@@ -29,16 +29,16 @@ import grpc_tuna_pb2
 import grpc_tuna_pb2_grpc
 import time
 
-Vision_ip='192.168.0.18'
-Vision_port='50002'
+Vision_ip=''
+Vision_port=''
 
-RbPi1_ip='192.168.0.5'
-RbPi1_port='50003'
+RbPi1_ip=''
+RbPi1_port=''
 
-RbPi2_ip = '192.168.0.14'
-RbPi2_port ='50004'
+RbPi2_ip = ''
+RbPi2_port =''
 
-Scada_ip='172.19.85.125'
+Scada_ip=''
 
 def resource_path(relative_path):
     base_path = getattr(sys, "_MEIPASS", os.path.dirname(os.path.abspath(__file__)))
