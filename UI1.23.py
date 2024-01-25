@@ -52,6 +52,14 @@ class WindowClass(QMainWindow, form_class) :
     def __init__(self) :
         super().__init__()
         self.setupUi(self)
+        self.robot1_color_num=0
+        self.robot2_weight=0
+        self.robot3_weight=0
+        self.red_count=0
+        self.yellow_count=0
+        self.green_count=0
+        self.blue_count=0
+        self.purple_count=0
         
 
         self.lcd_robot1.setProperty("value", self.robot1_color_num)
@@ -64,25 +72,25 @@ class WindowClass(QMainWindow, form_class) :
         self.lcd_40kg.setProperty("value", self.blue_count)
         self.lcd_50kg.setProperty("value", self.purple_count)
 
-        self.lcd_kgline1.setProperty("value", self.pbar1)     #누적무게
-        self.lcd_kgline2.setProperty("value", self.pbar2)
-        self.lcd_kgline3.setProperty("value", self.pbar3)
-        self.lcd_kgline4.setProperty("value", self.pbar4)
-        self.lcd_kgline5.setProperty("value", self.pbar5)
+        # self.lcd_kgline1.setProperty("value", self.pbar1)     #누적무게
+        # self.lcd_kgline2.setProperty("value", self.pbar2)
+        # self.lcd_kgline3.setProperty("value", self.pbar3)
+        # self.lcd_kgline4.setProperty("value", self.pbar4)
+        # self.lcd_kgline5.setProperty("value", self.pbar5)
 
-        self.lcd_slide1.setProperty("value", self.lcd_slide1_value)    #리스트 형태로 받아옴
-        self.lcd_slide2.setProperty("value", self.lcd_slide2_value)
-        self.lcd_slide3.setProperty("value", self.lcd_slide3_value)
-        self.lcd_slide4.setProperty("value", self.lcd_slide4_value)
-        self.lcd_slide5.setProperty("value", self.lcd_slide5_value)
-        self.lcd_slide6.setProperty("value", self.lcd_slide6_value)
+        # self.lcd_slide1.setProperty("value", self.lcd_slide1_value)    #리스트 형태로 받아옴
+        # self.lcd_slide2.setProperty("value", self.lcd_slide2_value)
+        # self.lcd_slide3.setProperty("value", self.lcd_slide3_value)
+        # self.lcd_slide4.setProperty("value", self.lcd_slide4_value)
+        # self.lcd_slide5.setProperty("value", self.lcd_slide5_value)
+        # self.lcd_slide6.setProperty("value", self.lcd_slide6_value)
 
-        self.bar_1.setProperty("value", self.pbar1_per)
-        self.bar_2.setProperty("value", self.pbar2_per)
-        self.bar_3.setProperty("value", self.pbar3_per)
-        self.bar_4.setProperty("value", self.pbar4_per)
-        self.bar_5.setProperty("value", self.pbar5_per)
-        # self.bar_1.setValue(self.pbar1)
+        # self.bar_1.setProperty("value", self.pbar1_per)
+        # self.bar_2.setProperty("value", self.pbar2_per)
+        # self.bar_3.setProperty("value", self.pbar3_per)
+        # self.bar_4.setProperty("value", self.pbar4_per)
+        # self.bar_5.setProperty("value", self.pbar5_per)
+        # # self.bar_1.setValue(self.pbar1)
         
         t1 = threading.Thread(target = self.Scada_RbPi1_client, args=(self,))
         t2 = threading.Thread(target = self.Scada_RbPi2_client, args=(self,))
