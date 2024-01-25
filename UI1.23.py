@@ -70,7 +70,6 @@ class WindowClass(QMainWindow, form_class) :
 
         
 if __name__ == "__main__":
-    import sys
     app = QApplication(sys.argv)
     ui = WindowClass()
     ui.show()
