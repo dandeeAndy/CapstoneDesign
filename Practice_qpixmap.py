@@ -13,16 +13,16 @@ class MyApp(QWidget):
         self.initUI()
 
     def initUI(self):
-        pixmap = QPixmap('Rectangle_small.png')
+        pixmap = QPixmap('ABCD위치_A.jpg')
 
         lbl_img = QLabel()
         lbl_img.setPixmap(pixmap)
-        lbl_size = QLabel('Width: '+str(pixmap.width())+', Height: '+str(pixmap.height()))
-        lbl_size.setAlignment(Qt.AlignCenter)
+        # lbl_size = QLabel('Width: '+str(pixmap.width())+', Height: '+str(pixmap.height()))
+        # lbl_size.setAlignment(Qt.AlignCenter)
 
         vbox = QVBoxLayout()
         vbox.addWidget(lbl_img)
-        vbox.addWidget(lbl_size)
+        # vbox.addWidget(lbl_size)
         self.setLayout(vbox)
 
         self.setWindowTitle('QPixmap')

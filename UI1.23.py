@@ -48,26 +48,36 @@ class WindowClass(QMainWindow, form_class) :
     def __init__(self) :
         super().__init__()
         self.setupUi(self)
-        self.robot1_color_num=0
-        self.robot2_weight=0
-        self.robot3_weight=0
-        self.red_count=0
-        self.yellow_count=0
-        self.green_count=0
-        self.blue_count=0
-        self.purple_count=0
+        # self.robot1_color_num=0
+        # self.robot2_weight=0
+        # self.robot3_weight=0
+        # self.red_count=0
+        # self.yellow_count=0
+        # self.green_count=0
+        # self.blue_count=0
+        # self.purple_count=0
         
 
-        self.lcd_robot1.setProperty("value", self.robot1_color_num)
-        self.lcd_robot2.setProperty("value", self.robot2_weight)
-        self.lcd_robot3.setProperty("value", self.robot3_weight)
+        # self.lcd_robot1.setProperty("value", self.robot1_color_num)
+        # self.lcd_robot2.setProperty("value", self.robot2_weight)
+        # self.lcd_robot3.setProperty("value", self.robot3_weight)
 
-        self.lcd_10kg.setProperty("value", self.red_count)
-        self.lcd_20kg.setProperty("value", self.yellow_count)
-        self.lcd_30kg.setProperty("value", self.green_count)
-        self.lcd_40kg.setProperty("value", self.blue_count)
-        self.lcd_50kg.setProperty("value", self.purple_count)
+        # self.lcd_10kg.setProperty("value", self.red_count)
+        # self.lcd_20kg.setProperty("value", self.yellow_count)
+        # self.lcd_30kg.setProperty("value", self.green_count)
+        # self.lcd_40kg.setProperty("value", self.blue_count)
+        # self.lcd_50kg.setProperty("value", self.purple_count)
+        
+        pixmap = QPixmap('ABCD위치_A.jpg')
+        lbl_img = QLabel()
+        lbl_img.setPixmap(pixmap)
+        
+        vbox = QVBoxLayout()
+        vbox.addWidget(lbl_img)
+        self.setLayout(vbox)
 
+        self.setWindowTitle('QPixmap')
+        self.move(300, 300)
         
 if __name__ == "__main__":
     app = QApplication(sys.argv)
