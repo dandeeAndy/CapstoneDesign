@@ -9,7 +9,6 @@ from PyQt5.QtGui import *
 from PyQt5 import uic
 from PyQt5 import QtWidgets, QtCore, QtGui
 
-
 from concurrent import futures
 
 import logging
@@ -20,17 +19,6 @@ import grpc_tuna_pb2
 import grpc_tuna_pb2_grpc
 import time
 
-Vision_ip=''
-Vision_port=''
-
-RbPi1_ip=''
-RbPi1_port=''
-
-RbPi2_ip = ''
-RbPi2_port =''
-
-Scada_ip=''
-
 
 form_class = uic.loadUiType("main.ui")[0]
 
@@ -39,14 +27,6 @@ class WindowClass(QMainWindow, form_class):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        # self.robot1_color_num=0
-        # self.robot2_weight=0
-        # self.robot3_weight=0
-        # self.red_count=0
-        # self.yellow_count=0
-        # self.green_count=0
-        # self.blue_count=0
-        # self.purple_count=0
         # self.picture = QtWidgets.QLabel(self.centralwidget)
         # self.picture.setGeometry(QtCore.QRect(670, 800, 461, 381))
         # self.picture.setObjectName("picture")
@@ -59,17 +39,6 @@ class WindowClass(QMainWindow, form_class):
         self.pixmap = QPixmap('ABCDpos_A.jpg')
         self.repixmap = self.pixmap.scaled(QSize(450, 150))
         self.lbl_A.setPixmap(self.repixmap)
-        
-
-        # self.lcd_robot1.setProperty("value", self.robot1_color_num)
-        # self.lcd_robot2.setProperty("value", self.robot2_weight)
-        # self.lcd_robot3.setProperty("value", self.robot3_weight)
-
-        # self.lcd_10kg.setProperty("value", self.red_count)
-        # self.lcd_20kg.setProperty("value", self.yellow_count)
-        # self.lcd_30kg.setProperty("value", self.green_count)
-        # self.lcd_40kg.setProperty("value", self.blue_count)
-        # self.lcd_50kg.setProperty("value", self.purple_count)
         
         # #############################################
         # pixmap = QPixmap('ABCDpos_A.jpg')
