@@ -1,23 +1,23 @@
-import os
 import sys
-import time
-import queue
-import urllib.request
+import os
+# import time
+# import queue
+# import urllib.request
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5 import uic
-from PyQt5 import QtWidgets, QtCore, QtGui
+# from PyQt5 import QtWidgets, QtCore, QtGui
 
-from concurrent import futures
+# from concurrent import futures
 
-import logging
-import threading
+# import logging
+# import threading
 
-import grpc
-import grpc_tuna_pb2
-import grpc_tuna_pb2_grpc
-import time
+# import grpc
+# import grpc_tuna_pb2
+# import grpc_tuna_pb2_grpc
+# import time
 
 
 form_class = uic.loadUiType("main.ui")[0]
@@ -64,6 +64,6 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     ui = WindowClass()
     ui.show()
-    app.exec_()
+    sys.exit(app.exec_())
 
     
