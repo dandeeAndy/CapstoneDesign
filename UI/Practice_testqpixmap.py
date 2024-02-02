@@ -14,14 +14,11 @@ class ThumbnailView(QMainWindow):
         self.main_img = QLabel()
         self.setCentralWidget(self.main_img)
 
-        front_image = 'gugu.jpg'
+        front_image = '123층_1.jpg'
 
         # Check gugu.jpg file
         if os.path.isfile(front_image):
-
-            # 아래 두 개의 코드는 동일함
-            self.main_img.setPixmap(QPixmap(front_image).scaled(self.width(), self.height()))
-            # self.main_img.setPixmap(QPixmap(front_image).scaled(self.width(), self.height(), Qt.IgnoreAspectRatio))
+            self.main_img.setPixmap(QPixmap(front_image).scaled(self.width(), self.height(), Qt.KeepAspectRatio))
         else:
             print('no file')
 

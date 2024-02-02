@@ -59,7 +59,7 @@
         <enum>Qt::AutoText</enum>
        </property>
        <property name="pixmap">
-        <pixmap>../../../../Figma/123층_1누끼.png</pixmap>
+        <pixmap>../../../../../Figma/123층_1누끼.png</pixmap>
        </property>
        <property name="scaledContents">
         <bool>false</bool>
@@ -75,7 +75,7 @@
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap>../../../../Figma/ABCD위치_A누끼.png</pixmap>
+        <pixmap>../../../../../Figma/ABCD위치_A누끼.png</pixmap>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
