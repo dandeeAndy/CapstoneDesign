@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>delta</class>
+ <widget class="QDialog" name="delta">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1920</width>
+    <height>1080</height>
+   </rect>
+  </property>
+  <property name="font">
+   <font>
+    <family>나눔스퀘어</family>
+    <weight>75</weight>
+    <bold>true</bold>
+   </font>
+  </property>
+  <property name="windowTitle">
+   <string>delta</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color:grey;</string>
+  </property>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

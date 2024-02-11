@@ -12,6 +12,7 @@
   </property>
   <property name="font">
    <font>
+    <family>NanumSquare</family>
     <pointsize>30</pointsize>
    </font>
   </property>
@@ -19,7 +20,7 @@
    <string>MainWindow</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color:black;</string>
+   <string notr="true">background-color:grey;</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QWidget" name="horizontalLayoutWidget">
@@ -59,13 +60,16 @@
         <enum>Qt::AutoText</enum>
        </property>
        <property name="pixmap">
-        <pixmap>../../../../../Figma/123층_1누끼.png</pixmap>
+        <pixmap>123층_1누끼.png</pixmap>
        </property>
        <property name="scaledContents">
         <bool>false</bool>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
+       </property>
+       <property name="indent">
+        <number>-1</number>
        </property>
       </widget>
      </item>
@@ -75,7 +79,10 @@
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap>../../../../../Figma/ABCD위치_A누끼.png</pixmap>
+        <pixmap>ABCD위치_A누끼.png</pixmap>
+       </property>
+       <property name="scaledContents">
+        <bool>false</bool>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
@@ -86,19 +93,6 @@
       </widget>
      </item>
     </layout>
-   </widget>
-   <widget class="QLabel" name="label_3">
-    <property name="geometry">
-     <rect>
-      <x>170</x>
-      <y>30</y>
-      <width>1071</width>
-      <height>61</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>TextLabel</string>
-    </property>
    </widget>
    <widget class="QScrollBar" name="horizontalScrollBar">
     <property name="geometry">
@@ -120,8 +114,16 @@
      <x>0</x>
      <y>0</y>
      <width>1920</width>
-     <height>26</height>
+     <height>23</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>나눔스퀘어</family>
+    </font>
+   </property>
+   <property name="nativeMenuBar">
+    <bool>true</bool>
    </property>
    <widget class="QMenu" name="menuSCADA_System">
     <property name="title">
