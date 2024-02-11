@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5 import uic
-# from PyQt5 import QtWidgets, QtCore, QtGui
+from PyQt5 import QtWidgets, QtCore, QtGui
 
 # from concurrent import futures
 
@@ -24,12 +24,12 @@ class WindowClass(QMainWindow, form_class):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        # self.picture = QtWidgets.QLabel(self.centralwidget)
-        # self.picture.setGeometry(QtCore.QRect(670, 800, 461, 381))
-        # self.picture.setObjectName("picture")
-        # self.img_robot = QtGui.QImage("ABCDpos_A.jpg")
-        # self.img_robot = self.img_robot.scaledToWidth(460)
-        # self.picture.setPixmap(QtGui.QPixmap.fromImage(self.img_robot))
+        self.picture = QtWidgets.QLabel(self.centralwidget)
+        self.picture.setGeometry(QtCore.QRect(670, 800, 461, 381))
+        self.picture.setObjectName("picture")
+        self.img_robot = QtGui.QImage("ABCDpos_A.jpg")
+        self.img_robot = self.img_robot.scaledToWidth(460)
+        self.picture.setPixmap(QtGui.QPixmap.fromImage(self.img_robot))
         
         lbl_A = QLabel()
         lbl_A.setPixmap(self.pixmap)
