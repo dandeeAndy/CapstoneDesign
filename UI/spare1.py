@@ -1,6 +1,6 @@
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtGui import *
+from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication, QMainWindow, QAction, qApp
 
 
@@ -18,12 +18,12 @@ class Ui_delta(object):
         self.retranslateUi(delta)
         QtCore.QMetaObject.connectSlotsByName(delta)
         
-        self.exitAction = QAction(QIcon('exit.png'), 'Exit', self)
-        self.exitAction.setShortcut('Ctrl+Q')
-        self.exitAction.setStatusTip('Exit application')
-        self.exitAction.triggered.connect(qApp.quit)
+        delta.exitAction = QAction(QIcon('exit.png'), 'Exit', delta)
+        delta.exitAction.setShortcut('Ctrl+Q')
+        delta.exitAction.setStatusTip('Exit application')
+        delta.exitAction.triggered.connect(qApp.quit)
 
-        self.statusBar()
+        delta.statusBar()
 
         menubar = self.menuBar()
         menubar.setNativeMenuBar(False)
@@ -32,8 +32,8 @@ class Ui_delta(object):
 
         self.setWindowTitle('Menubar')
         
-        # super().__init__()
-        # self.initUI()
+        super().__init__()
+        self.initUI()
 
     def retranslateUi(self, delta):
         _translate = QtCore.QCoreApplication.translate
