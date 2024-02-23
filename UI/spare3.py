@@ -2,6 +2,7 @@ import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QAction, QLabel, QHBoxLayout, QWidget, QVBoxLayout, QStatusBar, qApp, QGridLayout
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtCore import Qt, QTimer, QTime, QDate
+from datetime import datetime
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -60,6 +61,10 @@ class MainWindow(QMainWindow):
 
         # 그리드 레이아웃에 추가
         grid.addLayout(hbox, 1, 1)
+        
+        # 날짜와 시간 출력하기
+        self.statusBar().showMessage(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+
 
 
     def time_date(self):
