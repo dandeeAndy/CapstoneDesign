@@ -37,10 +37,27 @@ class MainWindow(QMainWindow):
         self.timer.timeout.connect(self.time_date)
         self.timer.start(1000)
         
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         # 날짜와 시간 출력하기
         self.statusBar().showMessage(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-
-
 
     def time_date(self):
         current_time = QTime.currentTime()
