@@ -29,7 +29,7 @@ class MainWindow(QMainWindow):
         layout = QVBoxLayout()
         
         # Image file names
-        image_files = ["./ABCD위치_A누끼.png", "./ABCD위치_B누끼.png", "./ABCD위치_C누끼.png"]
+        image_files = ["ABCD위치_A누끼.png", "ABCD위치_B누끼.png", "ABCD위치_C누끼.png"]
         
         for image_file in image_files:
             label = QLabel(self)
