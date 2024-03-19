@@ -12,7 +12,7 @@ class MainWindow(QMainWindow):
     def initUI(self):
         # 기본 창 설정
         self.setWindowTitle('Delta_System')
-        self.setGeometry(100, 100, 1920, 1080)
+        self.setGeometry(0, 0, 1920, 1080)
 
         # 메뉴바 설정
         self.menu_bar = QMenuBar(self)
@@ -49,11 +49,11 @@ class MainWindow(QMainWindow):
         for i in range(3):
             button = QPushButton(f'Option {i + 1}', self)
             button.setCheckable(True)
-            button.toggled.connect(self.handle_toggle)
-            options_layout.addWidget(button)
+            button.toggled.connect(lambda checked, b=button: self.toggleButtonState(b))
             self.option_buttons.append(button)
+            options_layout.addWidget(button)
+        
         top_layout.addLayout(options_layout)
-
         main_layout.addLayout(top_layout)
 
         # 중앙 레이아웃 설정 (세부항목 목록 및 장애이력)
@@ -73,11 +73,12 @@ class MainWindow(QMainWindow):
         main_widget = QWidget()
         main_widget.setLayout(main_layout)
         self.setCentralWidget(main_widget)
-
-    def handle_toggle(self, state):
-        for button in self.option_buttons:
-            if button.isChecked() and button is not self.sender():
-                button.setChecked(False)
+        
+    def toggleButtonState(self, btn):
+        if btn.isChecked():
+            for button in self.toggle_buttons:
+                if button != btn:
+                    button.setChecked(False)
 
     def refresh_system(self, event):
         print('새로고침')
