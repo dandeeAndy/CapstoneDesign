@@ -129,6 +129,8 @@ class OptionButton(QPushButton):
 
     def mousePressEvent(self, event):
         super().mousePressEvent(event)
+        # Button 상태가 변경된 후에 출력되어야 하므로 버튼 상태를 즉시 업데이트합니다.
+        QApplication.processEvents()
         if self.isChecked():
             print(self.opt_text)
 
