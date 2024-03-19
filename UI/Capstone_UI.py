@@ -25,6 +25,7 @@ class MainWindow(QMainWindow):
 
         # 기본 창 설정
         self.setWindowTitle('Delta_System')
+        self.setWindowIcon(QIcon('robot_icon.png'))
         self.setGeometry(0, 0, 1920, 1080)
 
         # 메뉴바 설정
@@ -63,7 +64,7 @@ class MainWindow(QMainWindow):
         self.option_buttons = []
         options_layout = QHBoxLayout()
         for i in range(3):
-            button = QPushButton(f"Option {i + 1}", self)
+            button = OptionButton(f"Option {i + 1}", i + 1, self)
             button.setCheckable(True)
             # 람다 함수에서 현재의 button 객체를 캡처
             button.toggled.connect(lambda checked, button=button: self.toggleButtonState(button))
@@ -100,6 +101,15 @@ class MainWindow(QMainWindow):
 
     def refresh_system(self, event):
         print('새로고침')
+
+class OptionButton(QPushButton):
+    def __init__(self, title, opt_number, parent=None):
+        super().__init__(title, parent)
+        self.opt_number = opt_number
+
+    def mousePressEvent(self, event):
+        super().mousePressEvent(event)
+        print(f'Opt{self.opt_number}')
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
