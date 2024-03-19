@@ -51,20 +51,17 @@ class MainWindow(QMainWindow):
         self.assembly_label.setPixmap(self.assembly_pixmap)
         top_layout.addWidget(self.assembly_label)
         
-        # 옵션 버튼 이름과 출력할 텍스트 설정
-        options = [
-            ("운송수단", "Opt1"),
-            ("파손주의 여부", "Opt2"),
-            ("택배사", "Opt3")
-        ]
-        # 옵션 버튼들 설정
-        self.option_buttons = []
         options_layout = QHBoxLayout()
-        for title, opt_text in options:
-            button = OptionButton(title, opt_text, self)
-            button.setCheckable(True)
-            button.toggled.connect(lambda checked, button=button: self.toggleButtonState(button))
-            self.option_buttons.append(button)
+        self.option_buttons = [
+            OptionButton('transport_ON.png', 'transport_OFF.png', 'Opt1', self),
+            OptionButton('fragile_ON.png', 'fragile_OFF.png', 'Opt2', self),
+            OptionButton('courier_ON.png', 'courier_OFF.png', 'Opt3', self),
+        ]
+        for button in self.option_buttons:
+            button.setAlignment(Qt.AlignCenter)
+            # 투명한 버튼을 이미지 위에 겹치게 설정
+            transparent_button = TransparentButton(button)
+            transparent_button.clicked.connect(lambda _, b=button: self.toggleButton(b))
             options_layout.addWidget(button)
         
         top_layout.addLayout(options_layout)
@@ -94,13 +91,14 @@ class MainWindow(QMainWindow):
         main_widget.setLayout(main_layout)
         self.setCentralWidget(main_widget)
         
-    def toggleButtonState(self, button):
-        # 버튼 상태를 토글
-        if button.isChecked():
-            # 다른 모든 버튼을 uncheck
-            for btn in self.option_buttons:
-                if btn != button:
-                    btn.setChecked(False)
+    def toggleButton(self, button):
+        # 다른 버튼이 이미 켜져 있으면 끄기
+        for btn in self.option_buttons:
+            if btn != button:
+                btn.is_on = False
+                btn.setPixmap(btn.off_pixmap)
+        # 클릭된 버튼 토글
+        button.toggle()
 
     def refresh_system(self, event):
         print('새로고침')
@@ -113,16 +111,26 @@ class MainWindow(QMainWindow):
     def addHistoryItem(self, text):
         self.history_list_widget.addItem(text)
     
-class OptionButton(QPushButton):
-    def __init__(self, title, opt_text, parent=None):
-        super().__init__(title, parent)
-        self.opt_text = opt_text
+class TransparentButton(QPushButton):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setFlat(True)
+        self.setStyleSheet("background:transparent;")
 
-    def mousePressEvent(self, event):
-        # 버튼의 체크 상태를 변경하기 전의 상태를 확인
-        if not self.isChecked():
+class OptionButton(QLabel):
+    def __init__(self, on_image_path, off_image_path, opt_text, parent=None):
+        super().__init__(parent)
+        self.on_pixmap = QPixmap(on_image_path)
+        self.off_pixmap = QPixmap(off_image_path)
+        self.setPixmap(self.off_pixmap)
+        self.opt_text = opt_text
+        self.is_on = False
+
+    def toggle(self):
+        self.is_on = not self.is_on
+        self.setPixmap(self.on_pixmap if self.is_on else self.off_pixmap)
+        if self.is_on:
             print(self.opt_text)
-        super().mousePressEvent(event)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
