@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QAction, QWidget, QLabel, 
-                             QVBoxLayout, QHBoxLayout, QPushButton, QMenuBar, QStatusBar)
+                             QVBoxLayout, QHBoxLayout, QPushButton, QMenuBar, QStatusBar, QListWidget)
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtCore import Qt
 
@@ -59,14 +59,20 @@ class MainWindow(QMainWindow):
         self.assembly_pixmap = QPixmap('assembly_image.jpg')
         self.assembly_label.setPixmap(self.assembly_pixmap)
         top_layout.addWidget(self.assembly_label)
+        
+        # 옵션 버튼 이름과 출력할 텍스트 설정
+        options = [
+            ("운송수단", "Opt1"),
+            ("파손주의 여부", "Opt2"),
+            ("택배사", "Opt3")
+        ]
 
         # 옵션 버튼들 설정
         self.option_buttons = []
         options_layout = QHBoxLayout()
-        for i in range(3):
-            button = OptionButton(f"Option {i + 1}", i + 1, self)
+        for title, opt_text in options:
+            button = OptionButton(title, opt_text, self)
             button.setCheckable(True)
-            # 람다 함수에서 현재의 button 객체를 캡처
             button.toggled.connect(lambda checked, button=button: self.toggleButtonState(button))
             self.option_buttons.append(button)
             options_layout.addWidget(button)
@@ -75,14 +81,24 @@ class MainWindow(QMainWindow):
         main_layout.addLayout(top_layout)
 
         # 중앙 레이아웃 설정 (세부항목 목록 및 장애이력)
-        middle_layout = QHBoxLayout()   
+        middle_layout = QHBoxLayout()
         
-        # 세부항목 목록 레이블 설정
-        self.details_list_label = QLabel('Details List', self)
-        middle_layout.addWidget(self.details_list_label)
+        # 세부항목 목록 레이블과 출력 위젯 설정
+        details_layout = QVBoxLayout()
+        self.details_title_label = QLabel('Details List', self)
+        self.details_title_label.setStyleSheet("border: 1px solid black;")  # 검은색 외형선 추가
+        details_layout.addWidget(self.details_title_label)
+
+        # 세부항목 목록 출력 위젯
+        self.details_list_widget = QListWidget(self)
+        self.details_list_widget.setStyleSheet("border: 1px solid black;")  # 검은색 외형선 추가
+        details_layout.addWidget(self.details_list_widget)
+
+        middle_layout.addLayout(details_layout)
 
         # 장애이력 레이블 설정
         self.history_label = QLabel('History', self)
+        self.history_label.setStyleSheet("border: 1px solid black;")  # 검은색 외형선 추가
         middle_layout.addWidget(self.history_label)
 
         main_layout.addLayout(middle_layout)
@@ -101,18 +117,24 @@ class MainWindow(QMainWindow):
 
     def refresh_system(self, event):
         print('새로고침')
+    
+    # 신호에 따라 세부항목 목록에 텍스트를 추가하는 함수
+    def addDetailItem(self, text):
+        self.details_list_widget.addItem(text)
 
 class OptionButton(QPushButton):
-    def __init__(self, title, opt_number, parent=None):
+    def __init__(self, title, opt_text, parent=None):
         super().__init__(title, parent)
-        self.opt_number = opt_number
+        self.opt_text = opt_text
 
     def mousePressEvent(self, event):
         super().mousePressEvent(event)
-        print(f'Opt{self.opt_number}')
+        if self.isChecked():
+            print(self.opt_text)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     mainWin = MainWindow()
     mainWin.show()
     sys.exit(app.exec_())
+    
