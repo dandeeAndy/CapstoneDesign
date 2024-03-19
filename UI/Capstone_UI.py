@@ -72,6 +72,12 @@ class MainWindow(QMainWindow):
         # 중앙 레이아웃 설정 (세부항목 목록 및 장애이력)
         middle_layout = QHBoxLayout()
         
+        # 장애이력 레이블 설정
+        self.history_label = QLabel('History', self)
+        self.history_label.setStyleSheet("border: 1px solid black;")  # 검은색 외형선 추가
+        middle_layout.addWidget(self.history_label)
+        main_layout.addLayout(middle_layout)
+        
         # 세부항목 목록 레이블과 출력 위젯 설정
         details_layout = QVBoxLayout()
         self.details_title_label = QLabel('Details List', self)
@@ -82,11 +88,7 @@ class MainWindow(QMainWindow):
         self.details_list_widget.setStyleSheet("border: 1px solid black;")  # 검은색 외형선 추가
         details_layout.addWidget(self.details_list_widget)
         middle_layout.addLayout(details_layout)
-        # 장애이력 레이블 설정
-        self.history_label = QLabel('History', self)
-        self.history_label.setStyleSheet("border: 1px solid black;")  # 검은색 외형선 추가
-        middle_layout.addWidget(self.history_label)
-        main_layout.addLayout(middle_layout)
+        
         # 메인 위젯 설정
         main_widget = QWidget()
         main_widget.setLayout(main_layout)
@@ -106,6 +108,10 @@ class MainWindow(QMainWindow):
     # 신호에 따라 세부항목 목록에 텍스트를 추가하는 함수
     def addDetailItem(self, text):
         self.details_list_widget.addItem(text)
+    
+    # 장애이력에 항목을 추가하는 메서드
+    def addHistoryItem(self, text):
+        self.history_list_widget.addItem(text)
     
 class OptionButton(QPushButton):
     def __init__(self, title, opt_text, parent=None):
