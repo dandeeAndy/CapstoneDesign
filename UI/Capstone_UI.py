@@ -42,6 +42,9 @@ class MainWindow(QMainWindow):
         # 시스템 로고 설정
         self.logo_label = QLabel(self)
         self.logo_pixmap = QPixmap('system_logo.png')
+        if self.logo_pixmap.isNull():
+            #QPixmap 객체 상태 확인(오작동시 True반환)
+            print("Failed to load system_logo.png")
         self.logo_label.setPixmap(self.logo_pixmap)
         self.logo_label.setAlignment(Qt.AlignCenter)
         self.logo_label.mousePressEvent = self.refresh_system
