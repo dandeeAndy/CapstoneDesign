@@ -3,31 +3,24 @@ from PyQt5.QtWidgets import (QApplication, QMainWindow, QAction, QWidget, QLabel
                              QVBoxLayout, QHBoxLayout, QPushButton, QMenuBar, QStatusBar, QListWidget)
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtCore import Qt
-
 #계속해서 수정하고 저장하면서 끝낼 완성본
 #크게 수정할 일이 있을 시
 #파일 저장 + 깃허브 커밋
 #파일 이름 : "추가한 기능(간략하게)//제거한 기능(없을시 *)(간략하게)"
-
 ##### VS코드 닫기 전!!!
 ##### 최종 저장 & 깃허브 푸쉬
-
-
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.initUI()
-
     def initUI(self):
         #이미지 파일 경로 확인을 위한 현재 디렉토리 출력
         import os
         print("Current Working Directory:", os.getcwd())
-
         # 기본 창 설정
         self.setWindowTitle('Delta_System')
         self.setWindowIcon(QIcon('robot_icon.png'))
         self.setGeometry(0, 0, 1920, 1080)
-
         # 메뉴바 설정
         self.menu_bar = QMenuBar(self)
         file_menu = self.menu_bar.addMenu('&File')
@@ -36,7 +29,6 @@ class MainWindow(QMainWindow):
         exit_action.triggered.connect(self.close)
         file_menu.addAction(exit_action)
         self.setMenuBar(self.menu_bar)
-
         # 메인 레이아웃 설정
         main_layout = QVBoxLayout()
         
@@ -50,7 +42,6 @@ class MainWindow(QMainWindow):
         self.logo_label.setAlignment(Qt.AlignCenter)
         self.logo_label.mousePressEvent = self.refresh_system
         main_layout.addWidget(self.logo_label)
-
         # 상단 레이아웃 설정 (구상도 사진 및 옵션 버튼)
         top_layout = QHBoxLayout()
         
@@ -66,20 +57,18 @@ class MainWindow(QMainWindow):
             ("파손주의 여부", "Opt2"),
             ("택배사", "Opt3")
         ]
-
         # 옵션 버튼들 설정
         self.option_buttons = []
         options_layout = QHBoxLayout()
         for title, opt_text in options:
             button = OptionButton(title, opt_text, self)
             button.setCheckable(True)
-            button.clicked.connect(lambda _, b=button: self.toggleButtonState(b))  # 'clicked' 이벤트 사용
+            button.toggled.connect(lambda checked, button=button: self.toggleButtonState(button))
             self.option_buttons.append(button)
             options_layout.addWidget(button)
         
         top_layout.addLayout(options_layout)
         main_layout.addLayout(top_layout)
-
         # 중앙 레이아웃 설정 (세부항목 목록 및 장애이력)
         middle_layout = QHBoxLayout()
         
@@ -88,60 +77,49 @@ class MainWindow(QMainWindow):
         self.details_title_label = QLabel('Details List', self)
         self.details_title_label.setStyleSheet("border: 1px solid black;")  # 검은색 외형선 추가
         details_layout.addWidget(self.details_title_label)
-
         # 세부항목 목록 출력 위젯
         self.details_list_widget = QListWidget(self)
         self.details_list_widget.setStyleSheet("border: 1px solid black;")  # 검은색 외형선 추가
         details_layout.addWidget(self.details_list_widget)
-
         middle_layout.addLayout(details_layout)
-
         # 장애이력 레이블 설정
         self.history_label = QLabel('History', self)
         self.history_label.setStyleSheet("border: 1px solid black;")  # 검은색 외형선 추가
         middle_layout.addWidget(self.history_label)
-
         main_layout.addLayout(middle_layout)
-
         # 메인 위젯 설정
         main_widget = QWidget()
         main_widget.setLayout(main_layout)
         self.setCentralWidget(main_widget)
         
     def toggleButtonState(self, button):
+        # 버튼 상태를 토글
         if button.isChecked():
+            # 다른 모든 버튼을 uncheck
             for btn in self.option_buttons:
                 if btn != button:
                     btn.setChecked(False)
-        else:
-            # 모든 버튼이 체크 해제될 때 원하는 동작을 수행합니다.
-            button.setChecked(True)
 
     def refresh_system(self, event):
         print('새로고침')
     
-    def addDetailItem(self):
-        # 터미널에서 입력을 받아 세부항목 목록에 추가하는 예시
-        text = input("Enter detail to add: ")
+    # 신호에 따라 세부항목 목록에 텍스트를 추가하는 함수
+    def addDetailItem(self, text):
         self.details_list_widget.addItem(text)
-
+    
 class OptionButton(QPushButton):
     def __init__(self, title, opt_text, parent=None):
         super().__init__(title, parent)
         self.opt_text = opt_text
 
     def mousePressEvent(self, event):
-        super().mousePressEvent(event)
-        # 먼저 버튼의 체크 상태를 변경합니다.
-        self.setChecked(not self.isChecked())
-        # 이벤트 발생 시 항상 텍스트를 출력합니다.
-        if self.isChecked():
+        # 버튼의 체크 상태를 변경하기 전의 상태를 확인
+        if not self.isChecked():
             print(self.opt_text)
+        super().mousePressEvent(event)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     mainWin = MainWindow()
     mainWin.show()
-    mainWin.addDetailItem()
     sys.exit(app.exec_())
-    
