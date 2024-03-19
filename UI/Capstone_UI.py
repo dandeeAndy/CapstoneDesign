@@ -73,7 +73,7 @@ class MainWindow(QMainWindow):
         for title, opt_text in options:
             button = OptionButton(title, opt_text, self)
             button.setCheckable(True)
-            button.toggled.connect(lambda checked, button=button: self.toggleButtonState(button))
+            button.clicked.connect(lambda _, b=button: self.toggleButtonState(b))  # 'clicked' 이벤트 사용
             self.option_buttons.append(button)
             options_layout.addWidget(button)
         
@@ -108,18 +108,21 @@ class MainWindow(QMainWindow):
         main_widget.setLayout(main_layout)
         self.setCentralWidget(main_widget)
         
-    def toggleButtonState(self, btn):
-        # 하나의 버튼이 on 상태일 때 다른 버튼들을 off 상태로 설정
-        if btn.isChecked():
-            for button in self.option_buttons:
-                if button != btn:
-                    button.setChecked(False)
+    def toggleButtonState(self, button):
+        if button.isChecked():
+            for btn in self.option_buttons:
+                if btn != button:
+                    btn.setChecked(False)
+        else:
+            # 모든 버튼이 체크 해제될 때 원하는 동작을 수행합니다.
+            button.setChecked(True)
 
     def refresh_system(self, event):
         print('새로고침')
     
-    # 신호에 따라 세부항목 목록에 텍스트를 추가하는 함수
-    def addDetailItem(self, text):
+    def addDetailItem(self):
+        # 터미널에서 입력을 받아 세부항목 목록에 추가하는 예시
+        text = input("Enter detail to add: ")
         self.details_list_widget.addItem(text)
 
 class OptionButton(QPushButton):
@@ -129,8 +132,9 @@ class OptionButton(QPushButton):
 
     def mousePressEvent(self, event):
         super().mousePressEvent(event)
-        # Button 상태가 변경된 후에 출력되어야 하므로 버튼 상태를 즉시 업데이트합니다.
-        QApplication.processEvents()
+        # 먼저 버튼의 체크 상태를 변경합니다.
+        self.setChecked(not self.isChecked())
+        # 이벤트 발생 시 항상 텍스트를 출력합니다.
         if self.isChecked():
             print(self.opt_text)
 
@@ -138,5 +142,6 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     mainWin = MainWindow()
     mainWin.show()
+    mainWin.addDetailItem()
     sys.exit(app.exec_())
     
