@@ -4,6 +4,15 @@ from PyQt5.QtWidgets import (QApplication, QMainWindow, QAction, QWidget, QLabel
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtCore import Qt
 
+#계속해서 수정하고 저장하면서 끝낼 완성본
+#크게 수정할 일이 있을 시
+#파일 저장 + 깃허브 커밋
+#파일 이름 : "추가한 기능(간략하게)//제거한 기능(없을시 *)(간략하게)"
+
+##### VS코드 닫기 전!!!
+##### 최종 저장 & 깃허브 푸쉬
+
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -39,17 +48,18 @@ class MainWindow(QMainWindow):
         
         # 구상도 이미지 설정
         self.assembly_label = QLabel(self)
-        self.assembly_pixmap = QPixmap('assembly_image.png')
+        self.assembly_pixmap = QPixmap('assembly_image.jpg')
         self.assembly_label.setPixmap(self.assembly_pixmap)
         top_layout.addWidget(self.assembly_label)
 
         # 옵션 버튼들 설정
-        options_layout = QHBoxLayout()
         self.option_buttons = []
+        options_layout = QHBoxLayout()
         for i in range(3):
-            button = QPushButton(f'Option {i + 1}', self)
+            button = QPushButton(f"Option {i + 1}", self)
             button.setCheckable(True)
-            button.toggled.connect(lambda checked, b=button: self.toggleButtonState(b))
+            # 람다 함수에서 현재의 button 객체를 캡처
+            button.toggled.connect(lambda checked, button=button: self.toggleButtonState(button))
             self.option_buttons.append(button)
             options_layout.addWidget(button)
         
@@ -57,7 +67,7 @@ class MainWindow(QMainWindow):
         main_layout.addLayout(top_layout)
 
         # 중앙 레이아웃 설정 (세부항목 목록 및 장애이력)
-        middle_layout = QHBoxLayout()
+        middle_layout = QHBoxLayout()   
         
         # 세부항목 목록 레이블 설정
         self.details_list_label = QLabel('Details List', self)
@@ -75,8 +85,9 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(main_widget)
         
     def toggleButtonState(self, btn):
+        # 하나의 버튼이 on 상태일 때 다른 버튼들을 off 상태로 설정
         if btn.isChecked():
-            for button in self.toggle_buttons:
+            for button in self.option_buttons:
                 if button != btn:
                     button.setChecked(False)
 
