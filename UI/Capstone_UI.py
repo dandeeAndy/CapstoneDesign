@@ -1,4 +1,4 @@
-import sys
+import sys, os
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QAction, QWidget, QLabel, 
                              QVBoxLayout, QHBoxLayout, QPushButton, QMenuBar, QStatusBar, QListWidget)
 from PyQt5.QtGui import QIcon, QPixmap
@@ -15,7 +15,6 @@ class MainWindow(QMainWindow):
         self.initUI()
     def initUI(self):
         #이미지 파일 경로 확인을 위한 현재 디렉토리 출력
-        import os
         print("Current Working Directory:", os.getcwd())
         # 기본 창 설정
         self.setWindowTitle('Delta_System')
@@ -63,7 +62,6 @@ class MainWindow(QMainWindow):
             transparent_button = TransparentButton(button)
             transparent_button.clicked.connect(lambda _, b=button: self.toggleButton(b))
             options_layout.addWidget(button)
-        
         top_layout.addLayout(options_layout)
         main_layout.addLayout(top_layout)
         # 중앙 레이아웃 설정 (세부항목 목록 및 장애이력)
@@ -122,9 +120,23 @@ class OptionButton(QLabel):
         super().__init__(parent)
         self.on_pixmap = QPixmap(on_image_path)
         self.off_pixmap = QPixmap(off_image_path)
-        self.setPixmap(self.off_pixmap)
+        # QLabel의 크기에 맞춰 QPixmap을 조정
+        self.setScaledPixmap()
+
         self.opt_text = opt_text
         self.is_on = False
+
+    def setScaledPixmap(self):
+        # QLabel의 크기를 가져오기
+        label_size = self.size()
+        # QPixmap을 QLabel의 크기에 맞춰 조정
+        scaled_on_pixmap = self.on_pixmap.scaled(label_size, Qt.KeepAspectRatio)
+        scaled_off_pixmap = self.off_pixmap.scaled(label_size, Qt.KeepAspectRatio)
+        self.setPixmap(scaled_off_pixmap if not self.is_on else scaled_on_pixmap)
+
+    def resizeEvent(self, event):
+        # QLabel의 크기가 변경될 때 QPixmap을 다시 조정
+        self.setScaledPixmap()
 
     def toggle(self):
         self.is_on = not self.is_on
