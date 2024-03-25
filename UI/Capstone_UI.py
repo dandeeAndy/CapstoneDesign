@@ -121,18 +121,19 @@ class OptionButton(QLabel):
         self.on_pixmap = QPixmap(on_image_path)
         self.off_pixmap = QPixmap(off_image_path)
         # QLabel의 크기에 맞춰 QPixmap을 조정
-        self.setScaledPixmap()
 
         self.opt_text = opt_text
         self.is_on = False
+        self.setScaledPixmap()      
 
     def setScaledPixmap(self):
         # QLabel의 크기를 가져오기
         label_size = self.size()
-        # QPixmap을 QLabel의 크기에 맞춰 조정
-        scaled_on_pixmap = self.on_pixmap.scaled(label_size, Qt.KeepAspectRatio)
-        scaled_off_pixmap = self.off_pixmap.scaled(label_size, Qt.KeepAspectRatio)
+        scaled_on_pixmap = self.on_pixmap.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        scaled_off_pixmap = self.off_pixmap.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        # 현재 상태(is_on)에 따라 적절한 QPixmap을 설정
         self.setPixmap(scaled_off_pixmap if not self.is_on else scaled_on_pixmap)
+        self.update()  # QLabel의 내용이 변경되었음을 알리고 강제로 다시 그리기
 
     def resizeEvent(self, event):
         # QLabel의 크기가 변경될 때 QPixmap을 다시 조정
@@ -140,7 +141,8 @@ class OptionButton(QLabel):
 
     def toggle(self):
         self.is_on = not self.is_on
-        self.setPixmap(self.on_pixmap if self.is_on else self.off_pixmap)
+        # self.setPixmap(self.on_pixmap if self.is_on else self.off_pixmap)
+        self.setScaledPixmap()
         if self.is_on:
             print(self.opt_text)
 
