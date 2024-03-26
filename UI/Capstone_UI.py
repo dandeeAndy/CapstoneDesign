@@ -16,10 +16,11 @@ class MainWindow(QMainWindow):
     def initUI(self):
         #이미지 파일 경로 확인을 위한 현재 디렉토리 출력
         print("Current Working Directory:", os.getcwd())
-        # 기본 창 설정
+        # 기본 창 설정layout
         self.setWindowTitle('Delta_System')
         self.setWindowIcon(QIcon('robot_icon.png'))
-        self.setGeometry(0, 0, 1920, 1080)
+        # self.setGeometry(0, 0, 1920, 1080)
+        self.showMaximized()
         # 메뉴바 설정
         self.menu_bar = QMenuBar(self)
         file_menu = self.menu_bar.addMenu('&File')
@@ -56,22 +57,33 @@ class MainWindow(QMainWindow):
             OptionButton('fragile_ON.png', 'fragile_OFF.png', 'Opt2', self),
             OptionButton('courier_ON.png', 'courier_OFF.png', 'Opt3', self),
         ]
-        for button in self.option_buttons:
-            button.setAlignment(Qt.AlignCenter)
-            # 투명한 버튼을 이미지 위에 겹치게 설정
-            transparent_button = TransparentButton(button)
-            transparent_button.clicked.connect(lambda _, b=button: self.toggleButton(b))
-            options_layout.addWidget(button)
+        for option_button in self.option_buttons:
+            container = QWidget()  # 옵션 버튼을 포함할 컨테이너 위젯 생성
+            layout = QVBoxLayout(container)  # 컨테이너에 QVBoxLayout 적용
+            layout.addWidget(option_button)  # OptionButton을 레이아웃에 추가
+
+            transparent_button = TransparentButton(container)
+            transparent_button.resize(option_button.size())  # TransparentButton의 크기를 OptionButton과 동일하게 설정
+            transparent_button.clicked.connect(lambda _, b=option_button: self.toggleButton(b))
+            layout.addWidget(transparent_button)  # 투명 버튼 추가
+
+            options_layout.addWidget(container)  # 최종적으로 컨테이너를 옵션 레이아웃에 추가
         top_layout.addLayout(options_layout)
         main_layout.addLayout(top_layout)
         # 중앙 레이아웃 설정 (세부항목 목록 및 장애이력)
         middle_layout = QHBoxLayout()
         
         # 장애이력 레이블 설정
+        history_layout = QVBoxLayout()
         self.history_label = QLabel('History', self)
         self.history_label.setStyleSheet("border: 1px solid black;")  # 검은색 외형선 추가
-        middle_layout.addWidget(self.history_label)
-        main_layout.addLayout(middle_layout)
+        history_layout.addWidget(self.history_label)
+        # 장애이력 출력 위젯 설정
+        self.history_list_widget = QListWidget(self)
+        self.history_list_widget.setStyleSheet("border: 1px solid black;")  # 검은색 외형선 추가
+        history_layout.addWidget(self.history_list_widget)  # 장애이력 레이아웃에 위젯 추가
+
+        middle_layout.addLayout(history_layout)  # 중앙 레이아웃에 장애이력 레이아웃 추가
         
         # 세부항목 목록 레이블과 출력 위젯 설정
         details_layout = QVBoxLayout()
@@ -83,6 +95,8 @@ class MainWindow(QMainWindow):
         self.details_list_widget.setStyleSheet("border: 1px solid black;")  # 검은색 외형선 추가
         details_layout.addWidget(self.details_list_widget)
         middle_layout.addLayout(details_layout)
+        
+        main_layout.addLayout(middle_layout)
         
         # 메인 위젯 설정
         main_widget = QWidget()
@@ -100,6 +114,7 @@ class MainWindow(QMainWindow):
 
     def refresh_system(self, event):
         print('새로고침')
+        self.someComponent.clear()
     
     # 신호에 따라 세부항목 목록에 텍스트를 추가하는 함수
     def addDetailItem(self, text):
@@ -120,11 +135,10 @@ class OptionButton(QLabel):
         super().__init__(parent)
         self.on_pixmap = QPixmap(on_image_path)
         self.off_pixmap = QPixmap(off_image_path)
-        # QLabel의 크기에 맞춰 QPixmap을 조정
-
         self.opt_text = opt_text
         self.is_on = False
-        self.setScaledPixmap()      
+        # 이미지의 초기 설정은 후에 resizeEvent에서 처리
+        self.setPixmap(self.off_pixmap)
 
     def setScaledPixmap(self):
         # QLabel의 크기를 가져오기
@@ -136,8 +150,10 @@ class OptionButton(QLabel):
         self.update()  # QLabel의 내용이 변경되었음을 알리고 강제로 다시 그리기
 
     def resizeEvent(self, event):
-        # QLabel의 크기가 변경될 때 QPixmap을 다시 조정
-        self.setScaledPixmap()
+        # 컨테이너의 크기에 맞춰 이미지 크기를 조정
+        scaled_on_pixmap = self.on_pixmap.scaled(self.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        scaled_off_pixmap = self.off_pixmap.scaled(self.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        self.setPixmap(scaled_off_pixmap if not self.is_on else scaled_on_pixmap)
 
     def toggle(self):
         self.is_on = not self.is_on
