@@ -115,14 +115,6 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(main_widget)
         main_widget.setLayout(main_layout)
         
-        # 위젯 위치와 크기를 1초마다 출력하는 타이머
-        self.timer = QTimer(self)
-        self.timer.timeout.connect(self.printWidgetSizes)
-        self.timer.start(1000)  # 1초마다 실행
-    
-    def printWidgetSizes(self):
-        print("Picture Widget Position:", self.assembly_label.pos())
-        print("Picture Widget Size:", self.assembly_label.size())
     def toggleButton(self, button):
         # 다른 버튼이 이미 켜져 있으면 끄기
         for btn in self.option_buttons:
