@@ -14,14 +14,12 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.initUI()
     def initUI(self):
-        # 모니터의 해상도를 얻어 창의 크기를 설정
         screen_rect = QApplication.desktop().screenGeometry()
-        self.setGeometry(screen_rect)  # 창을 모니터 해상도 크기로 설정
-        # 기본 창 설정layout
+        self.setGeometry(screen_rect)
         self.setWindowTitle('Delta_System')
         self.setWindowIcon(QIcon('robot_icon.png'))
-        # self.setGeometry(0, 0, 1920, 1080)
         self.showMaximized()
+        
         # 메뉴바 설정
         self.menu_bar = QMenuBar(self)
         file_menu = self.menu_bar.addMenu('&File')
@@ -37,29 +35,22 @@ class MainWindow(QMainWindow):
         # 시스템 로고 설정
         self.logo_label = QLabel(self)
         self.logo_pixmap = QPixmap('system_logo.png')
-        if self.logo_pixmap.isNull():
-            #QPixmap 객체 상태 확인(오작동시 True반환)
-            print("Failed to load system_logo.png")
         self.logo_label.setPixmap(self.logo_pixmap)
         self.logo_label.setAlignment(Qt.AlignCenter)
         self.logo_label.mousePressEvent = self.refresh_system
         main_layout.addWidget(self.logo_label)
+        
         # 상단 레이아웃 설정 (구상도 사진 및 옵션 버튼)
         top_layout = QHBoxLayout()
         
         # 구상도 이미지 설정
         self.assembly_label = QLabel(self)
-        pixmap = QPixmap('assembly_image.png')
-        # 원하는 너비에 맞게 이미지의 비율을 유지하면서 크기 조정
-        fixed_width = 946
+        pixmap = QPixmap('assembly_image.jpg')
+        fixed_width = 946  # 변경된 크기
         scaled_pixmap = pixmap.scaledToWidth(fixed_width, Qt.SmoothTransformation)
-        # QLabel에 조정된 QPixmap 설정
-        self.assembly_label.setPixmap(scaled_pixmap)        
-        # QLabel의 크기를 QPixmap의 크기에 맞게 조정
-        self.assembly_label.resize(scaled_pixmap.size())        
-        # QLabel의 위치 설정
-        self.assembly_label.move(11, 44)  # (x, y) 위치 지정
-        # top_layout.addWidget(self.assembly_label)
+        self.assembly_label.setPixmap(scaled_pixmap)
+        self.assembly_label.setGeometry(11, 44, scaled_pixmap.width(), scaled_pixmap.height())
+        top_layout.addWidget(self.assembly_label)
         
         options_layout = QHBoxLayout()
         self.option_buttons = [
@@ -76,10 +67,11 @@ class MainWindow(QMainWindow):
             transparent_button.resize(option_button.size())  # TransparentButton의 크기를 OptionButton과 동일하게 설정
             transparent_button.clicked.connect(lambda _, b=option_button: self.toggleButton(b))
             layout.addWidget(transparent_button)  # 투명 버튼 추가
-
             options_layout.addWidget(container)  # 최종적으로 컨테이너를 옵션 레이아웃에 추가
         top_layout.addLayout(options_layout)
+        
         main_layout.addLayout(top_layout)
+        
         # 중앙 레이아웃 설정 (세부항목 목록 및 장애이력)
         middle_layout = QHBoxLayout()
         
@@ -106,8 +98,7 @@ class MainWindow(QMainWindow):
         self.details_list_widget.setStyleSheet("border: 1px solid black;")  # 검은색 외형선 추가
         details_layout.addWidget(self.details_list_widget)
         self.details_list_widget.setGeometry(964, 585, 945, 429)  # 위치와 크기 설정 (x, y, width, height)
-        middle_layout.addLayout(details_layout)
-        
+        middle_layout.addLayout(details_layout)  # 중앙 레이아웃에 세부항목 레이아웃 추가
         main_layout.addLayout(middle_layout)
         
         # 메인 위젯 설정
@@ -115,13 +106,12 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(main_widget)
         main_widget.setLayout(main_layout)
         
+
     def toggleButton(self, button):
-        # 다른 버튼이 이미 켜져 있으면 끄기
         for btn in self.option_buttons:
             if btn != button:
                 btn.is_on = False
                 btn.setPixmap(btn.off_pixmap)
-        # 클릭된 버튼 토글
         button.toggle()
 
     def refresh_system(self, event):
@@ -148,7 +138,6 @@ class OptionButton(QLabel):
         self.off_pixmap = QPixmap(off_image_path)
         self.opt_text = opt_text
         self.is_on = False
-        # 이미지의 초기 설정은 후에 resizeEvent에서 처리
         self.setPixmap(self.off_pixmap)
 
     def setScaledPixmap(self):
@@ -161,14 +150,13 @@ class OptionButton(QLabel):
         self.update()  # QLabel의 내용이 변경되었음을 알리고 강제로 다시 그리기
 
     def resizeEvent(self, event):
-        # 컨테이너의 크기에 맞춰 이미지 크기를 조정
         scaled_on_pixmap = self.on_pixmap.scaled(self.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation)
         scaled_off_pixmap = self.off_pixmap.scaled(self.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation)
         self.setPixmap(scaled_off_pixmap if not self.is_on else scaled_on_pixmap)
 
     def toggle(self):
         self.is_on = not self.is_on
-        # self.setPixmap(self.on_pixmap if self.is_on else self.off_pixmap)
+        self.setPixmap(self.on_pixmap if self.is_on else self.off_pixmap)
         self.setScaledPixmap()
         if self.is_on:
             print(self.opt_text)
