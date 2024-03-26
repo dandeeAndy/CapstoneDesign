@@ -30,6 +30,7 @@ class MainWindow(QMainWindow):
         exit_action.triggered.connect(self.close)
         file_menu.addAction(exit_action)
         self.setMenuBar(self.menu_bar)
+        
         # 메인 레이아웃 설정
         main_layout = QVBoxLayout()
         
@@ -48,10 +49,17 @@ class MainWindow(QMainWindow):
         
         # 구상도 이미지 설정
         self.assembly_label = QLabel(self)
-        self.assembly_pixmap = QPixmap('assembly_image.jpg')
-        self.assembly_label.setPixmap(self.assembly_pixmap)
-        self.assembly_label.setGeometry(11, 44, 946, 510)
-        top_layout.addWidget(self.assembly_label)
+        pixmap = QPixmap('assembly_image.png')
+        # 원하는 너비에 맞게 이미지의 비율을 유지하면서 크기 조정
+        fixed_width = 946
+        scaled_pixmap = pixmap.scaledToWidth(fixed_width, Qt.SmoothTransformation)
+        # QLabel에 조정된 QPixmap 설정
+        self.assembly_label.setPixmap(scaled_pixmap)        
+        # QLabel의 크기를 QPixmap의 크기에 맞게 조정
+        self.assembly_label.resize(scaled_pixmap.size())        
+        # QLabel의 위치 설정
+        self.assembly_label.move(11, 44)  # (x, y) 위치 지정
+        # top_layout.addWidget(self.assembly_label)
         
         options_layout = QHBoxLayout()
         self.option_buttons = [
@@ -107,7 +115,7 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(main_widget)
         main_widget.setLayout(main_layout)
         
-        # 위젯 크기를 1초마다 출력하는 타이머
+        # 위젯 위치와 크기를 1초마다 출력하는 타이머
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.printWidgetSizes)
         self.timer.start(1000)  # 1초마다 실행
