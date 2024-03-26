@@ -2,7 +2,7 @@ import sys, os
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QAction, QWidget, QLabel, 
                              QVBoxLayout, QHBoxLayout, QPushButton, QMenuBar, QStatusBar, QListWidget)
 from PyQt5.QtGui import QIcon, QPixmap
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QTimer, QRect
 #계속해서 수정하고 저장하면서 끝낼 완성본
 #크게 수정할 일이 있을 시
 #파일 저장 + 깃허브 커밋
@@ -14,8 +14,9 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.initUI()
     def initUI(self):
-        #이미지 파일 경로 확인을 위한 현재 디렉토리 출력
-        print("Current Working Directory:", os.getcwd())
+        # 모니터의 해상도를 얻어 창의 크기를 설정
+        screen_rect = QApplication.desktop().screenGeometry()
+        self.setGeometry(screen_rect)  # 창을 모니터 해상도 크기로 설정
         # 기본 창 설정layout
         self.setWindowTitle('Delta_System')
         self.setWindowIcon(QIcon('robot_icon.png'))
@@ -82,7 +83,7 @@ class MainWindow(QMainWindow):
         self.history_list_widget = QListWidget(self)
         self.history_list_widget.setStyleSheet("border: 1px solid black;")  # 검은색 외형선 추가
         history_layout.addWidget(self.history_list_widget)  # 장애이력 레이아웃에 위젯 추가
-
+        
         middle_layout.addLayout(history_layout)  # 중앙 레이아웃에 장애이력 레이아웃 추가
         
         # 세부항목 목록 레이블과 출력 위젯 설정
@@ -100,9 +101,19 @@ class MainWindow(QMainWindow):
         
         # 메인 위젯 설정
         main_widget = QWidget()
-        main_widget.setLayout(main_layout)
         self.setCentralWidget(main_widget)
+        main_widget.setLayout(main_layout)
         
+        # 위젯 크기를 1초마다 출력하는 타이머
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.printWidgetSizes)
+        self.timer.start(1000)  # 1초마다 실행
+    
+    def printWidgetSizes(self):
+        print("History List Widget Position:", self.history_list_widget.pos())
+        print("History List Widget Size:", self.history_list_widget.size())
+        print("Details List Widget Position:", self.details_list_widget.pos())
+        print("Details List Widget Size:", self.details_list_widget.size())
     def toggleButton(self, button):
         # 다른 버튼이 이미 켜져 있으면 끄기
         for btn in self.option_buttons:
@@ -114,7 +125,6 @@ class MainWindow(QMainWindow):
 
     def refresh_system(self, event):
         print('새로고침')
-        self.someComponent.clear()
     
     # 신호에 따라 세부항목 목록에 텍스트를 추가하는 함수
     def addDetailItem(self, text):
@@ -165,5 +175,6 @@ class OptionButton(QLabel):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     mainWin = MainWindow()
+    mainWin.showMaximized()
     mainWin.show()
     sys.exit(app.exec_())
