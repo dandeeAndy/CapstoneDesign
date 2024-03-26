@@ -84,27 +84,41 @@ class MainWindow(QMainWindow):
         self.history_list_widget = QListWidget(self)
         self.history_list_widget.setStyleSheet("border: 1px solid black;")  # 검은색 외형선 추가
         history_layout.addWidget(self.history_list_widget)  # 장애이력 레이아웃에 위젯 추가
-        self.history_list_widget.setGeometry(11, 585, 946, 429)  # 위치와 크기 설정 (x, y, width, height)
+        self.history_list_widget.setGeometry(11, 585, 840, 429)  # 위치와 크기 설정 (x, y, width, height)
         
         middle_layout.addLayout(history_layout)  # 중앙 레이아웃에 장애이력 레이아웃 추가
         
-        # 세부항목 목록 레이블과 출력 위젯 설정
-        details_layout = QVBoxLayout()
-        self.details_title_label = QLabel('Details List', self)
-        self.details_title_label.setStyleSheet("border: 1px solid black;")  # 검은색 외형선 추가
-        details_layout.addWidget(self.details_title_label)
-        # 세부항목 목록 출력 위젯
-        self.details_list_widget = QListWidget(self)
-        self.details_list_widget.setStyleSheet("border: 1px solid black;")  # 검은색 외형선 추가
-        details_layout.addWidget(self.details_list_widget)
-        self.details_list_widget.setGeometry(964, 585, 945, 429)  # 위치와 크기 설정 (x, y, width, height)
-        middle_layout.addLayout(details_layout)  # 중앙 레이아웃에 세부항목 레이아웃 추가
-        main_layout.addLayout(middle_layout)
+        # 첫 번째 세부항목 레이블 및 위젯 설정
+        self.first_details_layout = QVBoxLayout()
+        self.first_details_label = QLabel('First Details', self)
+        self.first_details_label.setStyleSheet("border: 1px solid black;")
         
-        # 메인 위젯 설정
+        self.first_details_list_widget = QListWidget(self)
+        self.first_details_list_widget.setStyleSheet("border: 1px solid black;")
+        self.first_details_list_widget.setGeometry(845, 585, 840, 429)  # 위치와 크기 설정
+        self.first_details_layout.addWidget(self.first_details_list_widget)
+        middle_layout.addLayout(self.first_details_layout)
+        
+        # 두 번째 세부항목 레이블 및 위젯 설정
+        self.second_details_layout = QVBoxLayout()
+        self.second_details_label = QLabel('Second Details', self)
+        self.second_details_label.setStyleSheet("border: 1px solid black;")
+        
+        self.second_details_list_widget = QListWidget(self)
+        self.second_details_list_widget.setStyleSheet("border: 1px solid black;")
+        self.second_details_list_widget.setGeometry(1699, 585, 840, 429)  # 위치와 크기 설정
+        self.second_details_layout.addWidget(self.second_details_list_widget)
+        middle_layout.addLayout(self.second_details_layout)
+
+        # 메인 레이아웃 설정
         main_widget = QWidget()
         self.setCentralWidget(main_widget)
         main_widget.setLayout(main_layout)
+
+        # 중앙 레이아웃에 위젯 추가
+        middle_layout.addWidget(self.history_list_widget)
+
+        main_layout.addLayout(middle_layout)
         
 
     def toggleButton(self, button):
