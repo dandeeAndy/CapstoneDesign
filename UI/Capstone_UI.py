@@ -50,6 +50,7 @@ class MainWindow(QMainWindow):
         self.assembly_label = QLabel(self)
         self.assembly_pixmap = QPixmap('assembly_image.jpg')
         self.assembly_label.setPixmap(self.assembly_pixmap)
+        self.assembly_label.setGeometry(11, 44, 946, 510)
         top_layout.addWidget(self.assembly_label)
         
         options_layout = QHBoxLayout()
@@ -83,6 +84,7 @@ class MainWindow(QMainWindow):
         self.history_list_widget = QListWidget(self)
         self.history_list_widget.setStyleSheet("border: 1px solid black;")  # 검은색 외형선 추가
         history_layout.addWidget(self.history_list_widget)  # 장애이력 레이아웃에 위젯 추가
+        self.history_list_widget.setGeometry(11, 585, 946, 429)  # 위치와 크기 설정 (x, y, width, height)
         
         middle_layout.addLayout(history_layout)  # 중앙 레이아웃에 장애이력 레이아웃 추가
         
@@ -95,6 +97,7 @@ class MainWindow(QMainWindow):
         self.details_list_widget = QListWidget(self)
         self.details_list_widget.setStyleSheet("border: 1px solid black;")  # 검은색 외형선 추가
         details_layout.addWidget(self.details_list_widget)
+        self.details_list_widget.setGeometry(964, 585, 945, 429)  # 위치와 크기 설정 (x, y, width, height)
         middle_layout.addLayout(details_layout)
         
         main_layout.addLayout(middle_layout)
@@ -110,10 +113,8 @@ class MainWindow(QMainWindow):
         self.timer.start(1000)  # 1초마다 실행
     
     def printWidgetSizes(self):
-        print("History List Widget Position:", self.history_list_widget.pos())
-        print("History List Widget Size:", self.history_list_widget.size())
-        print("Details List Widget Position:", self.details_list_widget.pos())
-        print("Details List Widget Size:", self.details_list_widget.size())
+        print("Picture Widget Position:", self.assembly_label.pos())
+        print("Picture Widget Size:", self.assembly_label.size())
     def toggleButton(self, button):
         # 다른 버튼이 이미 켜져 있으면 끄기
         for btn in self.option_buttons:
