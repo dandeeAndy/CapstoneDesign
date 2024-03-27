@@ -32,10 +32,6 @@ class MainWindow(QMainWindow):
         # 메인 레이아웃 설정
         main_layout = QVBoxLayout()
         
-        
-        
-        self.setStyleSheet("border-radius: 10px;")
-        
         # 시스템 로고 설정
         self.logo_label = QLabel(self)
         self.logo_pixmap = QPixmap('system_logo.png')
@@ -106,16 +102,23 @@ class MainWindow(QMainWindow):
         # 중앙 레이아웃 설정 (세부항목 목록 및 장애이력)
         middle_layout = QHBoxLayout()
         
+        
         # 장애이력 레이블 설정
         history_layout = QVBoxLayout()
         self.history_label = QLabel('History', self)
-        self.history_label.setStyleSheet("border: 1px solid black;")  # 검은색 외형선 추가
-        self.history_label.setStyleSheet("border-radius: 10px;")
+        self.history_label.setStyleSheet("""
+            background-color: white;
+            border: 2px solid black;
+            border-radius: 10px;
+        """)
         history_layout.addWidget(self.history_label)
         # 장애이력 출력 위젯 설정
         self.history_list_widget = QListWidget(self)
-        self.history_list_widget.setStyleSheet("border: 1px solid black;")  # 검은색 외형선 추가
-        self.history_list_widget.setStyleSheet("border-radius: 10px;")
+        self.history_list_widget.setStyleSheet("""
+            background-color: white;
+            border: 2px solid black;
+            border-radius: 10px;
+        """)
         history_layout.addWidget(self.history_list_widget)  # 장애이력 레이아웃에 위젯 추가
         self.history_list_widget.setGeometry(11, 585, 840, 429)  # 위치와 크기 설정 (x, y, width, height)
         
@@ -126,12 +129,17 @@ class MainWindow(QMainWindow):
         # 첫 번째 세부항목 레이블 및 위젯 설정
         self.first_details_layout = QVBoxLayout()
         self.first_details_label = QLabel('First Details', self)
-        self.first_details_label.setStyleSheet("border: 1px solid black;")
-        self.first_details_label.setStyleSheet("border-radius: 10px;")
-        
+        self.first_details_label.setStyleSheet("""
+            background-color: white;
+            border: 2px solid black;
+            border-radius: 10px;
+        """)
         self.first_details_list_widget = QListWidget(self)
-        self.first_details_list_widget.setStyleSheet("border: 1px solid black;")
-        self.first_details_list_widget.setStyleSheet("border-radius: 10px;")
+        self.first_details_list_widget.setStyleSheet("""
+            background-color: white;
+            border: 2px solid black;
+            border-radius: 10px;
+        """)
         self.first_details_list_widget.setGeometry(845, 585, 840, 429)  # 위치와 크기 설정
         self.first_details_layout.addWidget(self.first_details_list_widget)
         middle_layout.addLayout(self.first_details_layout)
@@ -139,12 +147,17 @@ class MainWindow(QMainWindow):
         # 두 번째 세부항목 레이블 및 위젯 설정
         self.second_details_layout = QVBoxLayout()
         self.second_details_label = QLabel('Second Details', self)
-        self.second_details_label.setStyleSheet("border: 1px solid black;")
-        self.second_details_label.setStyleSheet("border-radius: 10px;")
-        
+        self.second_details_label.setStyleSheet("""
+            background-color: white;
+            border: 2px solid black;
+            border-radius: 10px;
+        """)
         self.second_details_list_widget = QListWidget(self)
-        self.second_details_list_widget.setStyleSheet("border: 1px solid black;")
-        self.second_details_list_widget.setStyleSheet("border-radius: 10px;")
+        self.second_details_list_widget.setStyleSheet("""
+            background-color: white;
+            border: 2px solid black;
+            border-radius: 10px;
+        """)
         self.second_details_list_widget.setGeometry(1699, 585, 840, 429)  # 위치와 크기 설정
         self.second_details_layout.addWidget(self.second_details_list_widget)
         middle_layout.addLayout(self.second_details_layout)
@@ -169,6 +182,8 @@ class MainWindow(QMainWindow):
             # Add your code here to handle the button click event
     
     def printWidgetSizes(self):
+        # print("장애이력 위치:", self.history_label.pos())
+        # print("장애이력 사이즈:", self.history_label.size())
         print("장애이력 위치:", self.history_list_widget.pos())
         print("장애이력 사이즈:", self.history_list_widget.size())
         print("왼파 세부사항 위치:", self.first_details_list_widget.pos())
