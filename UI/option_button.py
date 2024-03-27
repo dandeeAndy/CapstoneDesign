@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QAction, QWidget, QLabel, 
-                             QVBoxLayout, QHBoxLayout, QPushButton, QMenuBar, QStatusBar)
+                             QVBoxLayout, QHBoxLayout, QPushButton, QMenuBar, QSizePolicy, QListWidget, QGridLayout)
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtCore import Qt
 
@@ -54,25 +54,68 @@ class MainWindow(QMainWindow):
         # 상단 레이아웃 설정 (구상도 사진 및 옵션 버튼)
         top_layout = QHBoxLayout()
         
-        # 구상도 이미지 설정
-        self.assembly_label = QLabel(self)
-        self.assembly_pixmap = QPixmap('assembly_image.jpg')
-        self.assembly_label.setPixmap(self.assembly_pixmap)
-        top_layout.addWidget(self.assembly_label)
+        # 중앙 레이아웃 설정 (세부항목 목록 및 장애이력)
+        middle_layout = QGridLayout()
 
-        # 옵션 버튼들 설정
-        self.option_buttons = []
-        options_layout = QHBoxLayout()
-        for i in range(3):
-            button = OptionButton(f"Option {i + 1}", i + 1, self)
-            button.setCheckable(True)
-            # 람다 함수에서 현재의 button 객체를 캡처
-            button.toggled.connect(lambda checked, button=button: self.toggleButtonState(button))
-            self.option_buttons.append(button)
-            options_layout.addWidget(button)
-        
-        top_layout.addLayout(options_layout)
-        main_layout.addLayout(top_layout)
+        # 장애이력 레이블 설정
+        history_label = QLabel('History', self)
+        history_label.setStyleSheet("""
+            background-color: white;
+            border: 2px solid black;
+            border-radius: 10px;
+        """)
+        history_label.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)  # 크기 고정
+        middle_layout.addWidget(history_label, 0, 0, 1, 2)  # 장애이력 레이블 위치 설정
+
+        # 장애이력 출력 위젯 설정
+        history_list_widget = QListWidget(self)
+        history_list_widget.setStyleSheet("""
+            background-color: white;
+            border: 2px solid black;
+            border-radius: 10px;
+        """)
+        history_list_widget.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)  # 크기 고정
+        middle_layout.addWidget(history_list_widget, 1, 0, 1, 2)  # 장애이력 위젯 위치 설정
+
+        # 첫 번째 세부항목 레이블 및 위젯 설정
+        first_details_label = QLabel('First Details', self)
+        first_details_label.setStyleSheet("""
+            background-color: white;
+            border: 2px solid black;
+            border-radius: 10px;
+        """)
+        first_details_label.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)  # 크기 고정
+        middle_layout.addWidget(first_details_label, 0, 2, 1, 2)  # 첫 번째 세부항목 레이블 위치 설정
+
+        first_details_list_widget = QListWidget(self)
+        first_details_list_widget.setStyleSheet("""
+            background-color: white;
+            border: 2px solid black;
+            border-radius: 10px;
+        """)
+        first_details_list_widget.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)  # 크기 고정
+        middle_layout.addWidget(first_details_list_widget, 1, 2, 1, 2)  # 첫 번째 세부항목 위젯 위치 설정
+
+        # 두 번째 세부항목 레이블 및 위젯 설정
+        second_details_label = QLabel('Second Details', self)
+        second_details_label.setStyleSheet("""
+            background-color: white;
+            border: 2px solid black;
+            border-radius: 10px;
+        """)
+        second_details_label.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)  # 크기 고정
+        middle_layout.addWidget(second_details_label, 0, 4, 1, 2)  # 두 번째 세부항목 레이블 위치 설정
+
+        second_details_list_widget = QListWidget(self)
+        second_details_list_widget.setStyleSheet("""
+            background-color: white;
+            border: 2px solid black;
+            border-radius: 10px;
+        """)
+        second_details_list_widget.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)  # 크기 고정
+        middle_layout.addWidget(second_details_list_widget, 1, 4, 1, 2)  # 두 번째 세부항목 위젯 위치 설정
+
+        main_layout.addLayout(middle_layout)
 
         # 중앙 레이아웃 설정 (세부항목 목록 및 장애이력)
         middle_layout = QHBoxLayout()   
