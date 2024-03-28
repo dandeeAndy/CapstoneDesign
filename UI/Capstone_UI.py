@@ -86,7 +86,6 @@ class MainWindow(QMainWindow):
                 OptionButton('fragile_ON.png', 'fragile_OFF.png', 'Opt2', self),
                 OptionButton('courier_ON.png', 'courier_OFF.png', 'Opt3', self),
             ]
-        self.layout = QHBoxLayout(self)  # self.layout 설정, self를 parent로 지정
         
         # 옵션 버튼들을 만드는 코드 부분
         for option_button in self.option_buttons:
