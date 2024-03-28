@@ -19,14 +19,12 @@ class MainWindow(QMainWindow):
         self.initUI()
 
     def initUI(self):
-        #이미지 파일 경로 확인을 위한 현재 디렉토리 출력
-        import os
-        print("Current Working Directory:", os.getcwd())
-
-        # 기본 창 설정
+        # 기본 창 설정        
+        screen_rect = QApplication.desktop().screenGeometry()
+        self.setGeometry(screen_rect)
         self.setWindowTitle('Delta_System')
         self.setWindowIcon(QIcon('robot_icon.png'))
-        self.setGeometry(0, 0, 1920, 1080)
+        self.showMaximized()
 
         # 메뉴바 설정
         self.menu_bar = QMenuBar(self)
