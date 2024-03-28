@@ -218,7 +218,7 @@ class MainWindow(QMainWindow):
                 button.toggle()  # 선택된 버튼만 toggle 상태 변경
             else:
                 button.is_on = False  # 나머지 버튼은 off 상태로 설정
-                button.setPixmap(button.off_pixmap)
+                button.setScaledPixmap()
 
     def refresh_system(self, event):
         print('새로고침')
