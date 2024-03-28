@@ -14,6 +14,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.initUI()
+        
     def initUI(self):
         screen_rect = QApplication.desktop().screenGeometry()
         self.setGeometry(screen_rect)
@@ -77,6 +78,7 @@ class MainWindow(QMainWindow):
 
         # top_layout.addLayout(layout)
         ##
+        ###########################################################################################################
         
         options_layout = QHBoxLayout()
         self.option_buttons = [
@@ -94,74 +96,99 @@ class MainWindow(QMainWindow):
             transparent_button.clicked.connect(lambda _, b=option_button: self.toggleButton(b))
             layout.addWidget(transparent_button)  # 투명 버튼 추가
             options_layout.addWidget(container)  # 최종적으로 컨테이너를 옵션 레이아웃에 추가
-        # self.layout.setStyleSheet("border: 1px solid black;")  # 검은색 외형선 추가
+        self.layout.setStyleSheet("border: 1px solid black;")  # 검은색 외형선 추가
         top_layout.addLayout(options_layout)
         
         main_layout.addLayout(top_layout)
-        #################################################################################################
         
-        
+        ###########################################################################################################
         
         # 중앙 레이아웃 설정 (세부항목 목록 및 장애이력)
-        middle_layout = QGridLayout()
-
+        middle_layout = QHBoxLayout()
+        
         # 장애이력 레이블 설정
-        history_label = QLabel('History', self)
-        history_label.setStyleSheet("""
+        history_layout = QVBoxLayout()
+        
+        self.history_label = QLabel('History', self)
+        self.history_label.setStyleSheet("""
             background-color: white;
             border: 2px solid black;
             border-radius: 10px;
         """)
-        history_label.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)  # 크기 고정
-        middle_layout.addWidget(history_label, 5,0,1,1)  # 장애이력 레이블 위치 설정
-
+        self.history_label.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)  # 크기 고정
+        self.history_label.setGeometry(11, 585, 1680, 240)  # 위치와 크기 설정 (x, y, width, height)
+        history_layout.addWidget(self.history_label)
+        
         # 장애이력 출력 위젯 설정
-        history_list_widget = QListWidget(self)
-        history_list_widget.setStyleSheet("""
+        self.history_list_widget = QListWidget(self)
+        self.history_list_widget.setStyleSheet("""
             background-color: white;
             border: 2px solid black;
             border-radius: 10px;
         """)
-        history_list_widget.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)  # 크기 고정
-        middle_layout.addWidget(history_list_widget, 6,0,3,1)  # 장애이력 위젯 위치 설정
-
+        self.history_list_widget.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)  # 크기 고정
+        self.history_list_widget.setGeometry(11, 829, 1680, 860)  # 위치와 크기 설정 (x, y, width, height)
+        history_layout.addWidget(self.history_list_widget)  # 장애이력 레이아웃에 위젯 추가
+        
+        middle_layout.addLayout(history_layout)  # 중앙 레이아웃에 장애이력 레이아웃 추가
+                      
         # 첫 번째 세부항목 레이블 및 위젯 설정
-        first_details_label = QLabel('First Details', self)
-        first_details_label.setStyleSheet("""
+        first_details_layout = QVBoxLayout()
+        self.first_details_label = QLabel('First Details', self)
+        self.first_details_label.setStyleSheet("""
             background-color: white;
             border: 2px solid black;
             border-radius: 10px;
         """)
-        first_details_label.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)  # 크기 고정
-        middle_layout.addWidget(first_details_label, 5,1,1,2)  # 첫 번째 세부항목 레이블 위치 설정
-
-        first_details_list_widget = QListWidget(self)
-        first_details_list_widget.setStyleSheet("""
+        self.first_details_label.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)  # 크기 고정
+        self.first_details_label.setGeometry(1695, 585, 1680, 240)  # 위치와 크기 설정 (x, y, width, height)
+        first_details_layout.addWidget(self.first_details_label)  # 장애이력 레이아웃에 위젯 추가
+        
+        self.first_details_list_widget = QListWidget(self)
+        self.first_details_list_widget.setStyleSheet("""
             background-color: white;
             border: 2px solid black;
             border-radius: 10px;
         """)
-        first_details_list_widget.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)  # 크기 고정
-        middle_layout.addWidget(first_details_list_widget, 6,1,3,2)  # 첫 번째 세부항목 위젯 위치 설정
-
+        self.first_details_list_widget.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)  # 크기 고정
+        self.first_details_list_widget.setGeometry(1695, 829, 1680, 860)  # 위치와 크기 설정
+        first_details_layout.addWidget(self.first_details_list_widget)
+        
+        middle_layout.addLayout(first_details_layout)
+                
         # 두 번째 세부항목 레이블 및 위젯 설정
-        second_details_label = QLabel('Second Details', self)
-        second_details_label.setStyleSheet("""
+        second_details_layout = QVBoxLayout()
+        self.second_details_label = QLabel('Second Details', self)
+        self.second_details_label.setStyleSheet("""
             background-color: white;
             border: 2px solid black;
             border-radius: 10px;
         """)
-        second_details_label.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)  # 크기 고정
-        middle_layout.addWidget(second_details_label, 5,3,1,2)  # 두 번째 세부항목 레이블 위치 설정
+        self.second_details_label.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)  # 크기 고정
+        self.second_details_label.setGeometry(3379, 585, 1680, 240)  # 위치와 크기 설정 (x, y, width, height)
+        second_details_layout.addWidget(self.second_details_label)
+        
+        self.second_details_list_widget = QListWidget(self)
+        self.second_details_list_widget.setStyleSheet("""
+            background-color: white;
+            border: 2px solid black;
+            border-radius: 10px;
+        """)
+        self.second_details_list_widget.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)  # 크기 고정
+        self.second_details_list_widget.setGeometry(3379, 829, 1680, 860)  # 위치와 크기 설정
+        second_details_layout.addWidget(self.second_details_list_widget)
+        
+        middle_layout.addLayout(second_details_layout)
 
-        second_details_list_widget = QListWidget(self)
-        second_details_list_widget.setStyleSheet("""
-            background-color: white;
-            border: 2px solid black;
-            border-radius: 10px;
-        """)
-        second_details_list_widget.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)  # 크기 고정
-        middle_layout.addWidget(second_details_list_widget, 6,3,3,2)  # 두 번째 세부항목 위젯 위치 설정
+        # 메인 레이아웃 설정
+        main_widget = QWidget()
+        self.setCentralWidget(main_widget)
+        main_widget.setLayout(main_layout)
+
+        # 중앙 레이아웃에 위젯 추가
+        middle_layout.addWidget(self.history_list_widget)
+        
+        
 
         main_layout.addLayout(middle_layout)
         
