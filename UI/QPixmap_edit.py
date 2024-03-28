@@ -1,6 +1,6 @@
 import sys, os
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QAction, QWidget, QLabel, 
-                             QVBoxLayout, QHBoxLayout, QPushButton, QMenuBar, QStatusBar, QListWidget)
+                             QVBoxLayout, QHBoxLayout, QPushButton, QMenuBar, QListWidget)
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtCore import Qt
 #계속해서 수정하고 저장하면서 끝낼 완성본
