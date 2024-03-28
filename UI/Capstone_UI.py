@@ -86,6 +86,7 @@ class MainWindow(QMainWindow):
                 OptionButton('fragile_ON.png', 'fragile_OFF.png', 'Opt2', self),
                 OptionButton('courier_ON.png', 'courier_OFF.png', 'Opt3', self),
             ]
+        self.layout = QHBoxLayout(self)  # self.layout 설정, self를 parent로 지정
         
         # 옵션 버튼들을 만드는 코드 부분
         for option_button in self.option_buttons:
@@ -96,9 +97,7 @@ class MainWindow(QMainWindow):
             transparent_button = TransparentButton(container)
             transparent_button.resize(option_button.size())
             transparent_button.clicked.connect(lambda _, b=option_button: self.toggleButton(b))
-            # 절대 위치를 사용하여 transparent_button을 container에 추가합니다.
-            transparent_button.move(0, 0)  # container의 (0, 0) 위치에 transparent_button을 배치합니다.
-            top_layout.addWidget(container)  # container를 top_layout에 추가합니다.
+            self.layout.addWidget(option_button)  # option_button을 layout에 추가
         
         main_layout.addLayout(top_layout)
         
@@ -213,12 +212,13 @@ class MainWindow(QMainWindow):
         print("오른파 세부사항 사이즈:", self.second_details_list_widget.size())
         
     
-    def toggleButton(self, button):
-        for option_button in self.option_buttons:
-            if option_button != button:
-                option_button.is_on = False  # 다른 버튼을 'off' 상태로 전환합니다.
-                option_button.setScaledPixmap()
-        button.toggle()
+    def toggleButton(self, selected_button):
+        for button in self.option_buttons:
+            if button == selected_button:
+                button.toggle()  # 선택된 버튼만 toggle 상태 변경
+            else:
+                button.is_on = False  # 나머지 버튼은 off 상태로 설정
+                button.setPixmap(button.off_pixmap)
 
     def refresh_system(self, event):
         print('새로고침')
