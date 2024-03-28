@@ -82,21 +82,22 @@ class MainWindow(QMainWindow):
         
         options_layout = QHBoxLayout()
         self.option_buttons = [
-            OptionButton('transport_ON.png', 'transport_OFF.png', 'Opt1', self),
-            OptionButton('fragile_ON.png', 'fragile_OFF.png', 'Opt2', self),
-            OptionButton('courier_ON.png', 'courier_OFF.png', 'Opt3', self),
-        ]
+                OptionButton('transport_ON.png', 'transport_OFF.png', 'Opt1', self),
+                OptionButton('fragile_ON.png', 'fragile_OFF.png', 'Opt2', self),
+                OptionButton('courier_ON.png', 'courier_OFF.png', 'Opt3', self),
+            ]
+        # 옵션 버튼들을 만드는 코드 부분
         for option_button in self.option_buttons:
-            container = QWidget()  # 옵션 버튼을 포함할 컨테이너 위젯 생성
-            layout = QVBoxLayout(container)  # 컨테이너에 QVBoxLayout 적용
-            layout.addWidget(option_button)  # OptionButton을 레이아웃에 추가
+            container = QWidget()
+            layout = QVBoxLayout(container)
+            layout.addWidget(option_button)
 
             transparent_button = TransparentButton(container)
-            transparent_button.resize(option_button.size())  # TransparentButton의 크기를 OptionButton과 동일하게 설정
+            transparent_button.resize(option_button.size())
             transparent_button.clicked.connect(lambda _, b=option_button: self.toggleButton(b))
-            layout.addWidget(transparent_button)  # 투명 버튼 추가
-            options_layout.addWidget(container)  # 최종적으로 컨테이너를 옵션 레이아웃에 추가
-        self.layout.setStyleSheet("border: 1px solid black;")  # 검은색 외형선 추가
+            layout.addWidget(transparent_button, 0, Qt.AlignTop)  # 투명 버튼을 옵션 버튼 위에 정확히 위치시킵니다.
+            options_layout.addWidget(container)
+
         top_layout.addLayout(options_layout)
         
         main_layout.addLayout(top_layout)
@@ -213,10 +214,10 @@ class MainWindow(QMainWindow):
         
     
     def toggleButton(self, button):
-        for btn in self.option_buttons:
-            if btn != button:
-                btn.is_on = False
-                btn.setPixmap(btn.off_pixmap)
+        for option_button in self.option_buttons:
+            if option_button != button:
+                option_button.is_on = False  # 다른 버튼을 'off' 상태로 전환합니다.
+                option_button.setScaledPixmap()
         button.toggle()
 
     def refresh_system(self, event):
@@ -243,25 +244,20 @@ class OptionButton(QLabel):
         self.off_pixmap = QPixmap(off_image_path)
         self.opt_text = opt_text
         self.is_on = False
-        self.setPixmap(self.off_pixmap)
+        self.setScaledPixmap()  # 최초에 비율 조정된 이미지로 설정합니다.
 
     def setScaledPixmap(self):
-        # QLabel의 크기를 가져오기
-        label_size = self.size()
+        label_size = self.size()  # QLabel의 크기를 가져옵니다.
         scaled_on_pixmap = self.on_pixmap.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
         scaled_off_pixmap = self.off_pixmap.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
-        # 현재 상태(is_on)에 따라 적절한 QPixmap을 설정
         self.setPixmap(scaled_off_pixmap if not self.is_on else scaled_on_pixmap)
-        self.update()  # QLabel의 내용이 변경되었음을 알리고 강제로 다시 그리기
+        self.update()
 
     def resizeEvent(self, event):
-        scaled_on_pixmap = self.on_pixmap.scaled(self.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation)
-        scaled_off_pixmap = self.off_pixmap.scaled(self.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation)
-        self.setPixmap(scaled_off_pixmap if not self.is_on else scaled_on_pixmap)
+        self.setScaledPixmap()
 
     def toggle(self):
         self.is_on = not self.is_on
-        self.setPixmap(self.on_pixmap if self.is_on else self.off_pixmap)
         self.setScaledPixmap()
         if self.is_on:
             print(self.opt_text)
