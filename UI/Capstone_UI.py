@@ -80,12 +80,14 @@ class MainWindow(QMainWindow):
         ##
         ###########################################################################################################
         
-        options_layout = QHBoxLayout()
+        # options_layout = QHBoxLayout()
         self.option_buttons = [
                 OptionButton('transport_ON.png', 'transport_OFF.png', 'Opt1', self),
                 OptionButton('fragile_ON.png', 'fragile_OFF.png', 'Opt2', self),
                 OptionButton('courier_ON.png', 'courier_OFF.png', 'Opt3', self),
             ]
+        self.layout = QHBoxLayout(self)  # self.layout 설정, self를 parent로 지정
+        
         # 옵션 버튼들을 만드는 코드 부분
         for option_button in self.option_buttons:
             container = QWidget()
@@ -95,10 +97,9 @@ class MainWindow(QMainWindow):
             transparent_button = TransparentButton(container)
             transparent_button.resize(option_button.size())
             transparent_button.clicked.connect(lambda _, b=option_button: self.toggleButton(b))
-            layout.addWidget(transparent_button, 0, Qt.AlignTop)  # 투명 버튼을 옵션 버튼 위에 정확히 위치시킵니다.
-            options_layout.addWidget(container)
-
-        top_layout.addLayout(options_layout)
+            # 절대 위치를 사용하여 transparent_button을 container에 추가합니다.
+            transparent_button.move(0, 0)  # container의 (0, 0) 위치에 transparent_button을 배치합니다.
+            top_layout.addWidget(container)  # container를 top_layout에 추가합니다.
         
         main_layout.addLayout(top_layout)
         
