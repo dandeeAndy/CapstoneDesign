@@ -1,7 +1,7 @@
 import sys, os
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QAction, QWidget, QLabel, 
                              QVBoxLayout, QHBoxLayout, QPushButton, QMenuBar,
-                             QListWidget, QSizePolicy, QGridLayout)
+                             QListWidget, QSizePolicy, QStackedLayout)
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtCore import Qt, QTimer, QRect
 #계속해서 수정하고 저장하면서 끝낼 완성본
@@ -237,20 +237,32 @@ class TransparentButton(QPushButton):
         self.setFlat(True)
         self.setStyleSheet("background:transparent;")
 
-class OptionButton(QLabel):
+class OptionButton(QWidget):
     def __init__(self, on_image_path, off_image_path, opt_text, parent=None):
         super().__init__(parent)
         self.on_pixmap = QPixmap(on_image_path)
         self.off_pixmap = QPixmap(off_image_path)
+        if self.on_pixmap.isNull() or self.off_pixmap.isNull():
+            print("이미지 로드 실패:", on_image_path, "또는", off_image_path)
         self.opt_text = opt_text
         self.is_on = False
-        self.setScaledPixmap()  # 최초에 비율 조정된 이미지로 설정합니다.
+
+        self.label = QLabel(self)
+        self.setScaledPixmap()
+
+        self.transparent_button = TransparentButton(self)
+        self.transparent_button.resize(self.label.size())
+        self.transparent_button.clicked.connect(self.toggle)
+
+        layout = QStackedLayout(self)
+        layout.addWidget(self.label)
+        layout.addWidget(self.transparent_button)
 
     def setScaledPixmap(self):
         label_size = self.size()  # QLabel의 크기를 가져옵니다.
         scaled_on_pixmap = self.on_pixmap.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
         scaled_off_pixmap = self.off_pixmap.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
-        self.setPixmap(scaled_off_pixmap if not self.is_on else scaled_on_pixmap)
+        self.label.setPixmap(scaled_off_pixmap if not self.is_on else scaled_on_pixmap)
         self.update()
 
     def resizeEvent(self, event):
