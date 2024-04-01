@@ -25,33 +25,45 @@ class MainWindow(QMainWindow):
         
         # 각 행과 열에 대한 비율 설정
         grid_layout.setRowStretch(0, 1)
-        grid_layout.setRowStretch(1, 3)
-        grid_layout.setRowStretch(2, 4)
+        grid_layout.setRowStretch(1, 2)
+        grid_layout.setRowStretch(2, 1)
+        grid_layout.setRowStretch(3, 3)
         grid_layout.setColumnStretch(0, 2)
         grid_layout.setColumnStretch(1, 3)
-        grid_layout.setColumnStretch(2, 3)
+        grid_layout.setColumnStretch(2, 1)
+        grid_layout.setColumnStretch(3, 1)
+        grid_layout.setColumnStretch(4, 1)
 
-        # (0, 1)과 (0, 2)에 걸쳐지는 레이블 추가
+        # 걸쳐지는 레이블 추가
         label_1 = QLabel()
-        grid_layout.addWidget(label_1, 0, 1, 1, 2)  # 여기서 1, 2는 각각 rowSpan, colSpan을 의미합니다.
+        grid_layout.addWidget(label_1, 0, 1, 1, 4)  # (0, 1)에서 (0, 4)까지
 
-        # (1, 0)과 (1, 1)에 걸쳐지는 레이블 추가
         label_2 = QLabel()
-        grid_layout.addWidget(label_2, 1, 0, 1, 2)  # 여기서 1, 2는 각각 rowSpan, colSpan을 의미합니다.
+        grid_layout.addWidget(label_2, 1, 0, 2, 2)  # (1, 0)에서 (2, 1)까지
+        
+        label_3 = QLabel()
+        grid_layout.addWidget(label_3, 2, 2, 1, 3)  # (2, 2)에서 (2, 4)까지
+        
+        label_4 = QLabel()
+        grid_layout.addWidget(label_4, 3, 2, 1, 3)  # (3, 2)에서 (3, 4)까지
 
-        # 나머지 레이블들을 그리드에 추가합니다.
-        for i in range(3):  # 행
-            for j in range(3):  # 열
-                if (i == 0 and j in [1, 2]) or (i == 1 and j in [0, 1]):
-                    continue  # 이미 추가한 레이블에 걸쳐지는 부분은 건너뜁니다.
-                label = QLabel()
-                grid_layout.addWidget(label, i, j)
+        # 빈 레이블들을 생성하고 그리드 레이아웃에 추가하는 반복문
+        for i in range(4):  # 4행
+            for j in range(5):  # 5열
+                if not ((i == 0 and 1 <= j <= 4) or 
+                        (i in [1, 2] and j in [0, 1]) or 
+                        (i == 2 and 2 <= j <= 4) or 
+                        (i == 3 and 2 <= j <= 4)):  # 이미 추가한 레이블에 걸쳐지는 부분은 건너뜁니다.
+                    label = QLabel()
+                    grid_layout.addWidget(label, i, j)
         
         
         ########################################################################################################
         # 윈도우 설정
         screen_rect = QApplication.desktop().screenGeometry()
         self.setGeometry(screen_rect)
+        self.setCentralWidget(QWidget(self))
+        self.centralWidget().setLayout(grid_layout)
         self.setWindowTitle('Delta_System')
         self.setWindowIcon(QIcon('robot_icon.png'))
         self.showMaximized()
@@ -77,11 +89,9 @@ class MainWindow(QMainWindow):
         # 구상도 이미지 설정
         self.assembly_label = QLabel(self)
         pixmap = QPixmap('assembly_image.jpg')
-        fixed_width = 946  # 변경된 크기
-        scaled_pixmap = pixmap.scaledToWidth(fixed_width, Qt.SmoothTransformation)
-        self.assembly_label.setPixmap(scaled_pixmap)
-        self.assembly_label.setGeometry(11, 44, scaled_pixmap.width(), scaled_pixmap.height())
-        grid_layout.addWidget(self.assembly_label, 1, 0, 1, 2)
+        self.assembly_label.setPixmap(pixmap)
+        label_2.setLayout(QHBoxLayout())
+        label_2.layout().addWidget(self.assembly_label)
         
         ##
         # # 같은 크기의 QPixmap 레이블 두 개와 크기가 같은 투명 버튼을 모두 겹쳐 하나의 레이아웃에 포함
@@ -115,8 +125,8 @@ class MainWindow(QMainWindow):
                 OptionButton('courier_ON.png', 'courier_OFF.png', 'Opt3', self),
             ]
         
-        # 옵션 버튼들을 만드는 코드 부분
-        for idx, option_button in enumerate(self.option_buttons):
+        # 옵션 버튼들을 GridLayout에 추가
+        for i, option_button in enumerate(self.option_buttons):
             container = QWidget()
             layout = QVBoxLayout(container)
             layout.addWidget(option_button)
@@ -124,14 +134,10 @@ class MainWindow(QMainWindow):
             transparent_button = TransparentButton(container)
             transparent_button.resize(option_button.size())
             transparent_button.clicked.connect(lambda _, b=option_button: self.toggleButton(b))
-            grid_layout.addWidget(option_button, 1, idx + 2)  # 가정: 옵션 버튼을 1행, 2열부터 시작해 배치
+            grid_layout.addWidget(option_button, 1, i + 2)  # 가정: 옵션 버튼을 1행, 2열부터 시작해 배치
         
         grid_layout.setContentsMargins(50, 50, 50, 50)
         
-        # 중앙 위젯 설정 및 메인 레이아웃 적용
-        central_widget = QWidget()
-        central_widget.setLayout(grid_layout)
-        self.setCentralWidget(central_widget)
                 
         ###########################################################################################################
                 
@@ -146,7 +152,7 @@ class MainWindow(QMainWindow):
         self.history_list_widget = QListWidget(self)
         self.history_list_widget.setStyleSheet("background-color: white;border: 2px solid black;border-radius: 10px;")
         
-        grid_layout.addWidget(self.history_list_widget, 2, 0)
+        grid_layout.addWidget(self.history_list_widget, 3, 0)
         
         # grid_layout.addLayout(history_layout, 2, 0)  # 중앙 레이아웃에 장애이력 레이아웃 추가
                       
@@ -159,7 +165,7 @@ class MainWindow(QMainWindow):
         
         self.first_details_list_widget = QListWidget(self)
         self.first_details_list_widget.setStyleSheet("background-color: white;border: 2px solid black;border-radius: 10px;")
-        grid_layout.addWidget(self.first_details_list_widget, 2, 1)
+        grid_layout.addWidget(self.first_details_list_widget, 3, 1)
         
         # grid_layout.addLayout(first_details_layout, 2, 1)
                 
@@ -172,7 +178,7 @@ class MainWindow(QMainWindow):
         
         self.second_details_list_widget = QListWidget(self)
         self.second_details_list_widget.setStyleSheet("background-color: white;border: 2px solid black;border-radius: 10px;")
-        grid_layout.addWidget(self.second_details_list_widget, 2, 2)
+        grid_layout.addWidget(self.second_details_list_widget, 3, 2, 1, 3)
         
         # grid_layout.addLayout(second_details_layout, 2, 2)
 
