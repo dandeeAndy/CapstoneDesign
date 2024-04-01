@@ -1,0 +1,16 @@
+datas = [
+        ('exit.png'),
+        ('fragile_OFF.png'),
+        ('fragile_ON.png'),
+        ('Rectangle.png'),
+        ('robot_icon.png'),
+        ('system_logo.png'),
+        ('transport_OFF.png'),
+        ('transport_ON.png'),
+        ('courier_OFF.png'),
+        ('courier_ON.png'),
+        ('assembly_image,jpg')
+    ],
+    hiddenimports=['PyQt5.QtWidgets.*',
+        'PyQt5.QtCore.*',
+        'PyQt5.QtGui.*'],
