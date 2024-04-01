@@ -244,6 +244,8 @@ class OptionButton(QWidget):
         self.off_pixmap = QPixmap(off_image_path)
         if self.on_pixmap.isNull() or self.off_pixmap.isNull():
             print("이미지 로드 실패:", on_image_path, "또는", off_image_path)
+            return  # 이미지 로드 실패시 초기화 중단
+
         self.opt_text = opt_text
         self.is_on = False
 
@@ -251,12 +253,13 @@ class OptionButton(QWidget):
         self.setScaledPixmap()
 
         self.transparent_button = TransparentButton(self)
-        self.transparent_button.resize(self.label.size())
         self.transparent_button.clicked.connect(self.toggle)
 
         layout = QStackedLayout(self)
         layout.addWidget(self.label)
         layout.addWidget(self.transparent_button)
+
+        self.setLayout(layout)  # 중요: layout을 OptionButton에 설정
 
     def setScaledPixmap(self):
         label_size = self.size()  # QLabel의 크기를 가져옵니다.
