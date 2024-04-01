@@ -4,7 +4,7 @@
 #                              QListWidget, QSizePolicy, QStackedLayout, QGridLayout)
 # from PyQt5.QtCore import Qt, QTimer, QRect
 # from PyQt5.QtGui import QIcon, QPixmap
-import sys
+import sys, os
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
@@ -69,10 +69,10 @@ class MainWindow(QMainWindow):
         self.logo_label = QLabel(self)
         self.logo_pixmap = QPixmap('system_logo.png')
         self.logo_label.setPixmap(self.logo_pixmap)
-        self.logo_label.setAlignment(Qt.AlignCenter)
+        self.logo_label.setAlignment(Qt.AlignLeft)
         self.logo_label.mousePressEvent = self.refresh_system
         grid_layout.addWidget(self.logo_label, 0, 0)
-        grid_layout.setAlignment(Qt.AlignLeft)
+        # grid_layout.setAlignment(Qt.AlignLeft)
                 
         # 구상도 이미지 설정
         self.assembly_label = QLabel(self)
