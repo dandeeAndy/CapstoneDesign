@@ -93,6 +93,7 @@ class MainWindow(QMainWindow):
             layout.addWidget(option_button)
 
             transparent_button = TransparentButton(container)
+            print(option_button.size())
             transparent_button.resize(option_button.size())
             transparent_button.clicked.connect(lambda _, b=option_button: self.toggleButton(b))
             layout.addWidget(transparent_button, 0, Qt.AlignTop)  # 투명 버튼을 옵션 버튼 위에 정확히 위치시킵니다.
