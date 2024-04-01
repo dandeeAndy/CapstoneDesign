@@ -1,9 +1,14 @@
-import sys, os
-from PyQt5.QtWidgets import (QApplication, QMainWindow, QAction, QWidget, QLabel, 
-                             QVBoxLayout, QHBoxLayout, QPushButton, QMenuBar,
-                             QListWidget, QSizePolicy, QStackedLayout, QGridLayout)
-from PyQt5.QtGui import QIcon, QPixmap
-from PyQt5.QtCore import Qt, QTimer, QRect
+# import sys
+# from PyQt5.QtWidgets import (QApplication, QMainWindow, QAction, QWidget, QLabel, 
+#                              QVBoxLayout, QHBoxLayout, QPushButton, QMenuBar,
+#                              QListWidget, QSizePolicy, QStackedLayout, QGridLayout)
+# from PyQt5.QtCore import Qt, QTimer, QRect
+# from PyQt5.QtGui import QIcon, QPixmap
+import sys
+
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
 #계속해서 수정하고 저장하면서 끝낼 완성본
 #크게 수정할 일이 있을 시
 #파일 저장 + 깃허브 커밋
@@ -44,7 +49,7 @@ class MainWindow(QMainWindow):
         
         
         ########################################################################################################
-        
+        # 윈도우 설정
         screen_rect = QApplication.desktop().screenGeometry()
         self.setGeometry(screen_rect)
         self.setWindowTitle('Delta_System')
@@ -76,7 +81,8 @@ class MainWindow(QMainWindow):
         scaled_pixmap = pixmap.scaledToWidth(fixed_width, Qt.SmoothTransformation)
         self.assembly_label.setPixmap(scaled_pixmap)
         self.assembly_label.setGeometry(11, 44, scaled_pixmap.width(), scaled_pixmap.height())
-        grid_layout.addWidget(self.assembly_label, 1, 0)
+        grid_layout.addWidget(self.assembly_label, 1, 0, 1, 2)
+        grid_layout.setContentsMargins(50, 50, 50, 50)
         
         ##
         # # 같은 크기의 QPixmap 레이블 두 개와 크기가 같은 투명 버튼을 모두 겹쳐 하나의 레이아웃에 포함
@@ -132,26 +138,14 @@ class MainWindow(QMainWindow):
         # history_layout = QVBoxLayout()
         
         # self.history_label = QLabel('History', self)
-        # self.history_label.setStyleSheet("""
-        #     background-color: white;
-        #     border: 2px solid black;
-        #     border-radius: 10px;
-        # """)
-        # self.history_label.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)  # 크기 고정
-        # self.history_label.setGeometry(11, 585, 1680, 240)  # 위치와 크기 설정 (x, y, width, height)
+        # self.history_label.setStyleSheet("background-color: white;border: 2px solid black;border-radius: 10px;")
         # history_layout.addWidget(self.history_label)
         
         # 장애이력 출력 위젯 설정
         self.history_list_widget = QListWidget(self)
-        self.history_list_widget.setStyleSheet("""
-            background-color: white;
-            border: 2px solid black;
-            border-radius: 10px;
-        """)
-        self.history_list_widget.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)  # 크기 고정
-        self.history_list_widget.setGeometry(11, 829, 1680, 860)  # 위치와 크기 설정 (x, y, width, height)
+        self.history_list_widget.setStyleSheet("background-color: white;border: 2px solid black;border-radius: 10px;")
         
-        grid_layout.addWidget(self.history_list_widget, 2, 0)  # 장애이력 레이아웃에 위젯 추가
+        grid_layout.addWidget(self.history_list_widget, 2, 0)
         
         # grid_layout.addLayout(history_layout, 2, 0)  # 중앙 레이아웃에 장애이력 레이아웃 추가
                       
@@ -159,23 +153,11 @@ class MainWindow(QMainWindow):
         # first_details_layout = QVBoxLayout()
         
         # self.first_details_label = QLabel('First Details', self)
-        # self.first_details_label.setStyleSheet("""
-        #     background-color: white;
-        #     border: 2px solid black;
-        #     border-radius: 10px;
-        # """)
-        # self.first_details_label.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)  # 크기 고정
-        # self.first_details_label.setGeometry(1695, 585, 1680, 240)  # 위치와 크기 설정 (x, y, width, height)
-        # first_details_layout.addWidget(self.first_details_label)  # 장애이력 레이아웃에 위젯 추가
+        # self.first_details_label.setStyleSheet("background-color: white;border: 2px solid black;border-radius: 10px;")
+        # first_details_layout.addWidget(self.first_details_label)
         
         self.first_details_list_widget = QListWidget(self)
-        self.first_details_list_widget.setStyleSheet("""
-            background-color: white;
-            border: 2px solid black;
-            border-radius: 10px;
-        """)
-        self.first_details_list_widget.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)  # 크기 고정
-        self.first_details_list_widget.setGeometry(1695, 829, 1680, 860)  # 위치와 크기 설정
+        self.first_details_list_widget.setStyleSheet("background-color: white;border: 2px solid black;border-radius: 10px;")
         grid_layout.addWidget(self.first_details_list_widget, 2, 1)
         
         # grid_layout.addLayout(first_details_layout, 2, 1)
@@ -184,23 +166,11 @@ class MainWindow(QMainWindow):
         # second_details_layout = QVBoxLayout()
         
         # self.second_details_label = QLabel('Second Details', self)
-        # self.second_details_label.setStyleSheet("""
-        #     background-color: white;
-        #     border: 2px solid black;
-        #     border-radius: 10px;
-        # """)
-        # self.second_details_label.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)  # 크기 고정
-        # self.second_details_label.setGeometry(3379, 585, 1680, 240)  # 위치와 크기 설정 (x, y, width, height)
+        # self.second_details_label.setStyleSheet("background-color: white;border: 2px solid black;border-radius: 10px;")
         # second_details_layout.addWidget(self.second_details_label)
         
         self.second_details_list_widget = QListWidget(self)
-        self.second_details_list_widget.setStyleSheet("""
-            background-color: white;
-            border: 2px solid black;
-            border-radius: 10px;
-        """)
-        self.second_details_list_widget.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)  # 크기 고정
-        self.second_details_list_widget.setGeometry(3379, 829, 1680, 860)  # 위치와 크기 설정
+        self.second_details_list_widget.setStyleSheet("background-color: white;border: 2px solid black;border-radius: 10px;")
         grid_layout.addWidget(self.second_details_list_widget, 2, 2)
         
         # grid_layout.addLayout(second_details_layout, 2, 2)
