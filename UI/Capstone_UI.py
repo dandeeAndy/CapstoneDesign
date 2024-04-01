@@ -82,7 +82,6 @@ class MainWindow(QMainWindow):
         self.assembly_label.setPixmap(scaled_pixmap)
         self.assembly_label.setGeometry(11, 44, scaled_pixmap.width(), scaled_pixmap.height())
         grid_layout.addWidget(self.assembly_label, 1, 0, 1, 2)
-        grid_layout.setContentsMargins(50, 50, 50, 50)
         
         ##
         # # 같은 크기의 QPixmap 레이블 두 개와 크기가 같은 투명 버튼을 모두 겹쳐 하나의 레이아웃에 포함
@@ -110,28 +109,31 @@ class MainWindow(QMainWindow):
         ##
         ###########################################################################################################
         
-        # options_layout = QHBoxLayout()
+        self.stack_layout = QStackedLayout()
         self.option_buttons = [
                 OptionButton('transport_ON.png', 'transport_OFF.png', 'Opt1', self),
                 OptionButton('fragile_ON.png', 'fragile_OFF.png', 'Opt2', self),
                 OptionButton('courier_ON.png', 'courier_OFF.png', 'Opt3', self),
             ]
-        # self.layout = QHBoxLayout(self)  # self.layout 설정, self를 parent로 지정
         
-        # # 옵션 버튼들을 만드는 코드 부분
-        # for option_button in self.option_buttons:
-        #     container = QWidget()
-        #     layout = QVBoxLayout(container)
-        #     layout.addWidget(option_button)
+        # 옵션 버튼들을 만드는 코드 부분
+        for idx, option_button in enumerate(self.option_buttons):
+            container = QWidget()
+            layout = QVBoxLayout(container)
+            layout.addWidget(option_button)
 
-        #     transparent_button = TransparentButton(container)
-        #     transparent_button.resize(option_button.size())
-        #     transparent_button.clicked.connect(lambda _, b=option_button: self.toggleButton(b))
-        #     self.layout.addWidget(option_button)  # option_button을 layout에 추가
+            transparent_button = TransparentButton(container)
+            transparent_button.resize(option_button.size())
+            transparent_button.clicked.connect(lambda _, b=option_button: self.toggleButton(b))
+            grid_layout.addWidget(option_button, 1, idx + 2)  # 가정: 옵션 버튼을 1행, 2열부터 시작해 배치
         
-        # grid_layout.addLayout(self.layout, 1, 2)
-        grid_layout.addWidget(self.option_buttons[0], 1, 2)
+        grid_layout.setContentsMargins(50, 50, 50, 50)
         
+        # QGridLayout에 QStackedLayout을 포함하는 위젯을 추가
+        stack_widget = QWidget()
+        stack_widget.setLayout(self.stack_layout)
+        grid_layout.addWidget(stack_widget, 1, 2)  # 가정: 옵션 버튼을 1행 2열에 배치
+                
         ###########################################################################################################
                 
         # # 장애이력 레이블 설정
@@ -202,12 +204,14 @@ class MainWindow(QMainWindow):
         print("오른파 세부사항 사이즈:", self.second_details_list_widget.size())
         
     
+    # 선택된 버튼을 활성화하고 나머지는 비활성화
     def toggleButton(self, selected_button):
         for button in self.option_buttons:
             if button == selected_button:
-                button.toggle()  # 선택된 버튼만 toggle 상태 변경
+                self.stack_layout.setCurrentWidget(button)
+                button.toggle()
             else:
-                button.is_on = False  # 나머지 버튼은 off 상태로 설정
+                button.is_on = False
                 button.setScaledPixmap()
 
     def refresh_system(self, event):
