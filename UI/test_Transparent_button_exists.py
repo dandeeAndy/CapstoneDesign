@@ -2,7 +2,7 @@ import sys, os
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QAction, QWidget, QLabel, 
                              QVBoxLayout, QHBoxLayout, QPushButton, QMenuBar,
                              QListWidget, QSizePolicy, QGridLayout)
-from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtGui import QIcon, QPixmap, QFont
 from PyQt5.QtCore import Qt, QTimer, QRect
 #계속해서 수정하고 저장하면서 끝낼 완성본
 #크게 수정할 일이 있을 시
@@ -264,6 +264,9 @@ class OptionButton(QLabel):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+    # 폰트 설정
+    font = QFont('NanumSquareOTF', 9)
+    app.setFont(font)
     mainWin = MainWindow()
     mainWin.showMaximized()
     mainWin.show()
