@@ -109,7 +109,6 @@ class MainWindow(QMainWindow):
         ##
         ###########################################################################################################
         
-        self.stack_layout = QStackedLayout()
         self.option_buttons = [
                 OptionButton('transport_ON.png', 'transport_OFF.png', 'Opt1', self),
                 OptionButton('fragile_ON.png', 'fragile_OFF.png', 'Opt2', self),
@@ -129,10 +128,10 @@ class MainWindow(QMainWindow):
         
         grid_layout.setContentsMargins(50, 50, 50, 50)
         
-        # QGridLayout에 QStackedLayout을 포함하는 위젯을 추가
-        stack_widget = QWidget()
-        stack_widget.setLayout(self.stack_layout)
-        grid_layout.addWidget(stack_widget, 1, 2)  # 가정: 옵션 버튼을 1행 2열에 배치
+        # 중앙 위젯 설정 및 메인 레이아웃 적용
+        central_widget = QWidget()
+        central_widget.setLayout(grid_layout)
+        self.setCentralWidget(central_widget)
                 
         ###########################################################################################################
                 
@@ -208,7 +207,6 @@ class MainWindow(QMainWindow):
     def toggleButton(self, selected_button):
         for button in self.option_buttons:
             if button == selected_button:
-                self.stack_layout.setCurrentWidget(button)
                 button.toggle()
             else:
                 button.is_on = False
