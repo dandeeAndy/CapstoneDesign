@@ -108,6 +108,8 @@ class MainWindow(QMainWindow):
             option_button.setButtonSize(240, 270)
 
             transparent_button = TransparentButton(option_button)
+            transparent_button.setFixedSize(240, 135)
+            # transparent_button.resize(option_button.size())
             transparent_button.clicked.connect(lambda _, b=option_button: b.toggle())
 
             grid_layout.addWidget(option_button, 1, i + 2)
@@ -191,8 +193,8 @@ class OptionButton(QWidget):
         self.off_pixmap = QPixmap(off_image_path)
         if self.on_pixmap.isNull() or self.off_pixmap.isNull():
             print("이미지 로드 실패:", on_image_path, "또는", off_image_path)
-            return  # 이미지 로드 실패시 초기화 중단
-
+            return
+        
         self.opt_text = opt_text
         self.is_on = False
 
