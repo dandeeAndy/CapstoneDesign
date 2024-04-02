@@ -56,9 +56,8 @@ class MainWindow(QMainWindow):
                         (i == 2 and 2 <= j <= 4) or 
                         (i == 3 and 2 <= j <= 4)):  # 이미 추가한 레이블에 걸쳐지는 부분은 건너뜁니다.
                     label = QLabel()
-                    # label.setStyleSheet("border: 2px solid black;border-radius: 10px;")
-                    grid_layout.addWidget(label, i, j)
-        
+                    label.setStyleSheet("border: 2px solid black;border-radius: 10px;")
+                    grid_layout.addWidget(label, i, j)        
         
         ########################################################################################################
         # 윈도우 설정
@@ -100,27 +99,20 @@ class MainWindow(QMainWindow):
         ###########################################################################################################
         
         self.option_buttons = [
-                OptionButton('transport_ON.png', 'transport_OFF.png', 'Opt1', self),
+                OptionButton('domfor_ON.png', 'domfor_OFF.png', 'Opt1', self),
                 OptionButton('fragile_ON.png', 'fragile_OFF.png', 'Opt2', self),
                 OptionButton('courier_ON.png', 'courier_OFF.png', 'Opt3', self),
             ]
         
         for i, option_button in enumerate(self.option_buttons):
-            container = QWidget()
-            layout = QVBoxLayout(container)
+            option_button.setButtonSize(240, 270)
 
-            layout.addWidget(option_button)
-            layout.setAlignment(option_button, Qt.AlignCenter)
-
-            transparent_button = TransparentButton(container)
-            transparent_button.resize(option_button.size())
+            transparent_button = TransparentButton(option_button)
             transparent_button.clicked.connect(lambda _, b=option_button: b.toggle())
-            layout.addWidget(transparent_button)
-            layout.setAlignment(transparent_button, Qt.AlignCenter)
 
-            grid_layout.addWidget(container, 1, i + 2)
+            grid_layout.addWidget(option_button, 1, i + 2)
         
-        grid_layout.setContentsMargins(50, 50, 50, 50)        
+        grid_layout.setContentsMargins(50, 50, 50, 50)
         
         # 작업 중지 버튼 이미지 설정
         self.pause_button_label = QLabel(self)
@@ -218,6 +210,19 @@ class OptionButton(QWidget):
         
         # 투명 버튼을 위젯의 최상위에 배치합니다.
         self.transparent_button.raise_()
+    
+    def setButtonSize(self, width, height):
+        # QPixmap 크기 조정
+        scaled_on_pixmap = self.on_pixmap.scaled(width, height, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        scaled_off_pixmap = self.off_pixmap.scaled(width, height, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+
+        # 버튼 및 레이블 크기 조정
+        self.setFixedSize(width, height)
+        self.label.setFixedSize(width, height)
+        self.label.setPixmap(scaled_off_pixmap)
+
+        # 투명 버튼 크기 조정
+        self.transparent_button.setFixedSize(width, height)
 
     def setScaledPixmap(self):
         label_size = self.size()  # QLabel의 크기를 가져옵니다.
