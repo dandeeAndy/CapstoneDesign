@@ -18,6 +18,7 @@ from PyQt5.QtGui import *
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+        self.first_enter_pressed = False
         self.initUI()
         
     def initUI(self):
@@ -145,12 +146,23 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(central_widget)
     
     def keyPressEvent(self, event):
-        if event.key() == Qt.Key_Return:  # 엔터 키 입력 처리
-            if self.first_enter_pressed:
-                self.second_details_list_widget.addItem("2222222222")
-            else:
+        # 왼쪽 화살표 키 이벤트
+        if event.key() == Qt.Key_Left:
+            if self.option_buttons[0].is_on:
                 self.first_details_list_widget.addItem("1111111111")
-                self.first_enter_pressed = True
+            elif self.option_buttons[1].is_on:
+                self.first_details_list_widget.addItem("3333333333")
+            elif self.option_buttons[2].is_on:
+                self.first_details_list_widget.addItem("5555555555")
+        
+        # 오른쪽 화살표 키 이벤트
+        elif event.key() == Qt.Key_Right:
+            if self.option_buttons[0].is_on:
+                self.second_details_list_widget.addItem("2222222222")
+            elif self.option_buttons[1].is_on:
+                self.second_details_list_widget.addItem("4444444444")
+            elif self.option_buttons[2].is_on:
+                self.second_details_list_widget.addItem("6666666666")
         
     # 클릭 이벤트 처리
     def pauseClicked(self, event):
@@ -162,6 +174,8 @@ class MainWindow(QMainWindow):
 
         if reply == QMessageBox.Yes:
             self.resetOptions()
+            self.first_details_list_widget.clear()  # 첫 번째 리스트 위젯의 모든 항목을 지웁니다
+            self.second_details_list_widget.clear()  # 두 번째 리스트 위젯의 모든 항목을 지웁니다
     
     # 옵션 버튼 초기화
     def resetOptions(self):
