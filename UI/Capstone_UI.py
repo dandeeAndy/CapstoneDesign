@@ -97,30 +97,6 @@ class MainWindow(QMainWindow):
         label_2.setLayout(QHBoxLayout())
         label_2.layout().addWidget(self.assembly_label)
         
-        ##
-        # # 같은 크기의 QPixmap 레이블 두 개와 크기가 같은 투명 버튼을 모두 겹쳐 하나의 레이아웃에 포함
-        # label1 = QLabel(self)
-        # pixmap1 = QPixmap('transport_ON.png')
-        # label1.setPixmap(pixmap1)
-        # label1.setAlignment(Qt.AlignCenter)
-
-        # label2 = QLabel(self)
-        # pixmap2 = QPixmap('transport_OFF.png')
-        # label2.setPixmap(pixmap2)
-        # label2.setAlignment(Qt.AlignCenter)
-
-        # transparent_button = TransparentButton(self)
-        # transparent_button.resize(label1.size())  # 투명 버튼의 크기를 레이블과 동일하게 설정
-        # transparent_button.clicked.connect(self.buttonClicked)
-        
-
-        # layout = QVBoxLayout()
-        # layout.addWidget(label1)
-        # layout.addWidget(label2)
-        # layout.addWidget(transparent_button)
-
-        # top_layout.addLayout(layout)
-        ##
         ###########################################################################################################
         
         self.option_buttons = [
@@ -129,94 +105,54 @@ class MainWindow(QMainWindow):
                 OptionButton('courier_ON.png', 'courier_OFF.png', 'Opt3', self),
             ]
         
-        # 옵션 버튼들을 GridLayout에 추가
         for i, option_button in enumerate(self.option_buttons):
             container = QWidget()
             layout = QVBoxLayout(container)
+
             layout.addWidget(option_button)
+            layout.setAlignment(option_button, Qt.AlignCenter)
 
             transparent_button = TransparentButton(container)
             transparent_button.resize(option_button.size())
-            transparent_button.clicked.connect(lambda _, b=option_button: self.toggleButton(b))
-            grid_layout.addWidget(option_button, 1, i + 2)  # 가정: 옵션 버튼을 1행, 2열부터 시작해 배치
+            transparent_button.clicked.connect(lambda _, b=option_button: b.toggle())
+            layout.addWidget(transparent_button)
+            layout.setAlignment(transparent_button, Qt.AlignCenter)
+
+            grid_layout.addWidget(container, 1, i + 2)
         
-        grid_layout.setContentsMargins(50, 50, 50, 50)
-        
+        grid_layout.setContentsMargins(50, 50, 50, 50)        
         
         # 작업 중지 버튼 이미지 설정
         self.pause_button_label = QLabel(self)
         pause_button_pixmap = QPixmap('pause_button.png')
-        # 이미지 비율을 유지하면서 QLabel의 크기에 맞게 조절합니다.
         pause_button_pixmap = pause_button_pixmap.scaled(700, 200, Qt.KeepAspectRatio, Qt.SmoothTransformation)
         self.pause_button_label.setPixmap(pause_button_pixmap)
         self.pause_button_label.mousePressEvent = self.pauseClicked
-        # GridLayout에 작업 중지 버튼 추가
         grid_layout.addWidget(self.pause_button_label, 2, 2, 1, 3)
-
-        
                 
         ###########################################################################################################
-                
-        # # 장애이력 레이블 설정
-        # history_layout = QVBoxLayout()
-        
-        # self.history_label = QLabel('History', self)
-        # self.history_label.setStyleSheet("background-color: white;border: 2px solid black;border-radius: 10px;")
-        # history_layout.addWidget(self.history_label)
-        
         # 장애이력 출력 위젯 설정
         self.history_list_widget = QListWidget(self)
         self.history_list_widget.setStyleSheet("background-color: white;border: 2px solid black;border-radius: 10px;")
-        
         grid_layout.addWidget(self.history_list_widget, 3, 0)
-        
-        # grid_layout.addLayout(history_layout, 2, 0)  # 중앙 레이아웃에 장애이력 레이아웃 추가
-                      
-        # # 첫 번째 세부항목 레이블 및 위젯 설정
-        # first_details_layout = QVBoxLayout()
-        
-        # self.first_details_label = QLabel('First Details', self)
-        # self.first_details_label.setStyleSheet("background-color: white;border: 2px solid black;border-radius: 10px;")
-        # first_details_layout.addWidget(self.first_details_label)
-        
+                
         self.first_details_list_widget = QListWidget(self)
         self.first_details_list_widget.setStyleSheet("background-color: white;border: 2px solid black;border-radius: 10px;")
         grid_layout.addWidget(self.first_details_list_widget, 3, 1)
-        
-        # grid_layout.addLayout(first_details_layout, 2, 1)
                 
-        # # 두 번째 세부항목 레이블 및 위젯 설정
-        # second_details_layout = QVBoxLayout()
-        
-        # self.second_details_label = QLabel('Second Details', self)
-        # self.second_details_label.setStyleSheet("background-color: white;border: 2px solid black;border-radius: 10px;")
-        # second_details_layout.addWidget(self.second_details_label)
-        
         self.second_details_list_widget = QListWidget(self)
         self.second_details_list_widget.setStyleSheet("background-color: white;border: 2px solid black;border-radius: 10px;")
         grid_layout.addWidget(self.second_details_list_widget, 3, 2, 1, 3)
-        
-        # grid_layout.addLayout(second_details_layout, 2, 2)
-
-        # 메인 레이아웃 설정
         
         # 중앙 위젯 설정 및 메인 레이아웃 적용
         central_widget = QWidget()
         central_widget.setLayout(grid_layout)
         self.setCentralWidget(central_widget)
-                     
-        #  # 위젯 위치와 크기를 1초마다 출력하는 타이머
-        # self.timer = QTimer(self)
-        # self.timer.timeout.connect(self.printWidgetSizes)
-        # self.timer.start(1000)  # 1초마다 실행
         
     # 클릭 이벤트 처리
     def pauseClicked(self, event):
-        # QMessageBox로 사용자에게 질문하기
         reply = QMessageBox.question(self, '확인', '분류기준을 초기화하시겠습니까?',
                                      QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
-
-        # 터미널에 "PAUSE!" 출력
         print('PAUSE!')
 
         if reply == QMessageBox.Yes:
@@ -225,25 +161,12 @@ class MainWindow(QMainWindow):
     # 옵션 버튼 초기화
     def resetOptions(self):
         for button in self.option_buttons:
-            button.is_on = False  # 버튼 상태를 off로 설정
-            button.setScaledPixmap()  # off 이미지로 업데이트
+            button.is_on = False
+            button.setScaledPixmap()
         
     def buttonClicked(self):
             print("Button clicked!")
-            # Add your code here to handle the button click event
-    
-    def printWidgetSizes(self):
-        # print("장애이력 위치:", self.history_label.pos())
-        # print("장애이력 사이즈:", self.history_label.size())
-        print("장애이력 위치:", self.history_list_widget.pos())
-        print("장애이력 사이즈:", self.history_list_widget.size())
-        print("왼파 세부사항 위치:", self.first_details_list_widget.pos())
-        print("왼파 세부사항 사이즈:", self.first_details_list_widget.size())
-        print("오른파 세부사항 위치:", self.second_details_list_widget.pos())
-        print("오른파 세부사항 사이즈:", self.second_details_list_widget.size())
-        
-    
-    # 선택된 버튼을 활성화하고 나머지는 비활성화
+
     def toggleButton(self, selected_button):
         for button in self.option_buttons:
             if button == selected_button:
@@ -267,7 +190,7 @@ class TransparentButton(QPushButton):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setFlat(True)
-        self.setStyleSheet("background:transparent;")
+        self.setStyleSheet("background:transparent; border: 2px solid black;")
 
 class OptionButton(QWidget):
     def __init__(self, on_image_path, off_image_path, opt_text, parent=None):
@@ -310,7 +233,7 @@ class OptionButton(QWidget):
         self.is_on = not self.is_on
         self.setScaledPixmap()
         if self.is_on:
-            print(self.opt_text)
+            print(f"{self.opt_text}\nSTART")
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
