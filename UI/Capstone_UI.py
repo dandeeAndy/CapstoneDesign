@@ -56,7 +56,7 @@ class MainWindow(QMainWindow):
                         (i == 2 and 2 <= j <= 4) or 
                         (i == 3 and 2 <= j <= 4)):  # 이미 추가한 레이블에 걸쳐지는 부분은 건너뜁니다.
                     label = QLabel()
-                    label.setStyleSheet("border: 2px solid black;border-radius: 10px;")
+                    # label.setStyleSheet("border: 2px solid black;border-radius: 10px;")
                     grid_layout.addWidget(label, i, j)        
         
         ########################################################################################################
@@ -109,6 +109,7 @@ class MainWindow(QMainWindow):
 
             transparent_button = TransparentButton(option_button)
             transparent_button.setFixedSize(240, 135)
+            # transparent_button.setAlignment(Qt.AlignBottom)
             # transparent_button.resize(option_button.size())
             transparent_button.clicked.connect(lambda _, b=option_button: b.toggle())
 
@@ -142,12 +143,22 @@ class MainWindow(QMainWindow):
         central_widget = QWidget()
         central_widget.setLayout(grid_layout)
         self.setCentralWidget(central_widget)
+    
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Return:  # 엔터 키 입력 처리
+            if self.first_enter_pressed:
+                self.second_details_list_widget.addItem("2222222222")
+            else:
+                self.first_details_list_widget.addItem("1111111111")
+                self.first_enter_pressed = True
         
     # 클릭 이벤트 처리
     def pauseClicked(self, event):
+        QMessageBox.information(self, '알림', '작업이 중지되었습니다.')
+        print('PAUSE!')
+
         reply = QMessageBox.question(self, '확인', '분류기준을 초기화하시겠습니까?',
                                      QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
-        print('PAUSE!')
 
         if reply == QMessageBox.Yes:
             self.resetOptions()
@@ -155,8 +166,10 @@ class MainWindow(QMainWindow):
     # 옵션 버튼 초기화
     def resetOptions(self):
         for button in self.option_buttons:
-            button.is_on = False
-            button.setScaledPixmap()
+            if button.is_on:
+                print(f"{button.opt_text} pause")
+                button.is_on = False
+                button.setScaledPixmap()
         
     def buttonClicked(self):
             print("Button clicked!")
@@ -184,7 +197,7 @@ class TransparentButton(QPushButton):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setFlat(True)
-        self.setStyleSheet("background:transparent; border: 2px solid black;")
+        # self.setStyleSheet("background:transparent; border: 2px solid black;")
 
 class OptionButton(QWidget):
     def __init__(self, on_image_path, off_image_path, opt_text, parent=None):
@@ -203,12 +216,14 @@ class OptionButton(QWidget):
 
         self.transparent_button = TransparentButton(self)
         self.transparent_button.clicked.connect(self.toggle)
+        self.transparent_button.setFixedSize(240, 135)  # 버튼 크기 설정
 
-        layout = QStackedLayout(self)
+        # QStackedLayout 대신 QVBoxLayout 사용
+        layout = QVBoxLayout(self)
         layout.addWidget(self.label)
         layout.addWidget(self.transparent_button)
 
-        self.setLayout(layout)  # 중요: layout을 OptionButton에 설정
+        self.setLayout(layout)
         
         # 투명 버튼을 위젯의 최상위에 배치합니다.
         self.transparent_button.raise_()
