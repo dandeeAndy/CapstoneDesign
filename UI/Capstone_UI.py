@@ -42,6 +42,7 @@ class MainWindow(QMainWindow):
         grid_layout.addWidget(label_2, 1, 0, 2, 2)  # (1, 0)에서 (2, 1)까지
         
         label_3 = QLabel()
+        # label_3.setStyleSheet("border: 2px solid black;border-radius: 10px;")
         grid_layout.addWidget(label_3, 2, 2, 1, 3)  # (2, 2)에서 (2, 4)까지
         
         label_4 = QLabel()
@@ -55,6 +56,7 @@ class MainWindow(QMainWindow):
                         (i == 2 and 2 <= j <= 4) or 
                         (i == 3 and 2 <= j <= 4)):  # 이미 추가한 레이블에 걸쳐지는 부분은 건너뜁니다.
                     label = QLabel()
+                    # label.setStyleSheet("border: 2px solid black;border-radius: 10px;")
                     grid_layout.addWidget(label, i, j)
         
         
@@ -79,10 +81,12 @@ class MainWindow(QMainWindow):
                 
         # 시스템 로고 설정
         self.logo_label = QLabel(self)
-        self.logo_pixmap = QPixmap('system_logo.png')
+        self.logo_pixmap = QPixmap('logo_image.png')
         self.logo_label.setPixmap(self.logo_pixmap)
         self.logo_label.setAlignment(Qt.AlignLeft)
         self.logo_label.mousePressEvent = self.refresh_system
+        scaled_pixmap = self.logo_pixmap.scaled(200, 200, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        self.logo_label.setPixmap(scaled_pixmap)
         grid_layout.addWidget(self.logo_label, 0, 0)
         # grid_layout.setAlignment(Qt.AlignLeft)
                 
@@ -137,6 +141,18 @@ class MainWindow(QMainWindow):
             grid_layout.addWidget(option_button, 1, i + 2)  # 가정: 옵션 버튼을 1행, 2열부터 시작해 배치
         
         grid_layout.setContentsMargins(50, 50, 50, 50)
+        
+        
+        # 작업 중지 버튼 이미지 설정
+        self.pause_button_label = QLabel(self)
+        pause_button_pixmap = QPixmap('pause_button.png')
+        # 이미지 비율을 유지하면서 QLabel의 크기에 맞게 조절합니다.
+        pause_button_pixmap = pause_button_pixmap.scaled(700, 200, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        self.pause_button_label.setPixmap(pause_button_pixmap)
+        self.pause_button_label.mousePressEvent = self.pauseClicked
+        # GridLayout에 작업 중지 버튼 추가
+        grid_layout.addWidget(self.pause_button_label, 2, 2, 1, 3)
+
         
                 
         ###########################################################################################################
@@ -193,6 +209,24 @@ class MainWindow(QMainWindow):
         # self.timer = QTimer(self)
         # self.timer.timeout.connect(self.printWidgetSizes)
         # self.timer.start(1000)  # 1초마다 실행
+        
+    # 클릭 이벤트 처리
+    def pauseClicked(self, event):
+        # QMessageBox로 사용자에게 질문하기
+        reply = QMessageBox.question(self, '확인', '분류기준을 초기화하시겠습니까?',
+                                     QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+
+        # 터미널에 "PAUSE!" 출력
+        print('PAUSE!')
+
+        if reply == QMessageBox.Yes:
+            self.resetOptions()
+    
+    # 옵션 버튼 초기화
+    def resetOptions(self):
+        for button in self.option_buttons:
+            button.is_on = False  # 버튼 상태를 off로 설정
+            button.setScaledPixmap()  # off 이미지로 업데이트
         
     def buttonClicked(self):
             print("Button clicked!")
@@ -258,6 +292,9 @@ class OptionButton(QWidget):
         layout.addWidget(self.transparent_button)
 
         self.setLayout(layout)  # 중요: layout을 OptionButton에 설정
+        
+        # 투명 버튼을 위젯의 최상위에 배치합니다.
+        self.transparent_button.raise_()
 
     def setScaledPixmap(self):
         label_size = self.size()  # QLabel의 크기를 가져옵니다.
