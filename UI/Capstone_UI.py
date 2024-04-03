@@ -22,51 +22,52 @@ class MainWindow(QMainWindow):
         
     def initUI(self):
         grid_layout = QGridLayout()
+        self.setLayout(grid_layout)
         grid_layout.setSpacing(0)
+        grid_layout.setContentsMargins(50, 0, 50, 50)
         
         # 각 행과 열에 대한 비율 설정
-        grid_layout.setRowStretch(0, 2)
-        grid_layout.setRowStretch(1, 4)
-        grid_layout.setRowStretch(2, 2)
+        grid_layout.setRowStretch(0, 10)
+        grid_layout.setRowStretch(1, 20)
+        grid_layout.setRowStretch(2, 10)
         grid_layout.setRowStretch(3, 1)
-        grid_layout.setRowStretch(4, 6)
-        grid_layout.setColumnStretch(0, 6)
-        # grid_layout.setColumnStretch(1, 1)
-        grid_layout.setColumnStretch(1, 9)
-        # grid_layout.setColumnStretch(2, 1)
-        grid_layout.setColumnStretch(2, 3)
-        grid_layout.setColumnStretch(3, 3)
-        grid_layout.setColumnStretch(4, 3)
+        grid_layout.setRowStretch(4, 30)
+        grid_layout.setColumnStretch(0, 80)
+        grid_layout.setColumnStretch(1, 1)
+        grid_layout.setColumnStretch(2, 120)
+        grid_layout.setColumnStretch(3, 1)
+        grid_layout.setColumnStretch(4, 40)
+        grid_layout.setColumnStretch(5, 40)
+        grid_layout.setColumnStretch(6, 40)
 
         # 겹치는 레이블 추가
         label_1 = QLabel()
-        grid_layout.addWidget(label_1, 0, 1, 1, 4)  # (0, 1)에서 (0, 4)까지
+        grid_layout.addWidget(label_1, 0, 1, 1, 6)  # (0, 1)에서 (0, 6)까지
 
         label_2 = QLabel()
-        grid_layout.addWidget(label_2, 1, 0, 2, 2)  # (1, 0)에서 (2, 1)까지
+        grid_layout.addWidget(label_2, 1, 0, 2, 4)  # (1, 0)에서 (2, 3)까지
         
         label_3 = QLabel()
         # label_3.setStyleSheet("border: 2px solid black;border-radius: 10px;")
-        grid_layout.addWidget(label_3, 2, 2, 1, 3)  # (2, 2)에서 (2, 4)까지
+        grid_layout.addWidget(label_3, 2, 4, 1, 3)  # (2, 4)에서 (2, 6)까지
         
         label_4 = QLabel()
-        grid_layout.addWidget(label_4, 3, 2, 1, 3)  # (3, 2)에서 (3, 4)까지
+        grid_layout.addWidget(label_4, 3, 4, 1, 3)  # (3, 4)에서 (3, 6)까지
         
         label_5 = QLabel()
-        label_3.setStyleSheet("border: 2px solid black;border-radius: 10px;")
-        grid_layout.addWidget(label_5, 4, 2, 1, 3)  # (4, 2)에서 (4, 4)까지
+        # label_3.setStyleSheet("border: 2px solid black;border-radius: 10px;")
+        grid_layout.addWidget(label_5, 4, 4, 1, 3)  # (4, 4)에서 (4, 6)까지
 
-        # 빈 레이블들을 생성하고 그리드 레이아웃에 추가하는 반복문
-        for i in range(4):  # 4행
-            for j in range(5):  # 5열
-                if not ((i == 0 and 1 <= j <= 4) or 
-                        (i in [1, 2] and j in [0, 1]) or 
-                        (i == 2 and 2 <= j <= 4) or 
-                        (i == 3 and 2 <= j <= 4) or 
-                        (i == 4 and 2 <= j <= 4)):
+        for i in range(5):  # 4행
+            for j in range(7):  # 5열
+                if not ((i == 0 and 1 <= j <= 6) or 
+                        (i in [1, 2] and j in [0, 4]) or 
+                        (i == 2 and 4 <= j <= 6) or 
+                        (i == 3 and 4 <= j <= 6) or 
+                        (i == 4 and 4 <= j <= 6)):
                     label = QLabel()
-                    label.setStyleSheet("border: 2px solid black;border-radius: 10px;")
-                    grid_layout.addWidget(label, i, j)        
+                    # label.setStyleSheet("border: 2px solid black;border-radius: 10px;")
+                    grid_layout.addWidget(label, i, j)
         
         ########################################################################################################
         # 윈도우 설정
@@ -104,43 +105,61 @@ class MainWindow(QMainWindow):
         label_2.layout().addWidget(self.assembly_label)
         
         ###########################################################################################################
-        
+        # 옵션 버튼 설정
         self.option_buttons = [
                 OptionButton('domfor_ON.png', 'domfor_OFF.png', 'Opt1', self),
                 OptionButton('fragile_ON.png', 'fragile_OFF.png', 'Opt2', self),
                 OptionButton('courier_ON.png', 'courier_OFF.png', 'Opt3', self),
             ]
-        
         for i, option_button in enumerate(self.option_buttons):
             option_button.setButtonSize(240, 270)
-
             transparent_button = TransparentButton(option_button)
             transparent_button.setFixedSize(240, 135)
             transparent_button.clicked.connect(lambda _, b=option_button: b.toggle())
-
-            grid_layout.addWidget(option_button, 1, i + 2)
-        
-        grid_layout.setContentsMargins(50, 50, 50, 50)
-        
+            grid_layout.addWidget(option_button, 1, i + 4)
         self.pause_button_label = QLabel(self)
         pause_button_pixmap = QPixmap('pause_button.png')
         pause_button_pixmap = pause_button_pixmap.scaled(700, 200, Qt.KeepAspectRatio, Qt.SmoothTransformation)
         self.pause_button_label.setPixmap(pause_button_pixmap)
         self.pause_button_label.mousePressEvent = self.pauseClicked
-        grid_layout.addWidget(self.pause_button_label, 2, 2, 1, 3)
-                
+        grid_layout.addWidget(self.pause_button_label, 2, 4, 1, 3)
+        
         ###########################################################################################################
+        # 리스트 설정
+        font_label = QFont("NanumSquare", 12)
+        border_style = "border-top: 2px solid black; border-left: 2px solid black; border-right: 2px solid black;"
+
+        label_alarm = QLabel("NO      ALARM      EQ      STATE      DATETIME")
+        label_alarm.setFont(font_label)
+        label_alarm.setAlignment(Qt.AlignHCenter | Qt.AlignBottom)
+        label_alarm.setStyleSheet(border_style + " background-color: white;")
+        grid_layout.addWidget(label_alarm, 3, 0)
+        
+        label_first_detail = QLabel("상품명         코드         출발날짜        도착날짜         지역")
+        label_first_detail.setFont(font_label)
+        label_first_detail.setAlignment(Qt.AlignHCenter | Qt.AlignBottom)
+        label_first_detail.setStyleSheet(border_style + " background-color: white;")
+        grid_layout.addWidget(label_first_detail, 3, 2)
+        
+        label_second_detail = QLabel("상품명         코드         출발날짜         도착날짜         지역")
+        label_second_detail.setFont(font_label)
+        label_second_detail.setAlignment(Qt.AlignHCenter | Qt.AlignBottom)
+        label_second_detail.setStyleSheet(border_style + " background-color: white;")
+        grid_layout.addWidget(label_second_detail, 3, 4, 1, 3)
+        
         self.history_list_widget = QListWidget(self)
         self.history_list_widget.setStyleSheet("background-color: white;border: 2px solid black;")
         grid_layout.addWidget(self.history_list_widget, 4, 0)
                 
         self.first_details_list_widget = QListWidget(self)
         self.first_details_list_widget.setStyleSheet("background-color: white;border: 2px solid black;")
-        grid_layout.addWidget(self.first_details_list_widget, 4, 1)
+        grid_layout.addWidget(self.first_details_list_widget, 4, 2)
+        self.printWidgetSize(self.first_details_list_widget)
                 
         self.second_details_list_widget = QListWidget(self)
         self.second_details_list_widget.setStyleSheet("background-color: white;border: 2px solid black;")
-        grid_layout.addWidget(self.second_details_list_widget, 4, 2, 1, 3)
+        grid_layout.addWidget(self.second_details_list_widget, 4, 4, 1, 3)
+        self.printWidgetSize(self.second_details_list_widget)
         
         central_widget = QWidget()
         central_widget.setLayout(grid_layout)
@@ -201,6 +220,10 @@ class MainWindow(QMainWindow):
     # 장애이력에 항목을 추가하는 메서드
     def addHistoryItem(self, text):
         self.history_list_widget.addItem(text)
+    
+    def printWidgetSize(self, widget):
+        size = widget.size()
+        print("Width:", size.width(), "Height:", size.height())
     
 class TransparentButton(QPushButton):
     def __init__(self, parent=None):
@@ -264,6 +287,8 @@ class OptionButton(QWidget):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+    font = QFont("NanumSquare", 9)
+    app.setFont(font)
     mainWin = MainWindow()
     mainWin.showMaximized()
     mainWin.show()
