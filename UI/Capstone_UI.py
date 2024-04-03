@@ -22,6 +22,7 @@ class MainWindow(QMainWindow):
         
     def initUI(self):
         grid_layout = QGridLayout()
+        grid_layout.setSpacing(0)
         
         # 각 행과 열에 대한 비율 설정
         grid_layout.setRowStretch(0, 2)
@@ -29,11 +30,13 @@ class MainWindow(QMainWindow):
         grid_layout.setRowStretch(2, 2)
         grid_layout.setRowStretch(3, 1)
         grid_layout.setRowStretch(4, 6)
-        grid_layout.setColumnStretch(0, 2)
-        grid_layout.setColumnStretch(1, 3)
-        grid_layout.setColumnStretch(2, 1)
-        grid_layout.setColumnStretch(3, 1)
-        grid_layout.setColumnStretch(4, 1)
+        grid_layout.setColumnStretch(0, 6)
+        # grid_layout.setColumnStretch(1, 1)
+        grid_layout.setColumnStretch(1, 9)
+        # grid_layout.setColumnStretch(2, 1)
+        grid_layout.setColumnStretch(2, 3)
+        grid_layout.setColumnStretch(3, 3)
+        grid_layout.setColumnStretch(4, 3)
 
         # 겹치는 레이블 추가
         label_1 = QLabel()
