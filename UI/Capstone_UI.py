@@ -5,7 +5,6 @@
 # from PyQt5.QtCore import Qt, QTimer, QRect
 # from PyQt5.QtGui import QIcon, QPixmap
 import sys, os
-
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
@@ -25,17 +24,18 @@ class MainWindow(QMainWindow):
         grid_layout = QGridLayout()
         
         # 각 행과 열에 대한 비율 설정
-        grid_layout.setRowStretch(0, 1)
-        grid_layout.setRowStretch(1, 2)
-        grid_layout.setRowStretch(2, 1)
-        grid_layout.setRowStretch(3, 3)
+        grid_layout.setRowStretch(0, 2)
+        grid_layout.setRowStretch(1, 4)
+        grid_layout.setRowStretch(2, 2)
+        grid_layout.setRowStretch(3, 1)
+        grid_layout.setRowStretch(4, 6)
         grid_layout.setColumnStretch(0, 2)
         grid_layout.setColumnStretch(1, 3)
         grid_layout.setColumnStretch(2, 1)
         grid_layout.setColumnStretch(3, 1)
         grid_layout.setColumnStretch(4, 1)
 
-        # 걸쳐지는 레이블 추가
+        # 겹치는 레이블 추가
         label_1 = QLabel()
         grid_layout.addWidget(label_1, 0, 1, 1, 4)  # (0, 1)에서 (0, 4)까지
 
@@ -48,6 +48,10 @@ class MainWindow(QMainWindow):
         
         label_4 = QLabel()
         grid_layout.addWidget(label_4, 3, 2, 1, 3)  # (3, 2)에서 (3, 4)까지
+        
+        label_5 = QLabel()
+        label_3.setStyleSheet("border: 2px solid black;border-radius: 10px;")
+        grid_layout.addWidget(label_5, 4, 2, 1, 3)  # (4, 2)에서 (4, 4)까지
 
         # 빈 레이블들을 생성하고 그리드 레이아웃에 추가하는 반복문
         for i in range(4):  # 4행
@@ -55,9 +59,10 @@ class MainWindow(QMainWindow):
                 if not ((i == 0 and 1 <= j <= 4) or 
                         (i in [1, 2] and j in [0, 1]) or 
                         (i == 2 and 2 <= j <= 4) or 
-                        (i == 3 and 2 <= j <= 4)):  # 이미 추가한 레이블에 걸쳐지는 부분은 건너뜁니다.
+                        (i == 3 and 2 <= j <= 4) or 
+                        (i == 4 and 2 <= j <= 4)):
                     label = QLabel()
-                    # label.setStyleSheet("border: 2px solid black;border-radius: 10px;")
+                    label.setStyleSheet("border: 2px solid black;border-radius: 10px;")
                     grid_layout.addWidget(label, i, j)        
         
         ########################################################################################################
@@ -81,16 +86,14 @@ class MainWindow(QMainWindow):
                 
         # 시스템 로고 설정
         self.logo_label = QLabel(self)
-        self.logo_pixmap = QPixmap('logo_image.png')
+        self.logo_pixmap = QPixmap('JALK3_logo.png')
         self.logo_label.setPixmap(self.logo_pixmap)
         self.logo_label.setAlignment(Qt.AlignLeft)
         self.logo_label.mousePressEvent = self.refresh_system
         scaled_pixmap = self.logo_pixmap.scaled(200, 200, Qt.KeepAspectRatio, Qt.SmoothTransformation)
         self.logo_label.setPixmap(scaled_pixmap)
         grid_layout.addWidget(self.logo_label, 0, 0)
-        # grid_layout.setAlignment(Qt.AlignLeft)
-                
-        # 구상도 이미지 설정
+        
         self.assembly_label = QLabel(self)
         pixmap = QPixmap('assembly_image.jpg')
         self.assembly_label.setPixmap(pixmap)
@@ -110,15 +113,12 @@ class MainWindow(QMainWindow):
 
             transparent_button = TransparentButton(option_button)
             transparent_button.setFixedSize(240, 135)
-            # transparent_button.setAlignment(Qt.AlignBottom)
-            # transparent_button.resize(option_button.size())
             transparent_button.clicked.connect(lambda _, b=option_button: b.toggle())
 
             grid_layout.addWidget(option_button, 1, i + 2)
         
         grid_layout.setContentsMargins(50, 50, 50, 50)
         
-        # 작업 중지 버튼 이미지 설정
         self.pause_button_label = QLabel(self)
         pause_button_pixmap = QPixmap('pause_button.png')
         pause_button_pixmap = pause_button_pixmap.scaled(700, 200, Qt.KeepAspectRatio, Qt.SmoothTransformation)
@@ -127,26 +127,23 @@ class MainWindow(QMainWindow):
         grid_layout.addWidget(self.pause_button_label, 2, 2, 1, 3)
                 
         ###########################################################################################################
-        # 장애이력 출력 위젯 설정
         self.history_list_widget = QListWidget(self)
-        self.history_list_widget.setStyleSheet("background-color: white;border: 2px solid black;border-radius: 10px;")
-        grid_layout.addWidget(self.history_list_widget, 3, 0)
+        self.history_list_widget.setStyleSheet("background-color: white;border: 2px solid black;")
+        grid_layout.addWidget(self.history_list_widget, 4, 0)
                 
         self.first_details_list_widget = QListWidget(self)
-        self.first_details_list_widget.setStyleSheet("background-color: white;border: 2px solid black;border-radius: 10px;")
-        grid_layout.addWidget(self.first_details_list_widget, 3, 1)
+        self.first_details_list_widget.setStyleSheet("background-color: white;border: 2px solid black;")
+        grid_layout.addWidget(self.first_details_list_widget, 4, 1)
                 
         self.second_details_list_widget = QListWidget(self)
-        self.second_details_list_widget.setStyleSheet("background-color: white;border: 2px solid black;border-radius: 10px;")
-        grid_layout.addWidget(self.second_details_list_widget, 3, 2, 1, 3)
+        self.second_details_list_widget.setStyleSheet("background-color: white;border: 2px solid black;")
+        grid_layout.addWidget(self.second_details_list_widget, 4, 2, 1, 3)
         
-        # 중앙 위젯 설정 및 메인 레이아웃 적용
         central_widget = QWidget()
         central_widget.setLayout(grid_layout)
         self.setCentralWidget(central_widget)
     
     def keyPressEvent(self, event):
-        # 왼쪽 화살표 키 이벤트
         if event.key() == Qt.Key_Left:
             if self.option_buttons[0].is_on:
                 self.first_details_list_widget.addItem("1111111111")
@@ -174,10 +171,9 @@ class MainWindow(QMainWindow):
 
         if reply == QMessageBox.Yes:
             self.resetOptions()
-            self.first_details_list_widget.clear()  # 첫 번째 리스트 위젯의 모든 항목을 지웁니다
-            self.second_details_list_widget.clear()  # 두 번째 리스트 위젯의 모든 항목을 지웁니다
+            self.first_details_list_widget.clear()
+            self.second_details_list_widget.clear()
     
-    # 옵션 버튼 초기화
     def resetOptions(self):
         for button in self.option_buttons:
             if button.is_on:
@@ -198,10 +194,6 @@ class MainWindow(QMainWindow):
 
     def refresh_system(self, event):
         print('새로고침')
-    
-    # 신호에 따라 세부항목 목록에 텍스트를 추가하는 함수
-    def addDetailItem(self, text):
-        self.details_list_widget.addItem(text)
     
     # 장애이력에 항목을 추가하는 메서드
     def addHistoryItem(self, text):
@@ -230,33 +222,29 @@ class OptionButton(QWidget):
 
         self.transparent_button = TransparentButton(self)
         self.transparent_button.clicked.connect(self.toggle)
-        self.transparent_button.setFixedSize(240, 135)  # 버튼 크기 설정
+        self.transparent_button.setFixedSize(240, 135)
 
-        # QStackedLayout 대신 QVBoxLayout 사용
         layout = QVBoxLayout(self)
         layout.addWidget(self.label)
         layout.addWidget(self.transparent_button)
 
         self.setLayout(layout)
         
-        # 투명 버튼을 위젯의 최상위에 배치합니다.
         self.transparent_button.raise_()
     
     def setButtonSize(self, width, height):
-        # QPixmap 크기 조정
         scaled_on_pixmap = self.on_pixmap.scaled(width, height, Qt.KeepAspectRatio, Qt.SmoothTransformation)
         scaled_off_pixmap = self.off_pixmap.scaled(width, height, Qt.KeepAspectRatio, Qt.SmoothTransformation)
 
-        # 버튼 및 레이블 크기 조정
         self.setFixedSize(width, height)
         self.label.setFixedSize(width, height)
+        self.label.setPixmap(scaled_on_pixmap)
         self.label.setPixmap(scaled_off_pixmap)
-
-        # 투명 버튼 크기 조정
+        
         self.transparent_button.setFixedSize(width, height)
 
     def setScaledPixmap(self):
-        label_size = self.size()  # QLabel의 크기를 가져옵니다.
+        label_size = self.size()
         scaled_on_pixmap = self.on_pixmap.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
         scaled_off_pixmap = self.off_pixmap.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
         self.label.setPixmap(scaled_off_pixmap if not self.is_on else scaled_on_pixmap)
