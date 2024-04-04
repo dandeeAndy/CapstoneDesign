@@ -1,4 +1,3 @@
-import sys, os
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
@@ -96,15 +95,15 @@ class MainWindow(QMainWindow):
         ###########################################################################################################
         # 옵션 버튼 설정
         self.option_buttons = [
-                OptionButton('domfor_ON.png', 'domfor_OFF.png', 'Opt1', self),
-                OptionButton('fragile_ON.png', 'fragile_OFF.png', 'Opt2', self),
-                OptionButton('courier_ON.png', 'courier_OFF.png', 'Opt3', self),
-            ]
+            OptionButton('domfor_ON.png', 'domfor_OFF.png', 'Opt1', self, callback=opt_callback),
+            OptionButton('fragile_ON.png', 'fragile_OFF.png', 'Opt2', self, callback=opt_callback),
+            OptionButton('courier_ON.png', 'courier_OFF.png', 'Opt3', self, callback=opt_callback),
+        ]
         for i, option_button in enumerate(self.option_buttons):
             option_button.setButtonSize(240, 270)
             transparent_button = TransparentButton(option_button)
             transparent_button.setFixedSize(240, 135)
-            transparent_button.clicked.connect(lambda _, b=option_button: b.toggle())
+            transparent_button.clicked.connect(lambda _, b=option_button: b.option_sel())
             grid_layout.addWidget(option_button, 1, i + 4)
         self.pause_button_label = QLabel(self)
         pause_button_pixmap = QPixmap('pause_button.png')
@@ -198,7 +197,7 @@ class MainWindow(QMainWindow):
     def toggleButton(self, selected_button):
         for button in self.option_buttons:
             if button == selected_button:
-                button.toggle()
+                button.option_sel()
             else:
                 button.is_on = False
                 button.setScaledPixmap()
@@ -214,6 +213,7 @@ class MainWindow(QMainWindow):
         size = widget.size()
         print("Width:", size.width(), "Height:", size.height())
     
+        
 class TransparentButton(QPushButton):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -221,22 +221,22 @@ class TransparentButton(QPushButton):
         # self.setStyleSheet("background:transparent; border: 2px solid black;")
 
 class OptionButton(QWidget):
-    def __init__(self, on_image_path, off_image_path, opt_text, parent=None):
+    def __init__(self, on_image_path, off_image_path, opt_text, parent=None, callback=None):
         super().__init__(parent)
         self.on_pixmap = QPixmap(on_image_path)
         self.off_pixmap = QPixmap(off_image_path)
+        self.opt_text = opt_text
+        self.is_on = False
+        self.callback = callback
         if self.on_pixmap.isNull() or self.off_pixmap.isNull():
             print("이미지 로드 실패:", on_image_path, "또는", off_image_path)
             return
-        
-        self.opt_text = opt_text
-        self.is_on = False
 
         self.label = QLabel(self)
         self.setScaledPixmap()
 
         self.transparent_button = TransparentButton(self)
-        self.transparent_button.clicked.connect(self.toggle)
+        self.transparent_button.clicked.connect(self.option_sel)
         self.transparent_button.setFixedSize(240, 135)
 
         layout = QVBoxLayout(self)
@@ -264,12 +264,16 @@ class OptionButton(QWidget):
         scaled_off_pixmap = self.off_pixmap.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
         self.label.setPixmap(scaled_off_pixmap if not self.is_on else scaled_on_pixmap)
         self.update()
-
+    
     def resizeEvent(self, event):
         self.setScaledPixmap()
+    
+    def opt_callback(selected_option):
+        print(f"Selected option: {selected_option}")
 
-    def toggle(self):
+    def option_sel(self):
         self.is_on = not self.is_on
         self.setScaledPixmap()
         if self.is_on:
-            print(f"{self.opt_text}\nSTART")
+            if self.callback:
+                self.callback(self.opt_text)

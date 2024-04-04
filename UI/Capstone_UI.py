@@ -3,6 +3,9 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 import UI_set
+from UI_set import OptionButton
+from UI_set.OptionButton import opt
+
 
 from queue import Queue
 import socket
@@ -61,7 +64,17 @@ def server_func():
     
     client_soc, addr = server_socket.accept()
     print('UI server connected')
-
+    
+def opt_callback(selected_opt):
+    print(f"Selected option: {selected_opt}")
+    
+    OptionButton.option_sel()
+    
+    # try:
+    #     client_soc.sendall(OptionButton.opt.encode('utf-8'))
+    # except socket.error as e:
+    #     print("Error sending data:", e)
+    #     break
 
 # -----------------------------------------------------------------------
 def UI_func():
