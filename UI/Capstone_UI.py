@@ -4,7 +4,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 import UI_set
 from UI_set import OptionButton
-from UI_set.OptionButton import opt
+# from UI_set.OptionButton import opt
 
 
 from queue import Queue
@@ -21,7 +21,7 @@ UI_host = '192.168.95.1'
 port = 1111
 
 lock = threading.Lock()
-client_soc = None  # 전역 변수로 선언하여 모든 함수에서 접근 가능하게 함
+client_soc = None
 selected_option = None
 
 # -----------------------------------------------------------------------
@@ -41,19 +41,19 @@ def client_func():
     while True:
         try:
             qr_data_receive = client_socket.recv(1024)
-            qr_data_receive.decode('utf-8')
+            qr_data = qr_data_receive.decode('utf-8')
         except socket.error as e:
             print("Error receiving data: ", e)
             break
         
-        parts = qr_data_receive.split('/')
+        parts = qr_data.split('/')  
         classifi = parts[0]
         
-        if classifi[0] == 'L' or 'Y' or 'A':
-            UI_set.MainWindow.first_details_list_widget.addItem(qr_data_receive)
-        
-        elif classifi[0] == 'F' or 'N' or 'B':
-            UI_set.MainWindow.second_details_list_widget.addItem(qr_data_receive)
+        if classifi and (classifi[0] == 'L' or classifi[0] == 'Y' or classifi[0] == 'A'):
+            UI_set.MainWindow.first_details_list_widget.addItem(qr_data)
+            
+        elif classifi and (classifi[0] == 'F' or classifi[0] == 'N' or classifi[0] == 'B'):
+            UI_set.MainWindow.second_details_list_widget.addItem(qr_data)
         
 # -----------------------------------------------------------------------
 def server_func():
@@ -70,7 +70,8 @@ def server_func():
         if selected_option is not None:
             try:
                 client_soc.sendall(selected_option.encode('utf-8'))
-                selected_option = None  # 메시지 전송 후 변수 초기화
+                print(f"Sending option: {selected_option}")
+                selected_option = None
             except socket.error as e:
                 print("Error sending data:", e)
                 break
@@ -81,7 +82,7 @@ def opt_callback(opt):
     selected_option = opt
     print(f"Selected option: {selected_option}")
     
-    OptionButton.option_sel()
+    # OptionButton.option_sel()
     
 # -----------------------------------------------------------------------
 def UI_func():

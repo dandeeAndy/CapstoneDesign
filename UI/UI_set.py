@@ -225,12 +225,13 @@ class OptionButton(QWidget):
         super().__init__(parent)
         self.on_pixmap = QPixmap(on_image_path)
         self.off_pixmap = QPixmap(off_image_path)
-        self.opt_text = opt_text
-        self.is_on = False
-        self.callback = callback
         if self.on_pixmap.isNull() or self.off_pixmap.isNull():
             print("이미지 로드 실패:", on_image_path, "또는", off_image_path)
             return
+        
+        self.opt_text = opt_text
+        self.is_on = False
+        self.callback = callback  # 콜백 함수 추가
 
         self.label = QLabel(self)
         self.setScaledPixmap()
@@ -269,11 +270,12 @@ class OptionButton(QWidget):
         self.setScaledPixmap()
     
     def opt_callback(opt):
-        print(f"Selected option: {opt}")
-
+        global selected_option
+        selected_option = opt
+        print(f"Selected option: {selected_option}")
+    
     def option_sel(self):
         self.is_on = not self.is_on
         self.setScaledPixmap()
-        if self.is_on:
-            if self.callback:
-                self.callback(self.opt_text)
+        if self.is_on and self.callback:
+            self.callback(self.opt_text)
