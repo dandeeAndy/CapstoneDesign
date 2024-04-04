@@ -15,8 +15,8 @@ import time
 # -----------------------------------------------------------------------
 print(socket.gethostbyname(socket.gethostname()))
 
-Vision_Motor_host = '192.168.97.231'
-UI_host = '192.168.1.210'
+Vision_Motor_host ='192.168.95.231'
+UI_host = '192.168.95.1'
 
 port = 1111
 
