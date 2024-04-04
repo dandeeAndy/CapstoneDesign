@@ -95,9 +95,9 @@ class MainWindow(QMainWindow):
         ###########################################################################################################
         # 옵션 버튼 설정
         self.option_buttons = [
-            OptionButton('domfor_ON.png', 'domfor_OFF.png', 'Opt1', self, callback=opt_callback),
-            OptionButton('fragile_ON.png', 'fragile_OFF.png', 'Opt2', self, callback=opt_callback),
-            OptionButton('courier_ON.png', 'courier_OFF.png', 'Opt3', self, callback=opt_callback),
+            OptionButton('domfor_ON.png', 'domfor_OFF.png', 'Opt1', self, callback=OptionButton.opt_callback),
+            OptionButton('fragile_ON.png', 'fragile_OFF.png', 'Opt2', self, callback=OptionButton.opt_callback),
+            OptionButton('courier_ON.png', 'courier_OFF.png', 'Opt3', self, callback=OptionButton.opt_callback),
         ]
         for i, option_button in enumerate(self.option_buttons):
             option_button.setButtonSize(240, 270)
@@ -264,12 +264,12 @@ class OptionButton(QWidget):
         scaled_off_pixmap = self.off_pixmap.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
         self.label.setPixmap(scaled_off_pixmap if not self.is_on else scaled_on_pixmap)
         self.update()
-    
+
     def resizeEvent(self, event):
         self.setScaledPixmap()
     
-    def opt_callback(selected_option):
-        print(f"Selected option: {selected_option}")
+    def opt_callback(opt):
+        print(f"Selected option: {opt}")
 
     def option_sel(self):
         self.is_on = not self.is_on

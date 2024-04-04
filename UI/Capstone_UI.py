@@ -22,6 +22,7 @@ port = 1111
 
 lock = threading.Lock()
 client_soc = None  # 전역 변수로 선언하여 모든 함수에서 접근 가능하게 함
+selected_option = None
 
 # -----------------------------------------------------------------------
 def client_func():
@@ -56,7 +57,7 @@ def client_func():
         
 # -----------------------------------------------------------------------
 def server_func():
-    global client_soc
+    global client_soc, selected_option
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.bind((UI_host, port))  
     server_socket.listen()
@@ -65,17 +66,23 @@ def server_func():
     client_soc, addr = server_socket.accept()
     print('UI server connected')
     
-def opt_callback(selected_opt):
-    print(f"Selected option: {selected_opt}")
+    while True:
+        if selected_option is not None:
+            try:
+                client_soc.sendall(selected_option.encode('utf-8'))
+                selected_option = None  # 메시지 전송 후 변수 초기화
+            except socket.error as e:
+                print("Error sending data:", e)
+                break
+
+# -----------------------------------------------------------------------
+def opt_callback(opt):
+    global selected_option
+    selected_option = opt
+    print(f"Selected option: {selected_option}")
     
     OptionButton.option_sel()
     
-    # try:
-    #     client_soc.sendall(OptionButton.opt.encode('utf-8'))
-    # except socket.error as e:
-    #     print("Error sending data:", e)
-    #     break
-
 # -----------------------------------------------------------------------
 def UI_func():
     app = QApplication(sys.argv)
