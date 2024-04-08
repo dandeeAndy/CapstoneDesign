@@ -20,40 +20,100 @@ class MainWindow(QMainWindow):
         grid_layout.setRowStretch(1, 20)
         grid_layout.setRowStretch(2, 10)
         grid_layout.setRowStretch(3, 1)
-        grid_layout.setRowStretch(4, 30)
-        grid_layout.setColumnStretch(0, 80)
-        grid_layout.setColumnStretch(1, 1)
-        grid_layout.setColumnStretch(2, 120)
-        grid_layout.setColumnStretch(3, 1)
-        grid_layout.setColumnStretch(4, 40)
-        grid_layout.setColumnStretch(5, 40)
-        grid_layout.setColumnStretch(6, 40)
+        grid_layout.setRowStretch(4, 1)
+        grid_layout.setRowStretch(5, 30)
+        
+        grid_layout.setColumnStretch(0, 8)
+        grid_layout.setColumnStretch(1, 16)
+        grid_layout.setColumnStretch(2, 12)
+        grid_layout.setColumnStretch(3, 16)
+        grid_layout.setColumnStretch(4, 28)
+        
+        
+        grid_layout.setColumnStretch(5, 1)
+        
+        
+        grid_layout.setColumnStretch(6, 12)
+        grid_layout.setColumnStretch(7, 30)
+        grid_layout.setColumnStretch(8, 30)
+        grid_layout.setColumnStretch(9, 18)
+        grid_layout.setColumnStretch(10, 30)
+        
+        
+        grid_layout.setColumnStretch(11, 1)
+        
+        
+        grid_layout.setColumnStretch(12, 12)
+        grid_layout.setColumnStretch(13, 28)
+        
+        grid_layout.setColumnStretch(14, 2)
+        grid_layout.setColumnStretch(15, 30)
+        grid_layout.setColumnStretch(16, 8)
+        
+        grid_layout.setColumnStretch(17, 10)
+        grid_layout.setColumnStretch(18, 30)
 
-        # 겹치는 레이블 추가
+        
         label_1 = QLabel()
-        grid_layout.addWidget(label_1, 0, 1, 1, 6)  # (0, 1)에서 (0, 6)까지
-
+        grid_layout.addWidget(label_1, 0, 0, 1, 5)
+        
         label_2 = QLabel()
-        grid_layout.addWidget(label_2, 1, 0, 2, 4)  # (1, 0)에서 (2, 3)까지
+        grid_layout.addWidget(label_2, 0, 5, 1, 14)
         
         label_3 = QLabel()
-        # label_3.setStyleSheet("border: 2px solid black;border-radius: 10px;")
-        grid_layout.addWidget(label_3, 2, 4, 1, 3)  # (2, 4)에서 (2, 6)까지
+        grid_layout.addWidget(label_3, 1, 0, 2, 12)
         
         label_4 = QLabel()
-        grid_layout.addWidget(label_4, 3, 4, 1, 3)  # (3, 4)에서 (3, 6)까지
+        grid_layout.addWidget(label_4, 1, 12, 1, 2)
         
         label_5 = QLabel()
-        # label_3.setStyleSheet("border: 2px solid black;border-radius: 10px;")
-        grid_layout.addWidget(label_5, 4, 4, 1, 3)  # (4, 4)에서 (4, 6)까지
+        grid_layout.addWidget(label_5, 1, 14, 1, 3)
+        
+        label_6 = QLabel()
+        grid_layout.addWidget(label_6, 1, 17, 1, 2)
+        
+        label_7 = QLabel()
+        grid_layout.addWidget(label_7, 2, 12, 1, 7)
+        
+        label_8 = QLabel()
+        grid_layout.addWidget(label_8, 3, 0, 1, 5)
+        
+        label_9 = QLabel()
+        grid_layout.addWidget(label_9, 3, 6, 1, 5)
+        
+        label_10 = QLabel()
+        grid_layout.addWidget(label_10, 3, 12, 1, 7)
+             
+        # # 겹치는 레이블 추가
+        # label_1 = QLabel()
+        # grid_layout.addWidget(label_1, 0, 1, 1, 6)  # (0, 1)에서 (0, 6)까지
+
+        # label_2 = QLabel()
+        # grid_layout.addWidget(label_2, 1, 0, 2, 4)  # (1, 0)에서 (2, 3)까지
+        
+        # label_3 = QLabel()
+        # # label_3.setStyleSheet("border: 2px solid black;border-radius: 10px;")
+        # grid_layout.addWidget(label_3, 2, 4, 1, 3)  # (2, 4)에서 (2, 6)까지
+        
+        # label_4 = QLabel()
+        # grid_layout.addWidget(label_4, 3, 4, 1, 3)  # (3, 4)에서 (3, 6)까지
+        
+        # label_5 = QLabel()
+        # # label_3.setStyleSheet("border: 2px solid black;border-radius: 10px;")
+        # grid_layout.addWidget(label_5, 4, 4, 1, 3)  # (4, 4)에서 (4, 6)까지
 
         for i in range(5):  # 4행
             for j in range(7):  # 5열
-                if not ((i == 0 and 1 <= j <= 6) or 
-                        (i in [1, 2] and j in [0, 4]) or 
-                        (i == 2 and 4 <= j <= 6) or 
-                        (i == 3 and 4 <= j <= 6) or 
-                        (i == 4 and 4 <= j <= 6)):
+                if not ((i == 0 and 0 <= j <= 5) or 
+                        (i == 0 and 5 <= j <= 19) or 
+                        (i in [1, 2] and j in [0, 12]) or 
+                        (i == 1 and 12 <= j <= 14) or 
+                        (i == 1 and 14 <= j <= 17) or 
+                        (i == 1 and 17 <= j <= 19) or 
+                        (i == 2 and 12 <= j <= 19) or 
+                        (i == 3 and 0 <= j <= 5) or 
+                        (i == 3 and 6 <= j <= 11) or 
+                        (i == 3 and 12 <= j <= 19)):
                     label = QLabel()
                     # label.setStyleSheet("border: 2px solid black;border-radius: 10px;")
                     grid_layout.addWidget(label, i, j)
