@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 import UI_set
-from UI_set import OptionButton
+from UI_set import selected_option
 # from UI_set.OptionButton import opt
 
 
@@ -22,7 +22,7 @@ port = 1111
 
 lock = threading.Lock()
 client_soc = None
-selected_option = None
+# selected_option = None
 
 # -----------------------------------------------------------------------
 def client_func():
@@ -68,6 +68,7 @@ def server_func():
     
     while True:
         if selected_option is not None:
+            print("None이 아님")
             try:
                 client_soc.sendall(selected_option.encode('utf-8'))
                 print(f"Sending option: {selected_option}")
@@ -86,7 +87,7 @@ def opt_callback(opt):
     
 # -----------------------------------------------------------------------
 def UI_func():
-    app = QApplication(sys.argv)
+    app = QApplication(sys.argv)    
     font = QFont("NanumSquare", 9)
     app.setFont(font)
     mainWin = UI_set.MainWindow()

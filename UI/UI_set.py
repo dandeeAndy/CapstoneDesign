@@ -2,6 +2,8 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
+selected_option = None
+
 # ---------------------------------------------------------------------------------------------------------------------
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -125,9 +127,9 @@ class MainWindow(QMainWindow):
 # ---------------------------------------------------------------------------------------------------------------------
         # 옵션 버튼 설정
         self.option_buttons = [
-            OptionButton('domfor_ON.png', 'domfor_OFF.png', 'Opt1', self, callback=self.update_labels),
-            OptionButton('fragile_ON.png', 'fragile_OFF.png', 'Opt2', self, callback=self.update_labels),
-            OptionButton('courier_ON.png', 'courier_OFF.png', 'Opt3', self, callback=self.update_labels),
+            OptionButton('domfor_ON.png', 'domfor_OFF.png', 'Opt1', self),
+            OptionButton('fragile_ON.png', 'fragile_OFF.png', 'Opt2', self),
+            OptionButton('courier_ON.png', 'courier_OFF.png', 'Opt3', self),
         ]
         button_positions = [(1, 12, 1, 2), (1, 14, 1, 3), (1, 17, 1, 2)]
         for i, option_button in enumerate(self.option_buttons):
@@ -144,14 +146,14 @@ class MainWindow(QMainWindow):
         self.pause_button_label.mousePressEvent = self.pauseClicked
         grid_layout.addWidget(self.pause_button_label, 2, 12, 1, 7)
         
-        label_9 = QLabel("L")
-        label_10 = QLabel("F")
-        label_9.setAlignment(Qt.AlignHCenter | Qt.AlignBottom)
-        label_10.setAlignment(Qt.AlignHCenter | Qt.AlignBottom)
-        label_9.setStyleSheet("background-color: white;border: 2px solid black;")
-        label_10.setStyleSheet("background-color: white;border: 2px solid black;")
-        grid_layout.addWidget(label_9, 3, 6, 1, 5)
-        grid_layout.addWidget(label_10, 3, 12, 1, 7)
+        self.label_9 = QLabel("L")
+        self.label_10 = QLabel("F")
+        self.label_9.setAlignment(Qt.AlignHCenter | Qt.AlignBottom)
+        self.label_10.setAlignment(Qt.AlignHCenter | Qt.AlignBottom)
+        self.label_9.setStyleSheet("background-color: white;border: 2px solid black;")
+        self.label_10.setStyleSheet("background-color: white;border: 2px solid black;")
+        grid_layout.addWidget(self.label_9, 3, 6, 1, 5)
+        grid_layout.addWidget(self.label_10, 3, 12, 1, 7)
         
 # ---------------------------------------------------------------------------------------------------------------------
         # 리스트 설정
@@ -314,6 +316,13 @@ class MainWindow(QMainWindow):
         central_widget.setLayout(grid_layout)
         self.setCentralWidget(central_widget)
         
+    def update_option(new_value):
+        global selected_option  # 글로벌 변수 사용 선언
+        selected_option = new_value  # 글로벌 변수 업데이트
+        
+    def print_option():
+        print(selected_option)  # 글로벌 변수 접근
+        
     def update_labels(self, opt):
         if opt == 'Opt1':
             self.label_9.setText("L")
@@ -324,7 +333,7 @@ class MainWindow(QMainWindow):
         elif opt == 'Opt3':
             self.label_9.setText("A")
             self.label_10.setText("B")
-        print(f"Selected option: {opt}")
+        # print(f"Selected option: {opt}")
         
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Left:
@@ -394,13 +403,12 @@ class TransparentButton(QPushButton):
         # self.setStyleSheet("background:transparent; border: 2px solid black;")
 
 class OptionButton(QWidget):
-    def __init__(self, on_image_path, off_image_path, opt_text, parent=None, callback=None):
+    def __init__(self, on_image_path, off_image_path, opt_text, parent=None):
         super().__init__(parent)
         self.on_pixmap = QPixmap(on_image_path)
         self.off_pixmap = QPixmap(off_image_path)
         self.opt_text = opt_text
         self.is_on = False
-        self.callback = callback
         if self.on_pixmap.isNull() or self.off_pixmap.isNull():
             print("이미지 로드 실패:", on_image_path, "또는", off_image_path)
             return
@@ -442,11 +450,13 @@ class OptionButton(QWidget):
         self.setScaledPixmap()
     
     def opt_callback(opt):
-        print(f"Selected option: {opt}")
+        # print(f"Selected option: {opt}")
+        global selected_option
+
 
     def option_sel(self):
+        global selected_option
         self.is_on = not self.is_on
-        self.setScaledPixmap()
         if self.is_on:
-            if self.callback:
-                self.callback(self.opt_text)
+            selected_option = self.opt_text
+        print(f"Current selected option: {selected_option}")
