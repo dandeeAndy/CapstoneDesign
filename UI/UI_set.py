@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
+# ---------------------------------------------------------------------------------------------------------------------
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -19,45 +20,74 @@ class MainWindow(QMainWindow):
         grid_layout.setRowStretch(1, 20)
         grid_layout.setRowStretch(2, 10)
         grid_layout.setRowStretch(3, 1)
-        grid_layout.setRowStretch(4, 30)
-        grid_layout.setColumnStretch(0, 80)
-        grid_layout.setColumnStretch(1, 1)
-        grid_layout.setColumnStretch(2, 120)
-        grid_layout.setColumnStretch(3, 1)
-        grid_layout.setColumnStretch(4, 40)
-        grid_layout.setColumnStretch(5, 40)
-        grid_layout.setColumnStretch(6, 40)
-
-        # 겹치는 레이블 추가
+        grid_layout.setRowStretch(4, 1)
+        grid_layout.setRowStretch(5, 30)
+        
+        grid_layout.setColumnStretch(0, 8)
+        grid_layout.setColumnStretch(1, 16)
+        grid_layout.setColumnStretch(2, 12)
+        grid_layout.setColumnStretch(3, 16)
+        grid_layout.setColumnStretch(4, 28)
+        
+        grid_layout.setColumnStretch(5, 1)
+        
+        #코드/출발날짜/도착날짜/지역/상품명
+        grid_layout.setColumnStretch(6, 12)
+        grid_layout.setColumnStretch(7, 30)
+        grid_layout.setColumnStretch(8, 30)
+        grid_layout.setColumnStretch(9, 18)
+        grid_layout.setColumnStretch(10, 30)
+        
+        grid_layout.setColumnStretch(11, 1)
+        
+        grid_layout.setColumnStretch(12, 12)
+        grid_layout.setColumnStretch(13, 28)
+        
+        grid_layout.setColumnStretch(14, 2)
+        grid_layout.setColumnStretch(15, 30)
+        grid_layout.setColumnStretch(16, 8)
+        
+        grid_layout.setColumnStretch(17, 10)
+        grid_layout.setColumnStretch(18, 30)
+        
         label_1 = QLabel()
-        grid_layout.addWidget(label_1, 0, 1, 1, 6)  # (0, 1)에서 (0, 6)까지
-
+        grid_layout.addWidget(label_1, 0, 0, 1, 5)        
         label_2 = QLabel()
-        grid_layout.addWidget(label_2, 1, 0, 2, 4)  # (1, 0)에서 (2, 3)까지
-        
+        grid_layout.addWidget(label_2, 0, 5, 1, 14)        
         label_3 = QLabel()
-        # label_3.setStyleSheet("border: 2px solid black;border-radius: 10px;")
-        grid_layout.addWidget(label_3, 2, 4, 1, 3)  # (2, 4)에서 (2, 6)까지
-        
+        grid_layout.addWidget(label_3, 1, 0, 2, 12)        
         label_4 = QLabel()
-        grid_layout.addWidget(label_4, 3, 4, 1, 3)  # (3, 4)에서 (3, 6)까지
-        
+        grid_layout.addWidget(label_4, 1, 12, 1, 2)        
         label_5 = QLabel()
-        # label_3.setStyleSheet("border: 2px solid black;border-radius: 10px;")
-        grid_layout.addWidget(label_5, 4, 4, 1, 3)  # (4, 4)에서 (4, 6)까지
+        grid_layout.addWidget(label_5, 1, 14, 1, 3)        
+        label_6 = QLabel()
+        grid_layout.addWidget(label_6, 1, 17, 1, 2)        
+        label_7 = QLabel()
+        grid_layout.addWidget(label_7, 2, 12, 1, 7)        
+        label_8 = QLabel()
+        grid_layout.addWidget(label_8, 3, 0, 1, 5)        
+        label_9 = QLabel()
+        grid_layout.addWidget(label_9, 3, 6, 1, 5)        
+        label_10 = QLabel()
+        grid_layout.addWidget(label_10, 3, 12, 1, 7)
 
         for i in range(5):  # 4행
             for j in range(7):  # 5열
-                if not ((i == 0 and 1 <= j <= 6) or 
-                        (i in [1, 2] and j in [0, 4]) or 
-                        (i == 2 and 4 <= j <= 6) or 
-                        (i == 3 and 4 <= j <= 6) or 
-                        (i == 4 and 4 <= j <= 6)):
+                if not ((i == 0 and 0 <= j <= 5) or 
+                        (i == 0 and 5 <= j <= 19) or 
+                        (i in [1, 2] and j in [0, 12]) or 
+                        (i == 1 and 12 <= j <= 14) or 
+                        (i == 1 and 14 <= j <= 17) or 
+                        (i == 1 and 17 <= j <= 19) or 
+                        (i == 2 and 12 <= j <= 19) or 
+                        (i == 3 and 0 <= j <= 5) or 
+                        (i == 3 and 6 <= j <= 11) or 
+                        (i == 3 and 12 <= j <= 19)):
                     label = QLabel()
                     # label.setStyleSheet("border: 2px solid black;border-radius: 10px;")
                     grid_layout.addWidget(label, i, j)
         
-        ########################################################################################################
+# ---------------------------------------------------------------------------------------------------------------------
         # 윈도우 설정
         screen_rect = QApplication.desktop().screenGeometry()
         self.setGeometry(screen_rect)
@@ -84,74 +114,217 @@ class MainWindow(QMainWindow):
         self.logo_label.mousePressEvent = self.refresh_system
         scaled_pixmap = self.logo_pixmap.scaled(200, 200, Qt.KeepAspectRatio, Qt.SmoothTransformation)
         self.logo_label.setPixmap(scaled_pixmap)
-        grid_layout.addWidget(self.logo_label, 0, 0)
+        grid_layout.addWidget(self.logo_label, 0, 0, 1, 5)
         
         self.assembly_label = QLabel(self)
         pixmap = QPixmap('assembly_image.jpg')
         self.assembly_label.setPixmap(pixmap)
-        label_2.setLayout(QHBoxLayout())
-        label_2.layout().addWidget(self.assembly_label)
+        label_3.setLayout(QHBoxLayout())
+        label_3.layout().addWidget(self.assembly_label)
         
-        ###########################################################################################################
+# ---------------------------------------------------------------------------------------------------------------------
         # 옵션 버튼 설정
         self.option_buttons = [
-            OptionButton('domfor_ON.png', 'domfor_OFF.png', 'Opt1', self, callback=OptionButton.opt_callback),
-            OptionButton('fragile_ON.png', 'fragile_OFF.png', 'Opt2', self, callback=OptionButton.opt_callback),
-            OptionButton('courier_ON.png', 'courier_OFF.png', 'Opt3', self, callback=OptionButton.opt_callback),
+            OptionButton('domfor_ON.png', 'domfor_OFF.png', 'Opt1', self, callback=self.update_labels),
+            OptionButton('fragile_ON.png', 'fragile_OFF.png', 'Opt2', self, callback=self.update_labels),
+            OptionButton('courier_ON.png', 'courier_OFF.png', 'Opt3', self, callback=self.update_labels),
         ]
+        button_positions = [(1, 12, 1, 2), (1, 14, 1, 3), (1, 17, 1, 2)]
         for i, option_button in enumerate(self.option_buttons):
             option_button.setButtonSize(240, 270)
             transparent_button = TransparentButton(option_button)
             transparent_button.setFixedSize(240, 135)
             transparent_button.clicked.connect(lambda _, b=option_button: b.option_sel())
-            grid_layout.addWidget(option_button, 1, i + 4)
+            pos = button_positions[i]
+            grid_layout.addWidget(option_button, *pos)
         self.pause_button_label = QLabel(self)
         pause_button_pixmap = QPixmap('pause_button.png')
         pause_button_pixmap = pause_button_pixmap.scaled(700, 200, Qt.KeepAspectRatio, Qt.SmoothTransformation)
         self.pause_button_label.setPixmap(pause_button_pixmap)
         self.pause_button_label.mousePressEvent = self.pauseClicked
-        grid_layout.addWidget(self.pause_button_label, 2, 4, 1, 3)
+        grid_layout.addWidget(self.pause_button_label, 2, 12, 1, 7)
         
-        ###########################################################################################################
+        label_9 = QLabel("L")
+        label_10 = QLabel("F")
+        label_9.setAlignment(Qt.AlignHCenter | Qt.AlignBottom)
+        label_10.setAlignment(Qt.AlignHCenter | Qt.AlignBottom)
+        label_9.setStyleSheet("background-color: white;border: 2px solid black;")
+        label_10.setStyleSheet("background-color: white;border: 2px solid black;")
+        grid_layout.addWidget(label_9, 3, 6, 1, 5)
+        grid_layout.addWidget(label_10, 3, 12, 1, 7)
+        
+# ---------------------------------------------------------------------------------------------------------------------
         # 리스트 설정
         font_label = QFont("NanumSquare", 12)
-        border_style = "border-top: 2px solid black; border-left: 2px solid black; border-right: 2px solid black;"
+        border_style = "border-top: 2px solid black; border-left: 2px solid black;"
+        border_style_2 = "border-top: 2px solid black; border-left: 2px solid black; border-bottom: 2px solid black;"
+        border_style_3 = "border-top: 2px solid black; border-left: 2px solid black; border-right: 2px solid black;"
 
-        label_alarm = QLabel("NO      ALARM      EQ      STATE      DATETIME")
-        label_alarm.setFont(font_label)
-        label_alarm.setAlignment(Qt.AlignHCenter | Qt.AlignBottom)
-        label_alarm.setStyleSheet(border_style + " background-color: white;")
-        grid_layout.addWidget(label_alarm, 3, 0)
+        NO_label = QLabel("NO")
+        NO_label.setFont(font_label)
+        NO_label.setAlignment(Qt.AlignHCenter | Qt.AlignBottom)
+        NO_label.setStyleSheet(border_style + " background-color: white;")
+        grid_layout.addWidget(NO_label, 4, 0)
         
-        label_first_detail = QLabel("상품명         코드         출발날짜        도착날짜         지역")
-        label_first_detail.setFont(font_label)
-        label_first_detail.setAlignment(Qt.AlignHCenter | Qt.AlignBottom)
-        label_first_detail.setStyleSheet(border_style + " background-color: white;")
-        grid_layout.addWidget(label_first_detail, 3, 2)
+        ALARM_label = QLabel("ALARM")
+        ALARM_label.setFont(font_label)
+        ALARM_label.setAlignment(Qt.AlignHCenter | Qt.AlignBottom)
+        ALARM_label.setStyleSheet(border_style + " background-color: white;")
+        grid_layout.addWidget(ALARM_label, 4, 1)
         
-        label_second_detail = QLabel("상품명         코드         출발날짜         도착날짜         지역")
-        label_second_detail.setFont(font_label)
-        label_second_detail.setAlignment(Qt.AlignHCenter | Qt.AlignBottom)
-        label_second_detail.setStyleSheet(border_style + " background-color: white;")
-        grid_layout.addWidget(label_second_detail, 3, 4, 1, 3)
+        EQ_label = QLabel("EQ")
+        EQ_label.setFont(font_label)
+        EQ_label.setAlignment(Qt.AlignHCenter | Qt.AlignBottom)
+        EQ_label.setStyleSheet(border_style + " background-color: white;")
+        grid_layout.addWidget(EQ_label, 4, 2)
         
-        self.history_list_widget = QListWidget(self)
-        self.history_list_widget.setStyleSheet("background-color: white;border: 2px solid black;")
-        grid_layout.addWidget(self.history_list_widget, 4, 0)
-                
-        self.first_details_list_widget = QListWidget(self)
-        self.first_details_list_widget.setStyleSheet("background-color: white;border: 2px solid black;")
-        grid_layout.addWidget(self.first_details_list_widget, 4, 2)
-        self.printWidgetSize(self.first_details_list_widget)
-                
-        self.second_details_list_widget = QListWidget(self)
-        self.second_details_list_widget.setStyleSheet("background-color: white;border: 2px solid black;")
-        grid_layout.addWidget(self.second_details_list_widget, 4, 4, 1, 3)
-        self.printWidgetSize(self.second_details_list_widget)
+        STATE_label = QLabel("STATE")
+        STATE_label.setFont(font_label)
+        STATE_label.setAlignment(Qt.AlignHCenter | Qt.AlignBottom)
+        STATE_label.setStyleSheet(border_style + " background-color: white;")
+        grid_layout.addWidget(STATE_label, 4, 3)
+        
+        DATETIME_label = QLabel("DATETIME")
+        DATETIME_label.setFont(font_label)
+        DATETIME_label.setAlignment(Qt.AlignHCenter | Qt.AlignBottom)
+        DATETIME_label.setStyleSheet(border_style_3 + " background-color: white;")
+        grid_layout.addWidget(DATETIME_label, 4, 4)
+        
+        code_label_1 = QLabel("코드")
+        code_label_1.setFont(font_label)
+        code_label_1.setAlignment(Qt.AlignHCenter | Qt.AlignBottom)
+        code_label_1.setStyleSheet(border_style + " background-color: white;")
+        grid_layout.addWidget(code_label_1, 4, 6)
+        
+        departure_label_1 = QLabel("출발날짜")
+        departure_label_1.setFont(font_label)
+        departure_label_1.setAlignment(Qt.AlignHCenter | Qt.AlignBottom)
+        departure_label_1.setStyleSheet(border_style + " background-color: white;")
+        grid_layout.addWidget(departure_label_1, 4, 7)
+        
+        arrival_label_1 = QLabel("도착날짜")
+        arrival_label_1.setFont(font_label)
+        arrival_label_1.setAlignment(Qt.AlignHCenter | Qt.AlignBottom)
+        arrival_label_1.setStyleSheet(border_style + " background-color: white;")
+        grid_layout.addWidget(arrival_label_1, 4, 8)
+        
+        region_label_1 = QLabel("지역")
+        region_label_1.setFont(font_label)
+        region_label_1.setAlignment(Qt.AlignHCenter | Qt.AlignBottom)
+        region_label_1.setStyleSheet(border_style + " background-color: white;")
+        grid_layout.addWidget(region_label_1, 4, 9)
+        
+        product_label_1 = QLabel("상품명")
+        product_label_1.setFont(font_label)
+        product_label_1.setAlignment(Qt.AlignHCenter | Qt.AlignBottom)
+        product_label_1.setStyleSheet(border_style_3 + " background-color: white;")
+        grid_layout.addWidget(product_label_1, 4, 10)
+        
+        code_label_2 = QLabel("코드")
+        code_label_2.setFont(font_label)
+        code_label_2.setAlignment(Qt.AlignHCenter | Qt.AlignBottom)
+        code_label_2.setStyleSheet(border_style + " background-color: white;")
+        grid_layout.addWidget(code_label_2, 4, 12)
+        
+        departure_label_2 = QLabel("출발날짜")
+        departure_label_2.setFont(font_label)
+        departure_label_2.setAlignment(Qt.AlignHCenter | Qt.AlignBottom)
+        departure_label_2.setStyleSheet(border_style + " background-color: white;")
+        grid_layout.addWidget(departure_label_2, 4, 13, 1, 2)
+        
+        arrival_label_2 = QLabel("도착날짜")
+        arrival_label_2.setFont(font_label)
+        arrival_label_2.setAlignment(Qt.AlignHCenter | Qt.AlignBottom)
+        arrival_label_2.setStyleSheet(border_style + " background-color: white;")
+        grid_layout.addWidget(arrival_label_2, 4, 15)
+        
+        region_label_2 = QLabel("지역")
+        region_label_2.setFont(font_label)
+        region_label_2.setAlignment(Qt.AlignHCenter | Qt.AlignBottom)
+        region_label_2.setStyleSheet(border_style + " background-color: white;")
+        grid_layout.addWidget(region_label_2, 4, 16, 1, 2)
+        
+        product_label_2 = QLabel("상품명")
+        product_label_2.setFont(font_label)
+        product_label_2.setAlignment(Qt.AlignHCenter | Qt.AlignBottom)
+        product_label_2.setStyleSheet(border_style_3 + " background-color: white;")
+        grid_layout.addWidget(product_label_2, 4, 18)
+        
+        self.NO_widget = QListWidget(self)
+        self.NO_widget.setStyleSheet(border_style_2 + "background-color: white;")
+        grid_layout.addWidget(self.NO_widget, 5, 0)
+        
+        self.ALARM_widget = QListWidget(self)
+        self.ALARM_widget.setStyleSheet(border_style_2 + "background-color: white;")
+        grid_layout.addWidget(self.ALARM_widget, 5, 1)
+        
+        self.EQ_widget = QListWidget(self)
+        self.EQ_widget.setStyleSheet(border_style_2 + "background-color: white;")
+        grid_layout.addWidget(self.EQ_widget, 5, 2)
+        
+        self.STATE_widget = QListWidget(self)
+        self.STATE_widget.setStyleSheet(border_style_2 + "background-color: white;")
+        grid_layout.addWidget(self.STATE_widget, 5, 3)
+        
+        self.DATETIME_widget = QListWidget(self)
+        self.DATETIME_widget.setStyleSheet("background-color: white;border: 2px solid black;")
+        grid_layout.addWidget(self.DATETIME_widget, 5, 4)
+        
+        self.code_widget_1 = QListWidget(self)
+        self.code_widget_1.setStyleSheet(border_style_2 + "background-color: white;")
+        grid_layout.addWidget(self.code_widget_1, 5, 6)
+        
+        self.departure_widget_1 = QListWidget(self)
+        self.departure_widget_1.setStyleSheet(border_style_2 + "background-color: white;")
+        grid_layout.addWidget(self.departure_widget_1, 5, 7)
+        
+        self.arrival_widget_1 = QListWidget(self)
+        self.arrival_widget_1.setStyleSheet(border_style_2 + "background-color: white;")
+        grid_layout.addWidget(self.arrival_widget_1, 5, 8)
+        
+        self.region_widget_1 = QListWidget(self)
+        self.region_widget_1.setStyleSheet(border_style_2 + "background-color: white;")
+        grid_layout.addWidget(self.region_widget_1, 5, 9)
+        
+        self.product_widget_1 = QListWidget(self)
+        self.product_widget_1.setStyleSheet("background-color: white;border: 2px solid black;")
+        grid_layout.addWidget(self.product_widget_1, 5, 10)
+        
+        self.code_widget_2 = QListWidget(self)
+        self.code_widget_2.setStyleSheet(border_style_2 + "background-color: white;")
+        grid_layout.addWidget(self.code_widget_2, 5, 12)
+        
+        self.departure_widget_2 = QListWidget(self)
+        self.departure_widget_2.setStyleSheet(border_style_2 + "background-color: white;")
+        grid_layout.addWidget(self.departure_widget_2, 5, 13, 1, 2)
+        
+        self.arrival_widget_2 = QListWidget(self)
+        self.arrival_widget_2.setStyleSheet(border_style_2 + "background-color: white;")
+        grid_layout.addWidget(self.arrival_widget_2, 5, 15)
+        
+        self.region_widget_2 = QListWidget(self)
+        self.region_widget_2.setStyleSheet(border_style_2 + "background-color: white;")
+        grid_layout.addWidget(self.region_widget_2, 5, 16, 1, 2)
+        
+        self.product_widget_2 = QListWidget(self)
+        self.product_widget_2.setStyleSheet("background-color: white;border: 2px solid black;")
+        grid_layout.addWidget(self.product_widget_2, 5, 18)
         
         central_widget = QWidget()
         central_widget.setLayout(grid_layout)
         self.setCentralWidget(central_widget)
+        
+    def update_labels(self, opt):
+        if opt == 'Opt1':
+            self.label_9.setText("L")
+            self.label_10.setText("F")
+        elif opt == 'Opt2':
+            self.label_9.setText("Y")
+            self.label_10.setText("N")
+        elif opt == 'Opt3':
+            self.label_9.setText("A")
+            self.label_10.setText("B")
+        print(f"Selected option: {opt}")
         
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Left:
@@ -225,13 +398,12 @@ class OptionButton(QWidget):
         super().__init__(parent)
         self.on_pixmap = QPixmap(on_image_path)
         self.off_pixmap = QPixmap(off_image_path)
+        self.opt_text = opt_text
+        self.is_on = False
+        self.callback = callback
         if self.on_pixmap.isNull() or self.off_pixmap.isNull():
             print("이미지 로드 실패:", on_image_path, "또는", off_image_path)
             return
-        
-        self.opt_text = opt_text
-        self.is_on = False
-        self.callback = callback  # 콜백 함수 추가
 
         self.label = QLabel(self)
         self.setScaledPixmap()
@@ -270,12 +442,11 @@ class OptionButton(QWidget):
         self.setScaledPixmap()
     
     def opt_callback(opt):
-        global selected_option
-        selected_option = opt
-        print(f"Selected option: {selected_option}")
-    
+        print(f"Selected option: {opt}")
+
     def option_sel(self):
         self.is_on = not self.is_on
         self.setScaledPixmap()
-        if self.is_on and self.callback:
-            self.callback(self.opt_text)
+        if self.is_on:
+            if self.callback:
+                self.callback(self.opt_text)
