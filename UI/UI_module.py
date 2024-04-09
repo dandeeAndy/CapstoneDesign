@@ -130,7 +130,7 @@ class MainWindow(QMainWindow):
 # ---------------------------------------------------------------------------------------------------------------------
         # 옵션 버튼 설정
         self.option_buttons = [
-            OptionButton('domfor_ON.png', 'domfor_OFF.png', 'Opt1', self),
+            OptionButton('domfor_ON.png', 'domfor_OFF.png', 'Option1', self),
             OptionButton('fragile_ON.png', 'fragile_OFF.png', 'Opt2', self),
             OptionButton('courier_ON.png', 'courier_OFF.png', 'Opt3', self),
         ]
