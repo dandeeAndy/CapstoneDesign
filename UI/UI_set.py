@@ -453,10 +453,12 @@ class OptionButton(QWidget):
         # print(f"Selected option: {opt}")
         global selected_option
 
-
     def option_sel(self):
-        global selected_option
+        global selected_option  # 전역 변수 사용을 명시
         self.is_on = not self.is_on
+        self.setScaledPixmap()
         if self.is_on:
-            selected_option = self.opt_text
-        print(f"Current selected option: {selected_option}")
+            selected_option = self.opt_text  # 선택된 옵션을 전역 변수에 할당
+            print(f"Selected option: {selected_option}")
+            if self.callback:
+                self.callback(self.opt_text)  # 변경된 selected_option 값을 사용하여 callback 함수 호출

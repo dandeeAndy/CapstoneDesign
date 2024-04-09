@@ -455,15 +455,14 @@ class OptionButton(QWidget):
         global selected_option
 
     def option_sel(self):
-        global selected_option
+        global selected_option  # 전역 변수 사용을 명시
         self.is_on = not self.is_on
-        if self.is_on:
-            selected_option = self.opt_text
-            self.parent().update_labels()  # 부모 윈도우의 update_labels 호출
-        else:
-            selected_option = None  # 버튼이 꺼지면 selected_option 초기화
         self.setScaledPixmap()
-        print(f"Current selected option: {selected_option}")
+        if self.is_on:
+            selected_option = self.opt_text  # 선택된 옵션을 전역 변수에 할당
+            print(f"Selected option: {selected_option}")
+            if self.callback:
+                self.callback(self.opt_text)  # 변경된 selected_option 값을 사용하여 callback 함수 호출
 # ---------------------------------------------------------------------------------------------------------------------
 if __name__ == '__main__':
     app = QApplication(sys.argv)
