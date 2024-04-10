@@ -9,16 +9,21 @@ def get_selected_option():
     global selected_option
     return selected_option
 
-font_label = QFont("NanumSquare", 12)
+font_title = QFont("NanumSquare", 12)
 border_style_1 = "border-top: 2px solid black; border-left: 2px solid black;"
-border_style_2 = "border-top: 2px solid black; border-left: 2px solid black; border-bottom: 2px solid black;"
-border_style_3 = "border-top: 2px solid black; border-left: 2px solid black; border-right: 2px solid black;"
+border_style_2 = "border-top: 2px solid black; border-left: 2px solid black; border-right: 2px solid black;"
+border_style_3 = "border-top: 2px solid black; border-left: 2px solid black; border-bottom: 2px solid black;"
+border_style_4 = "background-color: white; border: 2px solid black;"
 
 # ---------------------------------------------------------------------------------------------------------------------
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.first_enter_pressed = False
+        # self.setStyleSheet("background-color: #FFFFFF;")
+        self.option1_status = 0
+        self.option2_status = 0
+        self.option3_status = 0
         self.initUI()
         
     def initUI(self):
@@ -156,8 +161,7 @@ class MainWindow(QMainWindow):
         self.pause_button_label.mousePressEvent = self.pauseClicked
         self.grid_layout.addWidget(self.pause_button_label, 2, 12, 1, 7)
         
-        self.label_maker("label_8", "장애이력", 2, 3, 0, 1, 5)
-        label_8.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+        self.history_maker("label_8", "장애이력", 2, 3, 0, 1, 5)
         self.label_maker("label_9", "L", 2, 3, 6, 1, 5)
         self.label_maker("label_10", "F", 2, 3, 12, 1, 7)
 
@@ -206,70 +210,67 @@ class MainWindow(QMainWindow):
         central_widget.setLayout(self.grid_layout)
         self.setCentralWidget(central_widget)
 #---------------------------------------------------------------------------------------------------------------------      
+    def history_maker(self, label_name, text, style_num, row, col, rowspan=1, colspan=1):
+        label = QLabel(text, self)
+        setattr(self, label_name, label)
+        label.setFont(font_title)
+        label.setAlignment(Qt.AlignLeft | Qt.AlignBottom)
+        
+        if style_num == 2:
+            label.setStyleSheet(border_style_2)#좌상우
+        
+        self.grid_layout.addWidget(label, row, col, rowspan, colspan)
+        
     def label_maker(self, label_name, text, style_num, row, col, rowspan=1, colspan=1):
         label = QLabel(text, self)
         setattr(self, label_name, label)
-        font_label = QFont("NanumSquare", 12)
-        label.setFont(font_label)
+        label.setFont(font_title)
         label.setAlignment(Qt.AlignHCenter | Qt.AlignBottom)
-
+        
         if style_num == 1:
-            label.setStyleSheet("border-top: 2px solid black; border-left: 2px solid black; background-color: white;")#좌상
+            label.setStyleSheet(border_style_1)#좌상
         elif style_num == 2:
-            label.setStyleSheet("border-top: 2px solid black; border-left: 2px solid black; border-right: 2px solid black; background-color: white;")#좌상우
+            label.setStyleSheet(border_style_2)#좌상우
         elif style_num == 3:
-            label.setStyleSheet("border-top: 2px solid black; border-left: 2px solid black; border-bottom: 2px solid black; background-color: white;")#좌상하
+            label.setStyleSheet(border_style_3)#좌상하
         
         self.grid_layout.addWidget(label, row, col, rowspan, colspan)
     
     def widget_maker(self, widget_name, style_num, row, col, rowspan=1, colspan=1):
         widget = QListWidget(self)
         setattr(self, widget_name, widget)
-
+        
         if style_num == 1:
-            widget.setStyleSheet("border-top: 2px solid black; border-left: 2px solid black; background-color: white;")#좌상
+            widget.setStyleSheet(border_style_1)#좌상
         elif style_num == 2:
-            widget.setStyleSheet("border-top: 2px solid black; border-left: 2px solid black; border-right: 2px solid black; background-color: white;")#좌상우
+            widget.setStyleSheet(border_style_2)#좌상우
         elif style_num == 3:
-            widget.setStyleSheet("border-top: 2px solid black; border-left: 2px solid black; border-bottom: 2px solid black; background-color: white;")#좌상하
+            widget.setStyleSheet(border_style_3)#좌상하
         elif style_num == 4:
-            widget.setStyleSheet("background-color: white; border: 2px solid black;")#상하좌우
+            widget.setStyleSheet(border_style_4)#상하좌우
 
         self.grid_layout.addWidget(widget, row, col, rowspan, colspan)
     
-    def update_buttons(self, selected_index):
-        for i, button in enumerate(self.option_buttons):
-            if i == selected_index:
-                button.is_on = True
-                button.setScaledPixmap()
-            else:
-                button.is_on = False
-                button.setScaledPixmap()
     
-    def option_selected(self):
-        # 하나라도 켜진 버튼이 있는지 체크
-        is_any_button_on = any(button.is_on for button in self.option_buttons)
-        active_button_index = next((i for i, button in enumerate(self.option_buttons) if button.is_on), -1)
-        if is_any_button_on:
-            self.update_buttons(active_button_index)
     
     def addQRData(self, qr_data):
         parts = qr_data.split('/')
         classifi = parts[0]
         
         if classifi[0] in ['L', 'Y', 'A']:
-            self.code_widget_1.addItem(parts[1])
-            self.departure_widget_1.addItem(parts[2])
-            self.arrival_widget_1.addItem(parts[3])
-            self.region_widget_1.addItem(parts[4])
-            self.product_widget_1.addItem(parts[5])
+            self.QR_add(1, parts)
         
         elif classifi[0] in ['F', 'N', 'B']:
-            self.code_widget_2.addItem(parts[1])
-            self.departure_widget_2.addItem(parts[2])
-            self.arrival_widget_2.addItem(parts[3])
-            self.region_widget_2.addItem(parts[4])
-            self.product_widget_2.addItem(parts[5])
+            self.QR_add(2, parts)
+    
+    def QR_add(self, widget_set_number, parts):
+        if widget_set_number == 1:
+            widgets = [self.code_widget_1, self.departure_widget_1, self.arrival_widget_1, self.region_widget_1, self.product_widget_1]
+        elif widget_set_number == 2:
+            widgets = [self.code_widget_2, self.departure_widget_2, self.arrival_widget_2, self.region_widget_2, self.product_widget_2]
+        
+        for widget, part in zip(widgets, parts):
+            widget.addItem(part)
     
     def clearLists(self):
         history_widgets = [self.NO_widget, self.ALARM_widget, self.EQ_widget, self.STATE_widget, self.DATETIME_widget]
@@ -356,7 +357,6 @@ class MainWindow(QMainWindow):
     def printWidgetSize(self, widget):
         size = widget.size()
         print("Width:", size.width(), "Height:", size.height())
-    
         
 class TransparentButton(QPushButton):
     def __init__(self, parent=None):
@@ -374,7 +374,7 @@ class OptionButton(QWidget):
         if self.on_pixmap.isNull() or self.off_pixmap.isNull():
             print("이미지 로드 실패:", on_image_path, "또는", off_image_path)
             return
-
+        
         self.label = QLabel(self)
         self.setScaledPixmap()
         
@@ -391,9 +391,6 @@ class OptionButton(QWidget):
         self.setLayout(layout)
         
         self.transparent_button.raise_()
-    
-    def button_clicked(self):
-        self.parent().option_selected()
     
     def setButtonSize(self, width, height):
         scaled_on_pixmap = self.on_pixmap.scaled(width, height, Qt.KeepAspectRatio, Qt.SmoothTransformation)
@@ -415,6 +412,26 @@ class OptionButton(QWidget):
 
     def resizeEvent(self, event):
         self.setScaledPixmap()
+    
+    def button_clicked(self):
+        self.option_selected()
+    
+    def update_buttons(self, selected_index):
+        for i, button in enumerate(self.option_buttons):
+            if i == selected_index:
+                button.is_on = True
+                setattr(self, f"option{i+1}_status", 1)  # 상태 변수 업데이트
+            else:
+                button.is_on = False
+                setattr(self, f"option{i+1}_status", 0)  # 상태 변수 업데이트
+            button.setScaledPixmap()
+    
+    def option_selected(self):
+        is_any_button_on = any(button.is_on for button in self.option_buttons)
+        active_button_index = next((i for i, button in enumerate(self.option_buttons) if button.is_on), -1)
+        if is_any_button_on:
+            self.update_buttons(active_button_index)
+        # 이제 여기에서 각 버튼의 상태를 확인하고 필요한 작업을 수행할 수 있습니다.
         
     def toggle(self):
         global selected_option
