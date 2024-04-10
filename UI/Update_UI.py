@@ -122,7 +122,7 @@ class MainWindow(QMainWindow):
         exit_action.triggered.connect(self.close)
         file_menu.addAction(exit_action)
         self.setMenuBar(self.menu_bar)
-                
+        
         # 시스템 로고 설정
         self.logo_label = QLabel(self)
         self.logo_pixmap = QPixmap('JALK3_logo.png')
@@ -220,7 +220,7 @@ class MainWindow(QMainWindow):
             label.setStyleSheet(border_style_2)#좌상우
         
         self.grid_layout.addWidget(label, row, col, rowspan, colspan)
-        
+    
     def label_maker(self, label_name, text, style_num, row, col, rowspan=1, colspan=1):
         label = QLabel(text, self)
         setattr(self, label_name, label)
@@ -251,7 +251,22 @@ class MainWindow(QMainWindow):
 
         self.grid_layout.addWidget(widget, row, col, rowspan, colspan)
     
+    def update_buttons(self, selected_index):
+        for i, button in enumerate(self.option_buttons):
+            if i == selected_index:
+                button.is_on = True
+                setattr(self, f"option{i+1}_status", 1)  # 상태 변수 업데이트
+            else:
+                button.is_on = False
+                setattr(self, f"option{i+1}_status", 0)  # 상태 변수 업데이트
+            button.setScaledPixmap()
     
+    def option_selected(self):
+        is_any_button_on = any(button.is_on for button in self.option_buttons)
+        active_button_index = next((i for i, button in enumerate(self.option_buttons) if button.is_on), -1)
+        if is_any_button_on:
+            self.update_buttons(active_button_index)
+        # 이제 여기에서 각 버튼의 상태를 확인하고 필요한 작업을 수행할 수 있습니다.
     
     def addQRData(self, qr_data):
         parts = qr_data.split('/')
@@ -279,14 +294,14 @@ class MainWindow(QMainWindow):
 
         for widget in history_widgets + details_1_widgets + details_2_widgets:
             widget.clear()
-        
+    
     def update_option(new_value):
         global selected_option  # 글로벌 변수 사용 선언
         selected_option = new_value  # 글로벌 변수 업데이트
-        
+    
     def print_option():
         print(selected_option)  # 글로벌 변수 접근
-        
+    
     def update_labels(self, opt):
         if opt == 'Opt1':
             self.label_9.setText("L")
@@ -298,7 +313,7 @@ class MainWindow(QMainWindow):
             self.label_9.setText("A")
             self.label_10.setText("B")
         # print(f"Selected option: {opt}")
-        
+    
     # def keyPressEvent(self, event):
     #     if event.key() == Qt.Key_Left:
     #         if self.option_buttons[0].is_on:
@@ -335,7 +350,7 @@ class MainWindow(QMainWindow):
                 print(f"{button.opt_text} pause")
                 button.is_on = False
                 button.setScaledPixmap()
-        
+    
     def buttonClicked(self):
             print("Button clicked!")
 
@@ -357,7 +372,7 @@ class MainWindow(QMainWindow):
     def printWidgetSize(self, widget):
         size = widget.size()
         print("Width:", size.width(), "Height:", size.height())
-        
+
 class TransparentButton(QPushButton):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -398,11 +413,10 @@ class OptionButton(QWidget):
 
         self.setFixedSize(width, height)
         self.label.setFixedSize(width, height)
-        self.label.setPixmap(scaled_on_pixmap)
         self.label.setPixmap(scaled_off_pixmap)
         
         self.transparent_button.setFixedSize(width, height)
-
+    
     def setScaledPixmap(self):
         label_size = self.size()
         scaled_on_pixmap = self.on_pixmap.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
@@ -416,23 +430,6 @@ class OptionButton(QWidget):
     def button_clicked(self):
         self.option_selected()
     
-    def update_buttons(self, selected_index):
-        for i, button in enumerate(self.option_buttons):
-            if i == selected_index:
-                button.is_on = True
-                setattr(self, f"option{i+1}_status", 1)  # 상태 변수 업데이트
-            else:
-                button.is_on = False
-                setattr(self, f"option{i+1}_status", 0)  # 상태 변수 업데이트
-            button.setScaledPixmap()
-    
-    def option_selected(self):
-        is_any_button_on = any(button.is_on for button in self.option_buttons)
-        active_button_index = next((i for i, button in enumerate(self.option_buttons) if button.is_on), -1)
-        if is_any_button_on:
-            self.update_buttons(active_button_index)
-        # 이제 여기에서 각 버튼의 상태를 확인하고 필요한 작업을 수행할 수 있습니다.
-        
     def toggle(self):
         global selected_option
         self.is_on = not self.is_on
