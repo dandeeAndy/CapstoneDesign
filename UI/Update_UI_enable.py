@@ -94,12 +94,9 @@ class MainWindow(QMainWindow):
         
         for i, option_button in enumerate(self.option_buttons):
             option_button.setButtonSize(240, 270)
-
             transparent_button = TransparentButton(option_button)
             transparent_button.setFixedSize(240, 135)
-            # transparent_button.setAlignment(Qt.AlignBottom)
-            # transparent_button.resize(option_button.size())
-            transparent_button.clicked.connect(lambda _, b=option_button: b.toggle())
+            transparent_button.clicked.connect(lambda _, b=option_button: self.option_button_clicked(b))
 
             grid_layout.addWidget(option_button, 1, i + 2)
         
@@ -131,6 +128,23 @@ class MainWindow(QMainWindow):
         central_widget = QWidget()
         central_widget.setLayout(grid_layout)
         self.setCentralWidget(central_widget)
+        
+    def option_button_clicked(self, button):
+        if self.options_enabled:  # 옵션 버튼이 활성화된 경우에만 기능 수행
+            button.toggle()
+            self.check_options_status()
+    
+    def check_options_status(self):
+        # 옵션 버튼 상태 확인
+        if any(button.is_on for button in self.option_buttons):
+            self.options_enabled = False
+        else:
+            self.options_enabled = True
+    
+    def resetOptions(self):
+        for button in self.option_buttons:
+            button.is_on = False
+            button.setScaledPixmap() # 버튼 이미지 초기화
     
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Return:  # 엔터 키 입력 처리
@@ -139,17 +153,17 @@ class MainWindow(QMainWindow):
             else:
                 self.first_details_list_widget.addItem("1111111111")
                 self.first_enter_pressed = True
-        
+    
     # 클릭 이벤트 처리
     def pauseClicked(self, event):
         QMessageBox.information(self, '알림', '작업이 중지되었습니다.')
         print('PAUSE!')
 
-        reply = QMessageBox.question(self, '확인', '분류기준을 초기화하시겠습니까?',
-                                     QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        reply = QMessageBox.question(self, '확인', '분류기준을 초기화하시겠습니까?', QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 
         if reply == QMessageBox.Yes:
             self.resetOptions()
+            self.options_enabled = True  # 옵션 버튼 재활성화
     
     # 옵션 버튼 초기화
     def resetOptions(self):
@@ -240,10 +254,14 @@ class OptionButton(QWidget):
         self.setScaledPixmap()
 
     def toggle(self):
+        if not self.parent().options_enabled:
+            return  # 옵션 버튼이 비활성화된 경우 기능을 수행하지 않음
         self.is_on = not self.is_on
         self.setScaledPixmap()
         if self.is_on:
-            print(f"{self.opt_text}\nSTART")
+            print(f"{self.opt_text} activated")
+        else:
+            print(f"{self.opt_text} deactivated")
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
