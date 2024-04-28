@@ -255,7 +255,7 @@ class OptionButton(QWidget):
 
     def toggle(self):
         if not self.parent().options_enabled:
-            return  # 옵션 버튼이 비활성화된 경우 기능을 수행하지 않음
+            return  # 옵션 버튼이 비활성화된 경우 기능을 수행하지 않음, 부모 윈도우에서 옵션 버튼 활성화 상태를 확인
         self.is_on = not self.is_on
         self.setScaledPixmap()
         if self.is_on:
