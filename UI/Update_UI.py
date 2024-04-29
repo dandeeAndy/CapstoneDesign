@@ -154,6 +154,8 @@ class MainWindow(QMainWindow):
             transparent_button.clicked.connect(lambda _, b=option_button: b.button_clicked())
             pos = button_positions[i]
             self.grid_layout.addWidget(option_button, *pos)
+        
+        # 작업 중지 버튼 설정
         self.pause_button_label = QLabel(self)
         pause_button_pixmap = QPixmap('pause_button.png')
         pause_button_pixmap = pause_button_pixmap.scaled(700, 200, Qt.KeepAspectRatio, Qt.SmoothTransformation)
@@ -336,7 +338,6 @@ class MainWindow(QMainWindow):
     def pauseClicked(self, event):
         QMessageBox.information(self, '알림', '작업이 중지되었습니다.')
         print('PAUSE!')
-
         reply = QMessageBox.question(self, '확인', '분류기준을 초기화하시겠습니까?',
                                      QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 
@@ -398,11 +399,11 @@ class OptionButton(QWidget):
         self.transparent_button.clicked.connect(self.button_clicked)
         # self.transparent_button.clicked.connect(self.toggle)
         self.transparent_button.setFixedSize(240, 135)
+        self.transparent_button.setStyleSheet("background:transparent;")
 
         layout = QVBoxLayout(self)
         layout.addWidget(self.label)
         layout.addWidget(self.transparent_button)
-
         self.setLayout(layout)
         
         self.transparent_button.raise_()
@@ -426,9 +427,13 @@ class OptionButton(QWidget):
 
     def resizeEvent(self, event):
         self.setScaledPixmap()
-    
+        
     def button_clicked(self):
-        self.option_selected()
+        other_buttons_on = any(btn.is_on for btn in self.parent().option_buttons if btn is not self)
+        if other_buttons_on:
+            QMessageBox.warning(self, '경고', '다른 옵션이 실행 중입니다.')
+        else:
+            self.toggle()
     
     def toggle(self):
         global selected_option

@@ -12,8 +12,6 @@ class MainWindow(QMainWindow):
     def initUI(self):
         grid_layout = QGridLayout()
         
-        grid_layout.setContentsMargins(50, 50, 50, 50)
-        
         # 각 행과 열에 대한 비율 설정
         grid_layout.setRowStretch(0, 1)
         grid_layout.setRowStretch(1, 2)
@@ -103,6 +101,7 @@ class MainWindow(QMainWindow):
 
             grid_layout.addWidget(option_button, 1, i + 2)
         
+        grid_layout.setContentsMargins(50, 50, 50, 50)
         
         # 작업 중지 버튼 이미지 설정
         self.pause_button_label = QLabel(self)
@@ -143,37 +142,20 @@ class MainWindow(QMainWindow):
         else:
             self.options_enabled = True
     
-    def resetOptions(self):
-        for button in self.option_buttons:
-            button.is_on = False
-            button.setScaledPixmap() # 버튼 이미지 초기화
-    
-    def keyPressEvent(self, event):
-        if event.key() == Qt.Key_Return:  # 엔터 키 입력 처리
-            if self.first_enter_pressed:
-                self.second_details_list_widget.addItem("2222222222")
-            else:
-                self.first_details_list_widget.addItem("1111111111")
-                self.first_enter_pressed = True
-    
     # 클릭 이벤트 처리
-    def pauseClicked(self, event):
-        QMessageBox.information(self, '알림', '작업이 중지되었습니다.')
-        print('PAUSE!')
-
-        reply = QMessageBox.question(self, '확인', '분류기준을 초기화하시겠습니까?', QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
-
-        if reply == QMessageBox.Yes:
-            self.resetOptions()
-            self.options_enabled = True  # 옵션 버튼 재활성화
+    def pauseClicked(self):
+        if any(button.is_on for button in self.option_buttons):
+            reply = QMessageBox.question(self, '확인', '분류기준을 초기화하시겠습니까?',
+                                         QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+            if reply == QMessageBox.Yes:
+                self.resetOptions()
+                self.options_enabled = True
     
     # 옵션 버튼 초기화
     def resetOptions(self):
         for button in self.option_buttons:
-            if button.is_on:
-                print(f"{button.opt_text} pause")
-                button.is_on = False
-                button.setScaledPixmap()
+            button.is_on = False
+            button.setScaledPixmap()
         
     def buttonClicked(self):
             print("Button clicked!")
@@ -204,9 +186,8 @@ class TransparentButton(QPushButton):
         # self.setStyleSheet("background:transparent; border: 2px solid black;")
 
 class OptionButton(QWidget):
-    def __init__(self, on_image_path, off_image_path, opt_text, parent=None, main_window=None):
+    def __init__(self, on_image_path, off_image_path, opt_text, parent=None):
         super().__init__(parent)
-        self.main_window = main_window  # MainWindow의 참조를 저장
         self.on_pixmap = QPixmap(on_image_path)
         self.off_pixmap = QPixmap(off_image_path)
         if self.on_pixmap.isNull() or self.off_pixmap.isNull():
@@ -222,8 +203,8 @@ class OptionButton(QWidget):
         self.transparent_button = TransparentButton(self)
         self.transparent_button.clicked.connect(self.toggle)
         self.transparent_button.setFixedSize(240, 135)  # 버튼 크기 설정
-
         # QStackedLayout 대신 QVBoxLayout 사용
+        
         layout = QVBoxLayout(self)
         layout.addWidget(self.label)
         layout.addWidget(self.transparent_button)
@@ -231,19 +212,6 @@ class OptionButton(QWidget):
         
         # 투명 버튼을 위젯의 최상위에 배치합니다.
         self.transparent_button.raise_()
-    
-    def toggle(self):
-        # 부모가 MainWindow이고, options_enabled 속성을 가지고 있는지 확인
-        if isinstance(self.parent(), MainWindow) and self.parent().options_enabled:
-            self.is_on = not self.is_on
-            self.setScaledPixmap()
-            if self.is_on:
-                print(f"{self.opt_text} activated")
-            else:
-                print(f"{self.opt_text} deactivated")
-        else:
-            print("버튼 활성화 변경 불가능")
-        
     
     def setButtonSize(self, width, height):
         # QPixmap 크기 조정
@@ -259,24 +227,28 @@ class OptionButton(QWidget):
         self.transparent_button.setFixedSize(width, height)
 
     def setScaledPixmap(self):
-        label_size = self.size()  # QLabel의 크기를 가져옵니다.
-        scaled_on_pixmap = self.on_pixmap.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
-        scaled_off_pixmap = self.off_pixmap.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
-        self.label.setPixmap(scaled_off_pixmap if not self.is_on else scaled_on_pixmap)
-        self.update()
-
-    def resizeEvent(self, event):
-        self.setScaledPixmap()
+        if self.is_on:
+            self.label.setPixmap(self.on_pixmap)
+        else:
+            self.label.setPixmap(self.off_pixmap)
 
     def toggle(self):
         if not self.parent().options_enabled:
-            return  # 옵션 버튼이 비활성화된 경우 기능을 수행하지 않음, 부모 윈도우에서 옵션 버튼 활성화 상태를 확인
+            QMessageBox.information(self, "경고", "다른 옵션이 실행중입니다.")
+            return
+
+        if any(button.is_on and button != self for button in self.parent().option_buttons):
+            QMessageBox.warning(self, "경고", "다른 옵션이 실행중입니다.")
+            return
+
         self.is_on = not self.is_on
         self.setScaledPixmap()
+
         if self.is_on:
-            print(f"{self.opt_text} activated")
+            self.parent().options_enabled = False
         else:
-            print(f"{self.opt_text} deactivated")
+            if not any(button.is_on for button in self.parent().option_buttons):
+                self.parent().options_enabled = True
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
