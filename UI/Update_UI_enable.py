@@ -1,15 +1,18 @@
 import sys
-
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+        self.options_enabled = True  # 옵션 버튼 활성화 상태 관리
         self.initUI()
         
     def initUI(self):
         grid_layout = QGridLayout()
+        
+        grid_layout.setContentsMargins(50, 50, 50, 50)
         
         # 각 행과 열에 대한 비율 설정
         grid_layout.setRowStretch(0, 1)
@@ -100,7 +103,6 @@ class MainWindow(QMainWindow):
 
             grid_layout.addWidget(option_button, 1, i + 2)
         
-        grid_layout.setContentsMargins(50, 50, 50, 50)
         
         # 작업 중지 버튼 이미지 설정
         self.pause_button_label = QLabel(self)
@@ -202,8 +204,9 @@ class TransparentButton(QPushButton):
         # self.setStyleSheet("background:transparent; border: 2px solid black;")
 
 class OptionButton(QWidget):
-    def __init__(self, on_image_path, off_image_path, opt_text, parent=None):
+    def __init__(self, on_image_path, off_image_path, opt_text, parent=None, main_window=None):
         super().__init__(parent)
+        self.main_window = main_window  # MainWindow의 참조를 저장
         self.on_pixmap = QPixmap(on_image_path)
         self.off_pixmap = QPixmap(off_image_path)
         if self.on_pixmap.isNull() or self.off_pixmap.isNull():
@@ -224,11 +227,23 @@ class OptionButton(QWidget):
         layout = QVBoxLayout(self)
         layout.addWidget(self.label)
         layout.addWidget(self.transparent_button)
-
         self.setLayout(layout)
         
         # 투명 버튼을 위젯의 최상위에 배치합니다.
         self.transparent_button.raise_()
+    
+    def toggle(self):
+        # 부모가 MainWindow이고, options_enabled 속성을 가지고 있는지 확인
+        if isinstance(self.parent(), MainWindow) and self.parent().options_enabled:
+            self.is_on = not self.is_on
+            self.setScaledPixmap()
+            if self.is_on:
+                print(f"{self.opt_text} activated")
+            else:
+                print(f"{self.opt_text} deactivated")
+        else:
+            print("버튼 활성화 변경 불가능")
+        
     
     def setButtonSize(self, width, height):
         # QPixmap 크기 조정
