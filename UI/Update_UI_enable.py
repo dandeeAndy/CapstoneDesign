@@ -1,12 +1,11 @@
 import sys
+
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
-
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.options_enabled = True  # 옵션 버튼 활성화 상태 관리
         self.initUI()
         
     def initUI(self):
@@ -95,9 +94,12 @@ class MainWindow(QMainWindow):
         
         for i, option_button in enumerate(self.option_buttons):
             option_button.setButtonSize(240, 270)
+
             transparent_button = TransparentButton(option_button)
             transparent_button.setFixedSize(240, 135)
-            transparent_button.clicked.connect(lambda _, b=option_button: self.option_button_clicked(b))
+            # transparent_button.setAlignment(Qt.AlignBottom)
+            # transparent_button.resize(option_button.size())
+            transparent_button.clicked.connect(lambda _, b=option_button: b.toggle())
 
             grid_layout.addWidget(option_button, 1, i + 2)
         
@@ -130,32 +132,24 @@ class MainWindow(QMainWindow):
         central_widget.setLayout(grid_layout)
         self.setCentralWidget(central_widget)
         
-    def option_button_clicked(self, button):
-        if self.options_enabled:  # 옵션 버튼이 활성화된 경우에만 기능 수행
-            button.toggle()
-            self.check_options_status()
-    
-    def check_options_status(self):
-        # 옵션 버튼 상태 확인
-        if any(button.is_on for button in self.option_buttons):
-            self.options_enabled = False
-        else:
-            self.options_enabled = True
-    
     # 클릭 이벤트 처리
-    def pauseClicked(self):
-        if any(button.is_on for button in self.option_buttons):
-            reply = QMessageBox.question(self, '확인', '분류기준을 초기화하시겠습니까?',
-                                         QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
-            if reply == QMessageBox.Yes:
-                self.resetOptions()
-                self.options_enabled = True
+    def pauseClicked(self, event):
+        QMessageBox.information(self, '알림', '작업이 중지되었습니다.')
+        print('PAUSE!')
+
+        reply = QMessageBox.question(self, '확인', '분류기준을 초기화하시겠습니까?',
+                                     QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+
+        if reply == QMessageBox.Yes:
+            self.resetOptions()
     
     # 옵션 버튼 초기화
     def resetOptions(self):
         for button in self.option_buttons:
-            button.is_on = False
-            button.setScaledPixmap()
+            if button.is_on:
+                print(f"{button.opt_text} pause")
+                button.is_on = False
+                button.setScaledPixmap()
         
     def buttonClicked(self):
             print("Button clicked!")
@@ -203,11 +197,12 @@ class OptionButton(QWidget):
         self.transparent_button = TransparentButton(self)
         self.transparent_button.clicked.connect(self.toggle)
         self.transparent_button.setFixedSize(240, 135)  # 버튼 크기 설정
+
         # QStackedLayout 대신 QVBoxLayout 사용
-        
         layout = QVBoxLayout(self)
         layout.addWidget(self.label)
         layout.addWidget(self.transparent_button)
+
         self.setLayout(layout)
         
         # 투명 버튼을 위젯의 최상위에 배치합니다.
@@ -227,28 +222,20 @@ class OptionButton(QWidget):
         self.transparent_button.setFixedSize(width, height)
 
     def setScaledPixmap(self):
-        if self.is_on:
-            self.label.setPixmap(self.on_pixmap)
-        else:
-            self.label.setPixmap(self.off_pixmap)
+        label_size = self.size()  # QLabel의 크기를 가져옵니다.
+        scaled_on_pixmap = self.on_pixmap.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        scaled_off_pixmap = self.off_pixmap.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        self.label.setPixmap(scaled_off_pixmap if not self.is_on else scaled_on_pixmap)
+        self.update()
 
-    def toggle(self):
-        if not self.parent().options_enabled:
-            QMessageBox.information(self, "경고", "다른 옵션이 실행중입니다.")
-            return
-
-        if any(button.is_on and button != self for button in self.parent().option_buttons):
-            QMessageBox.warning(self, "경고", "다른 옵션이 실행중입니다.")
-            return
-
-        self.is_on = not self.is_on
+    def resizeEvent(self, event):
         self.setScaledPixmap()
 
+    def toggle(self):
+        self.is_on = not self.is_on
+        self.setScaledPixmap()
         if self.is_on:
-            self.parent().options_enabled = False
-        else:
-            if not any(button.is_on for button in self.parent().option_buttons):
-                self.parent().options_enabled = True
+            print(f"{self.opt_text}\nSTART")
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

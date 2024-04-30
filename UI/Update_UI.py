@@ -151,7 +151,7 @@ class MainWindow(QMainWindow):
             option_button.setButtonSize(240, 270)
             transparent_button = TransparentButton(option_button)
             transparent_button.setFixedSize(240, 135)
-            transparent_button.clicked.connect(lambda _, b=option_button: b.button_clicked())
+            transparent_button.clicked.connect(lambda _, b=option_button: b.toggle())
             pos = button_positions[i]
             self.grid_layout.addWidget(option_button, *pos)
         

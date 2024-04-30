@@ -63,7 +63,7 @@ class MainWindow(QMainWindow):
                 OptionButton('domfor_ON.png', 'domfor_OFF.png', 'Opt1', self),
                 OptionButton('fragile_ON.png', 'fragile_OFF.png', 'Opt2', self),
                 OptionButton('courier_ON.png', 'courier_OFF.png', 'Opt3', self),
-            ]
+        ]
         
         layout = QVBoxLayout(self.central_widget)
         for button in self.option_buttons:
