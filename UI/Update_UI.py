@@ -142,9 +142,9 @@ class MainWindow(QMainWindow):
 # ---------------------------------------------------------------------------------------------------------------------
         # 옵션 버튼 설정
         self.option_buttons = [
-            OptionButton('domfor_ON.png', 'domfor_OFF.png', 'Opt1', self, index=0),
-            OptionButton('fragile_ON.png', 'fragile_OFF.png', 'Opt2', self, index=1),
-            OptionButton('courier_ON.png', 'courier_OFF.png', 'Opt3', self, index=2),
+            OptionButton('domfor_ON.png', 'domfor_OFF.png', 'Opt1', self),#index 제거함
+            OptionButton('fragile_ON.png', 'fragile_OFF.png', 'Opt2', self),
+            OptionButton('courier_ON.png', 'courier_OFF.png', 'Opt3', self),
         ]
         button_positions = [(1, 12, 1, 2), (1, 14, 1, 3), (1, 17, 1, 2)]
         for i, option_button in enumerate(self.option_buttons):
@@ -315,24 +315,6 @@ class MainWindow(QMainWindow):
             self.label_9.setText("A")
             self.label_10.setText("B")
         # print(f"Selected option: {opt}")
-    
-    # def keyPressEvent(self, event):
-    #     if event.key() == Qt.Key_Left:
-    #         if self.option_buttons[0].is_on:
-    #             self.first_details_list_widget.addItem("1111111111")
-    #         elif self.option_buttons[1].is_on:
-    #             self.first_details_list_widget.addItem("3333333333")
-    #         elif self.option_buttons[2].is_on:
-    #             self.first_details_list_widget.addItem("5555555555")
-        
-    #     # 오른쪽 화살표 키 이벤트
-    #     elif event.key() == Qt.Key_Right:
-    #         if self.option_buttons[0].is_on:
-    #             self.second_details_list_widget.addItem("2222222222")
-    #         elif self.option_buttons[1].is_on:
-    #             self.second_details_list_widget.addItem("4444444444")
-    #         elif self.option_buttons[2].is_on:
-    #             self.second_details_list_widget.addItem("6666666666")
         
     # 클릭 이벤트 처리
     def pauseClicked(self, event):
@@ -366,10 +348,6 @@ class MainWindow(QMainWindow):
     def refresh_system(self, event):
         print('새로고침')
     
-    # 장애이력에 항목을 추가하는 메서드
-    def addHistoryItem(self, text):
-        self.history_list_widget.addItem(text)
-    
     def printWidgetSize(self, widget):
         size = widget.size()
         print("Width:", size.width(), "Height:", size.height())
@@ -381,7 +359,7 @@ class TransparentButton(QPushButton):
         # self.setStyleSheet("background:transparent; border: 2px solid black;")
 
 class OptionButton(QWidget):
-    def __init__(self, on_image_path, off_image_path, opt_text, parent=None, index=None):
+    def __init__(self, on_image_path, off_image_path, opt_text, parent=None):#index 제거함
         super().__init__(parent)
         self.on_pixmap = QPixmap(on_image_path)
         self.off_pixmap = QPixmap(off_image_path)
@@ -394,10 +372,9 @@ class OptionButton(QWidget):
         self.label = QLabel(self)
         self.setScaledPixmap()
         
-        self.index = index
+        # self.index = index
         self.transparent_button = TransparentButton(self)
         self.transparent_button.clicked.connect(self.button_clicked)
-        # self.transparent_button.clicked.connect(self.toggle)
         self.transparent_button.setFixedSize(240, 135)
         self.transparent_button.setStyleSheet("background:transparent;")
 
@@ -429,7 +406,8 @@ class OptionButton(QWidget):
         self.setScaledPixmap()
         
     def button_clicked(self):
-        other_buttons_on = any(btn.is_on for btn in self.parent().option_buttons if btn is not self)
+    # 옵션 버튼 리스트를 직접 참조
+        other_buttons_on = any(btn.is_on for btn in self.parent().children() if isinstance(btn, OptionButton) and btn is not self)
         if other_buttons_on:
             QMessageBox.warning(self, '경고', '다른 옵션이 실행 중입니다.')
         else:
