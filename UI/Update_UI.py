@@ -160,6 +160,7 @@ class MainWindow(QMainWindow):
         pause_button_pixmap = QPixmap('pause_button.png')
         pause_button_pixmap = pause_button_pixmap.scaled(700, 200, Qt.KeepAspectRatio, Qt.SmoothTransformation)
         self.pause_button_label.setPixmap(pause_button_pixmap)
+        self.pause_button_label.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
         self.pause_button_label.mousePressEvent = self.pauseClicked
         self.grid_layout.addWidget(self.pause_button_label, 2, 12, 1, 7)
         
@@ -386,13 +387,10 @@ class OptionButton(QWidget):
         self.transparent_button.raise_()
     
     def setButtonSize(self, width, height):
-        scaled_on_pixmap = self.on_pixmap.scaled(width, height, Qt.KeepAspectRatio, Qt.SmoothTransformation)
         scaled_off_pixmap = self.off_pixmap.scaled(width, height, Qt.KeepAspectRatio, Qt.SmoothTransformation)
-
         self.setFixedSize(width, height)
         self.label.setFixedSize(width, height)
         self.label.setPixmap(scaled_off_pixmap)
-        
         self.transparent_button.setFixedSize(width, height)
     
     def setScaledPixmap(self):
@@ -401,12 +399,8 @@ class OptionButton(QWidget):
         scaled_off_pixmap = self.off_pixmap.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
         self.label.setPixmap(scaled_off_pixmap if not self.is_on else scaled_on_pixmap)
         self.update()
-
-    def resizeEvent(self, event):
-        self.setScaledPixmap()
         
     def button_clicked(self):
-    # 옵션 버튼 리스트를 직접 참조
         other_buttons_on = any(btn.is_on for btn in self.parent().children() if isinstance(btn, OptionButton) and btn is not self)
         if other_buttons_on:
             QMessageBox.warning(self, '경고', '다른 옵션이 실행 중입니다.')
