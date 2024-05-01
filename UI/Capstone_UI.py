@@ -49,16 +49,19 @@ def client_func():
         classifi = parts[0]
         
         if classifi[0] == 'L' or 'Y' or 'A':
-            UI_set.MainWindow.first_details_list_widget.addItem(qr_data_receive)
+            widgets = [UI_set.MainWindow.code_widget_1, UI_set.MainWindow.departure_widget_1, UI_set.MainWindow.arrival_widget_1, UI_set.MainWindow.region_widget_1, UI_set.MainWindow.product_widget_1]
         
         elif classifi[0] == 'F' or 'N' or 'B':
-            UI_set.MainWindow.second_details_list_widget.addItem(qr_data_receive)
+            widgets = [UI_set.MainWindow.code_widget_2, UI_set.MainWindow.departure_widget_2, UI_set.MainWindow.arrival_widget_2, UI_set.MainWindow.region_widget_2, UI_set.MainWindow.product_widget_2]
+        
+        for widget, part in zip(widgets, parts):
+            widget.addItem(part)
         
 # -----------------------------------------------------------------------
 def server_func():
     global client_soc, selected_option
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_socket.bind((UI_host, port))  
+    server_socket.bind((UI_host, port))
     server_socket.listen()
     print('UI server waiting for connection....')
     
