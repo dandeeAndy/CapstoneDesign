@@ -149,7 +149,7 @@ class MainWindow(QMainWindow):
             option_button.setButtonSize(240, 270)
             transparent_button = TransparentButton(option_button)
             transparent_button.setFixedSize(240, 135)
-            transparent_button.clicked.connect(lambda _, b=option_button: b.toggle())
+            transparent_button.clicked.connect(lambda _, b=option_button: b.option_sel())
             pos = button_positions[i]
             self.grid_layout.addWidget(option_button, *pos)
             
@@ -415,12 +415,12 @@ class OptionButton(QWidget):
         if other_buttons_on:
             QMessageBox.warning(self, '경고', '다른 옵션이 실행 중입니다.')
         else:
-            self.toggle()
+            self.option_sel()
     
-    def toggle(self):
+    def option_sel(self):
         global selected_option
         self.is_on = not self.is_on
         self.setScaledPixmap()
         if self.is_on:
             selected_option = self.opt_text
-            print(f"Selected option: {selected_option}")
+            self.optionSelected.emit(selected_option)  # 신호 발생
