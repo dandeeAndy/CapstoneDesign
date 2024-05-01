@@ -4,8 +4,6 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 import UI_set
 
-
-
 from queue import Queue
 import socket
 import threading
@@ -57,7 +55,7 @@ def client_func():
                         widget.addItem(part)
 # -----------------------------------------------------------------------
 def server_func():
-    global client_soc, selected_option
+    global client_soc, selected_option, last_sent_option
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.bind((UI_host, port))
     server_socket.listen()
@@ -67,9 +65,11 @@ def server_func():
     print('UI server connected')
     
     while True:
-        if selected_option is not None:
+        selected_option = UI_set.get_selected_option()        
+        if selected_option is not None and selected_option != last_sent_option:
             try:
-                client_soc.sendall(selected_option.encode('utf-8'))
+                client_soc.sendall((selected_option + '\n').encode('utf-8'))
+                last_sent_option = selected_option
                 selected_option = None  # 메시지 전송 후 변수 초기화
             except socket.error as e:
                 print("Error sending data:", e)
