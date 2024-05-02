@@ -2,7 +2,8 @@ import sys, os
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
-import UI_set_1
+import UI_set
+# import UI_set_1
 
 from queue import Queue
 import socket
@@ -20,6 +21,7 @@ port = 1111
 lock = threading.Lock()
 client_soc = None  # 전역 변수로 선언하여 모든 함수에서 접근 가능하게 함
 selected_option = None
+last_sent_option = None
 
 # -----------------------------------------------------------------------
 def client_func():
@@ -38,19 +40,23 @@ def client_func():
     while True:
         try:
             qr_data_receive = client_socket.recv(1024).decode('utf-8')
+            # qr_data_receive = "LYA/456/789/131/345"
         except socket.error as e:
             print("Error receiving data: ", e)
             break
         
         if qr_data_receive:  # 데이터가 비어있지 않은지 확인
+            print("Received data:", qr_data_receive)  # 데이터 수신 로그 추가
             parts = qr_data_receive.split('/')
             if parts:  # parts 리스트가 비어있지 않은지 확인
                 classifi = parts[0]
                 if len(classifi) > 0:  # classifi 문자열에 적어도 하나의 문자가 있는지 확인
                     if classifi[0] in ['L', 'Y', 'A']:
-                        widgets = [UI_set_1.MainWindow.code_widget_1, UI_set_1.MainWindow.departure_widget_1, UI_set_1.MainWindow.arrival_widget_1, UI_set_1.MainWindow.region_widget_1, UI_set_1.MainWindow.product_widget_1]
+                        widgets = [UI_set.MainWindow.code_widget_1, UI_set.MainWindow.departure_widget_1, UI_set.MainWindow.arrival_widget_1, UI_set.MainWindow.region_widget_1, UI_set.MainWindow.product_widget_1]
+                        # widgets = [UI_set_1.MainWindow.code_widget_1, UI_set_1.MainWindow.departure_widget_1, UI_set_1.MainWindow.arrival_widget_1, UI_set_1.MainWindow.region_widget_1, UI_set_1.MainWindow.product_widget_1]
                     elif classifi[0] in ['F', 'N', 'B']:
-                        widgets = [UI_set_1.MainWindow.code_widget_2, UI_set_1.MainWindow.departure_widget_2, UI_set_1.MainWindow.arrival_widget_2, UI_set_1.MainWindow.region_widget_2, UI_set_1.MainWindow.product_widget_2]
+                        widgets = [UI_set.MainWindow.code_widget_2, UI_set.MainWindow.departure_widget_2, UI_set.MainWindow.arrival_widget_2, UI_set.MainWindow.region_widget_2, UI_set.MainWindow.product_widget_2]
+                        # widgets = [UI_set_1.MainWindow.code_widget_2, UI_set_1.MainWindow.departure_widget_2, UI_set_1.MainWindow.arrival_widget_2, UI_set_1.MainWindow.region_widget_2, UI_set_1.MainWindow.product_widget_2]
                     for widget, part in zip(widgets, parts):
                         widget.addItem(part)
 # -----------------------------------------------------------------------
@@ -65,7 +71,8 @@ def server_func():
     print('UI server connected')
     
     while True:
-        selected_option = UI_set_1.get_selected_option()        
+        selected_option = UI_set.get_selected_option()
+        # selected_option = UI_set_1.get_selected_option()
         if selected_option is not None and selected_option != last_sent_option:
             try:
                 client_soc.sendall((selected_option + '\n').encode('utf-8'))
@@ -80,7 +87,8 @@ def UI_func():
     app = QApplication(sys.argv)
     font = QFont("NanumSquare", 9)
     app.setFont(font)
-    mainWin = UI_set_1.MainWindow()
+    mainWin = UI_set.MainWindow()
+    # mainWin = UI_set_1.MainWindow()
     mainWin.showMaximized()
     mainWin.show()
     sys.exit(app.exec_())

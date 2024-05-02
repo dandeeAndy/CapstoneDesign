@@ -140,16 +140,16 @@ class MainWindow(QMainWindow):
 # ---------------------------------------------------------------------------------------------------------------------
         # 옵션 버튼 설정
         self.option_buttons = [
-            OptionButton('domfor_ON.png', 'domfor_OFF.png', 'Opt1', self),
-            OptionButton('fragile_ON.png', 'fragile_OFF.png', 'Opt2', self),
-            OptionButton('courier_ON.png', 'courier_OFF.png', 'Opt3', self),
+            OptionButton('domfor_ON.png', 'domfor_OFF.png', 'Option1', self),
+            OptionButton('fragile_ON.png', 'fragile_OFF.png', 'Option2', self),
+            OptionButton('courier_ON.png', 'courier_OFF.png', 'Option3', self),
         ]
         button_positions = [(1, 12, 1, 2), (1, 14, 1, 3), (1, 17, 1, 2)]
         for i, option_button in enumerate(self.option_buttons):
             option_button.setButtonSize(240, 270)
             transparent_button = TransparentButton(option_button)
             transparent_button.setFixedSize(240, 135)
-            transparent_button.clicked.connect(lambda _, b=option_button: b.toggle())
+            transparent_button.clicked.connect(lambda _, b=option_button: b.button_clicked())
             pos = button_positions[i]
             self.grid_layout.addWidget(option_button, *pos)
             
@@ -312,6 +312,7 @@ class MainWindow(QMainWindow):
         
     # 클릭 이벤트 처리
     def pauseClicked(self, event):
+        global pause_clicked
         QMessageBox.information(self, '알림', '작업이 중지되었습니다.')
         print('PAUSE!')
 
@@ -332,13 +333,13 @@ class MainWindow(QMainWindow):
     def buttonClicked(self):
             print("Button clicked!")
 
-    def toggleButton(self, selected_button):
-        for button in self.option_buttons:
-            if button == selected_button:
-                button.option_sel()
-            else:
-                button.is_on = False
-                button.setScaledPixmap()
+    # def toggleButton(self, selected_button):
+    #     for button in self.option_buttons:
+    #         if button == selected_button:
+    #             button.option_sel()
+    #         else:
+    #             button.is_on = False
+    #             button.setScaledPixmap()
 
     def refresh_system(self, event):
         print('새로고침')
@@ -378,6 +379,8 @@ class OptionButton(QWidget):
         self.setLayout(layout)
         
         self.transparent_button.raise_()
+        
+    optionSelected = pyqtSignal(str)  # 새 신호 정의
     
     def setButtonSize(self, width, height):
         # scaled_on_pixmap = self.on_pixmap.scaled(width, height, Qt.KeepAspectRatio, Qt.SmoothTransformation)
@@ -423,4 +426,5 @@ class OptionButton(QWidget):
         self.setScaledPixmap()
         if self.is_on:
             selected_option = self.opt_text
-            print(f"Selected option: {selected_option}")
+            # print(f"Selected option: {selected_option}")
+            # self.optionSelected.emit(selected_option)  # 신호 발생
