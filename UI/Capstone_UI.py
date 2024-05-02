@@ -50,6 +50,7 @@ def client_func():
             parts = qr_data_receive.split('/')
             if parts:  # parts 리스트가 비어있지 않은지 확인
                 classifi = parts[0]
+                widgets = []
                 if len(classifi) > 0:  # classifi 문자열에 적어도 하나의 문자가 있는지 확인
                     if classifi[0] in ['L', 'Y', 'A']:
                         widgets = [UI_set.MainWindow.code_widget_1, UI_set.MainWindow.departure_widget_1, UI_set.MainWindow.arrival_widget_1, UI_set.MainWindow.region_widget_1, UI_set.MainWindow.product_widget_1]
@@ -57,6 +58,7 @@ def client_func():
                     elif classifi[0] in ['F', 'N', 'B']:
                         widgets = [UI_set.MainWindow.code_widget_2, UI_set.MainWindow.departure_widget_2, UI_set.MainWindow.arrival_widget_2, UI_set.MainWindow.region_widget_2, UI_set.MainWindow.product_widget_2]
                         # widgets = [UI_set_1.MainWindow.code_widget_2, UI_set_1.MainWindow.departure_widget_2, UI_set_1.MainWindow.arrival_widget_2, UI_set_1.MainWindow.region_widget_2, UI_set_1.MainWindow.product_widget_2]
+                if widgets:  # widgets 리스트가 비어있지 않은 경우에만 실행
                     for widget, part in zip(widgets, parts):
                         widget.addItem(part)
 # -----------------------------------------------------------------------
