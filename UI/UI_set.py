@@ -3,10 +3,15 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
 selected_option = None
+pause_clicked = None
 
 def get_selected_option():
     global selected_option
     return selected_option
+
+def get_pause_clicked():
+    global pause_clicked
+    return pause_clicked
 
 font_title = QFont("NanumSquare", 12)
 border_style_1 = "border-top: 2px solid black; border-left: 2px solid black;"
@@ -315,6 +320,7 @@ class MainWindow(QMainWindow):
         global pause_clicked
         QMessageBox.information(self, '알림', '작업이 중지되었습니다.')
         print('PAUSE!')
+        pause_clicked = "pause"
 
         reply = QMessageBox.question(self, '확인', '분류기준을 초기화하시겠습니까?',
                                      QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
@@ -322,6 +328,8 @@ class MainWindow(QMainWindow):
         if reply == QMessageBox.Yes:
             self.resetOptions()
             self.clearLists()
+        else:
+            pause_clicked = None
     
     def resetOptions(self):
         for button in self.option_buttons:
@@ -421,7 +429,8 @@ class OptionButton(QWidget):
             self.toggle()
     
     def toggle(self):
-        global selected_option
+        global selected_option, pause_clicked
+        pause_clicked = None
         self.is_on = not self.is_on
         self.setScaledPixmap()
         if self.is_on:
