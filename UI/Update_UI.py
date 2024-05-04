@@ -4,10 +4,15 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
 selected_option = None
+pause_clicked = None
 
 def get_selected_option():
     global selected_option
     return selected_option
+
+def get_pause_clicked():
+    global pause_clicked
+    return pause_clicked
 
 font_title = QFont("NanumSquare", 12)
 border_style_1 = "border-top: 2px solid black; border-left: 2px solid black;"
@@ -20,7 +25,6 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.first_enter_pressed = False
-        # self.setStyleSheet("background-color: #FFFFFF;")
         self.option1_status = 0
         self.option2_status = 0
         self.option3_status = 0
@@ -122,7 +126,7 @@ class MainWindow(QMainWindow):
         exit_action.triggered.connect(self.close)
         file_menu.addAction(exit_action)
         self.setMenuBar(self.menu_bar)
-        
+                
         # 시스템 로고 설정
         self.logo_label = QLabel(self)
         self.logo_pixmap = QPixmap('JALK3_logo.png')
@@ -142,19 +146,19 @@ class MainWindow(QMainWindow):
 # ---------------------------------------------------------------------------------------------------------------------
         # 옵션 버튼 설정
         self.option_buttons = [
-            OptionButton('domfor_ON.png', 'domfor_OFF.png', 'Opt1', self),#index 제거함
-            OptionButton('fragile_ON.png', 'fragile_OFF.png', 'Opt2', self),
-            OptionButton('courier_ON.png', 'courier_OFF.png', 'Opt3', self),
+            OptionButton('domfor_ON.png', 'domfor_OFF.png', 'Option1', self),
+            OptionButton('fragile_ON.png', 'fragile_OFF.png', 'Option2', self),
+            OptionButton('courier_ON.png', 'courier_OFF.png', 'Option3', self),
         ]
         button_positions = [(1, 12, 1, 2), (1, 14, 1, 3), (1, 17, 1, 2)]
         for i, option_button in enumerate(self.option_buttons):
             option_button.setButtonSize(240, 270)
             transparent_button = TransparentButton(option_button)
             transparent_button.setFixedSize(240, 135)
-            transparent_button.clicked.connect(lambda _, b=option_button: b.toggle())
+            transparent_button.clicked.connect(lambda _, b=option_button: b.button_clicked())
             pos = button_positions[i]
             self.grid_layout.addWidget(option_button, *pos)
-        
+            
         # 작업 중지 버튼 설정
         self.pause_button_label = QLabel(self)
         pause_button_pixmap = QPixmap('pause_button.png')
@@ -204,15 +208,10 @@ class MainWindow(QMainWindow):
         self.widget_maker("region_widget_2", 3, 5, 16, 1, 2)
         self.widget_maker("product_widget_2", 4, 5, 18)
         
-        # history = {self.NO_widget, self.ALARM_widget, self.EQ_widget, self.STATE_widget, self.DATETIME_widget}
-        # details_1 = {self.code_widget_1, self.departure_widget_1, self.arrival_widget_1, self.region_widget_1, self.product_widget_1}
-        # details_2 = {self.code_widget_2, self.departure_widget_2, self.arrival_widget_2, self.region_widget_2, self.product_widget_2}
-        
-#---------------------------------------------------------------------------------------------------------------------      
         central_widget = QWidget()
         central_widget.setLayout(self.grid_layout)
         self.setCentralWidget(central_widget)
-#---------------------------------------------------------------------------------------------------------------------      
+    
     def history_maker(self, label_name, text, style_num, row, col, rowspan=1, colspan=1):
         label = QLabel(text, self)
         setattr(self, label_name, label)
@@ -297,14 +296,14 @@ class MainWindow(QMainWindow):
 
         for widget in history_widgets + details_1_widgets + details_2_widgets:
             widget.clear()
-    
+        
     def update_option(new_value):
         global selected_option  # 글로벌 변수 사용 선언
         selected_option = new_value  # 글로벌 변수 업데이트
-    
+        
     def print_option():
         print(selected_option)  # 글로벌 변수 접근
-    
+        
     def update_labels(self, opt):
         if opt == 'Opt1':
             self.label_9.setText("L")
@@ -319,14 +318,19 @@ class MainWindow(QMainWindow):
         
     # 클릭 이벤트 처리
     def pauseClicked(self, event):
+        global pause_clicked
         QMessageBox.information(self, '알림', '작업이 중지되었습니다.')
         print('PAUSE!')
+        pause_clicked = "pause"
+
         reply = QMessageBox.question(self, '확인', '분류기준을 초기화하시겠습니까?',
                                      QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 
         if reply == QMessageBox.Yes:
             self.resetOptions()
             self.clearLists()
+        else:
+            pause_clicked = None
     
     def resetOptions(self):
         for button in self.option_buttons:
@@ -334,17 +338,17 @@ class MainWindow(QMainWindow):
                 print(f"{button.opt_text} pause")
                 button.is_on = False
                 button.setScaledPixmap()
-    
+        
     def buttonClicked(self):
             print("Button clicked!")
 
-    def toggleButton(self, selected_button):
-        for button in self.option_buttons:
-            if button == selected_button:
-                button.toggle()
-            else:
-                button.is_on = False
-                button.setScaledPixmap()
+    # def toggleButton(self, selected_button):
+    #     for button in self.option_buttons:
+    #         if button == selected_button:
+    #             button.option_sel()
+    #         else:
+    #             button.is_on = False
+    #             button.setScaledPixmap()
 
     def refresh_system(self, event):
         print('새로고침')
@@ -352,7 +356,7 @@ class MainWindow(QMainWindow):
     def printWidgetSize(self, widget):
         size = widget.size()
         print("Width:", size.width(), "Height:", size.height())
-
+        
 class TransparentButton(QPushButton):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -360,7 +364,7 @@ class TransparentButton(QPushButton):
         # self.setStyleSheet("background:transparent; border: 2px solid black;")
 
 class OptionButton(QWidget):
-    def __init__(self, on_image_path, off_image_path, opt_text, parent=None):#index 제거함
+    def __init__(self, on_image_path, off_image_path, opt_text, parent=None):
         super().__init__(parent)
         self.on_pixmap = QPixmap(on_image_path)
         self.off_pixmap = QPixmap(off_image_path)
@@ -369,11 +373,10 @@ class OptionButton(QWidget):
         if self.on_pixmap.isNull() or self.off_pixmap.isNull():
             print("이미지 로드 실패:", on_image_path, "또는", off_image_path)
             return
-        
+
         self.label = QLabel(self)
         self.setScaledPixmap()
-        
-        # self.index = index
+
         self.transparent_button = TransparentButton(self)
         self.transparent_button.clicked.connect(self.button_clicked)
         self.transparent_button.setFixedSize(240, 135)
@@ -385,21 +388,40 @@ class OptionButton(QWidget):
         self.setLayout(layout)
         
         self.transparent_button.raise_()
+        
+    optionSelected = pyqtSignal(str)  # 새 신호 정의
     
     def setButtonSize(self, width, height):
+        # scaled_on_pixmap = self.on_pixmap.scaled(width, height, Qt.KeepAspectRatio, Qt.SmoothTransformation)
         scaled_off_pixmap = self.off_pixmap.scaled(width, height, Qt.KeepAspectRatio, Qt.SmoothTransformation)
         self.setFixedSize(width, height)
         self.label.setFixedSize(width, height)
+        # self.label.setPixmap(scaled_on_pixmap)
         self.label.setPixmap(scaled_off_pixmap)
+        
         self.transparent_button.setFixedSize(width, height)
-    
+
     def setScaledPixmap(self):
         label_size = self.size()
         scaled_on_pixmap = self.on_pixmap.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
         scaled_off_pixmap = self.off_pixmap.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
         self.label.setPixmap(scaled_off_pixmap if not self.is_on else scaled_on_pixmap)
         self.update()
-        
+    
+    # def opt_callback(opt):
+    #     # print(f"Selected option: {opt}")
+    #     global selected_option
+
+    # def option_sel(self):
+    #     global selected_option  # 전역 변수 사용을 명시
+    #     self.is_on = not self.is_on
+    #     self.setScaledPixmap()
+    #     if self.is_on:
+    #         selected_option = self.opt_text  # 선택된 옵션을 전역 변수에 할당
+    #         print(f"Selected option: {selected_option}")
+    #         if self.callback:
+    #             self.callback(self.opt_text)  # 변경된 selected_option 값을 사용하여 callback 함수 호출
+    
     def button_clicked(self):
         other_buttons_on = any(btn.is_on for btn in self.parent().children() if isinstance(btn, OptionButton) and btn is not self)
         if other_buttons_on:
@@ -408,12 +430,14 @@ class OptionButton(QWidget):
             self.toggle()
     
     def toggle(self):
-        global selected_option
+        global selected_option, pause_clicked
+        pause_clicked = None
         self.is_on = not self.is_on
         self.setScaledPixmap()
         if self.is_on:
             selected_option = self.opt_text
-            print(f"Selected option: {selected_option}")
+            # print(f"Selected option: {selected_option}")
+            # self.optionSelected.emit(selected_option)  # 신호 발생
 # ---------------------------------------------------------------------------------------------------------------------
 if __name__ == '__main__':
     app = QApplication(sys.argv)
