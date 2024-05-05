@@ -3,7 +3,6 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 import UI_set
-# import UI_set_1
 
 from queue import Queue
 import socket
@@ -19,7 +18,7 @@ UI_host = '192.168.95.1'
 port = 1111
 
 lock = threading.Lock()
-client_soc = None  # 전역 변수로 선언하여 모든 함수에서 접근 가능하게 함
+client_soc = None
 selected_option = None
 last_sent_option = None
 
@@ -45,19 +44,19 @@ def client_func():
             print("Error receiving data: ", e)
             break
         
-        if qr_data_receive:  # 데이터가 비어있지 않은지 확인
-            print("Received data:", qr_data_receive)  # 데이터 수신 로그 추가
+        if qr_data_receive:
+            print("Received data:", qr_data_receive)
             parts = qr_data_receive.split('/')
-            if parts:  # parts 리스트가 비어있지 않은지 확인
+            if parts:
                 classifi = parts[0]
                 widgets = []
                 if len(classifi) > 0:  # classifi 문자열에 적어도 하나의 문자가 있는지 확인
                     if classifi[0] in ['L', 'Y', 'A']:
-                        widgets = [UI_set.MainWindow.code_widget_1, UI_set.MainWindow.departure_widget_1, UI_set.MainWindow.arrival_widget_1, UI_set.MainWindow.region_widget_1, UI_set.MainWindow.product_widget_1]
-                        # widgets = [UI_set_1.MainWindow.code_widget_1, UI_set_1.MainWindow.departure_widget_1, UI_set_1.MainWindow.arrival_widget_1, UI_set_1.MainWindow.region_widget_1, UI_set_1.MainWindow.product_widget_1]
+                        widgets = [UI_set.MainWindow.code_label_1, UI_set.MainWindow.departure_label_1, UI_set.MainWindow.arrival_label_1, UI_set.MainWindow.region_label_1, UI_set.MainWindow.product_label_1]
+                        # widgets = [UI_set.MainWindow.code_widget_1, UI_set.MainWindow.departure_widget_1, UI_set.MainWindow.arrival_widget_1, UI_set.MainWindow.region_widget_1, UI_set.MainWindow.product_widget_1]
                     elif classifi[0] in ['F', 'N', 'B']:
-                        widgets = [UI_set.MainWindow.code_widget_2, UI_set.MainWindow.departure_widget_2, UI_set.MainWindow.arrival_widget_2, UI_set.MainWindow.region_widget_2, UI_set.MainWindow.product_widget_2]
-                        # widgets = [UI_set_1.MainWindow.code_widget_2, UI_set_1.MainWindow.departure_widget_2, UI_set_1.MainWindow.arrival_widget_2, UI_set_1.MainWindow.region_widget_2, UI_set_1.MainWindow.product_widget_2]
+                        widgets = [UI_set.MainWindow.code_label_2, UI_set.MainWindow.departure_label_2, UI_set.MainWindow.arrival_label_2, UI_set.MainWindow.region_label_2, UI_set.MainWindow.product_label_2]
+                        # widgets = [UI_set.MainWindow.code_widget_2, UI_set.MainWindow.departure_widget_2, UI_set.MainWindow.arrival_widget_2, UI_set.MainWindow.region_widget_2, UI_set.MainWindow.product_widget_2]
                 if widgets:  # widgets 리스트가 비어있지 않은 경우에만 실행
                     for widget, part in zip(widgets, parts):
                         widget.addItem(part)
@@ -99,7 +98,6 @@ def UI_func():
     font = QFont("NanumSquare", 9)
     app.setFont(font)
     mainWin = UI_set.MainWindow()
-    # mainWin = UI_set_1.MainWindow()
     mainWin.showMaximized()
     mainWin.show()
     sys.exit(app.exec_())
