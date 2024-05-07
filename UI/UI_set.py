@@ -272,7 +272,7 @@ class MainWindow(QMainWindow):
     def addQRData(self, qr_data):
         parts = qr_data.split('/')
         classifi = parts[0]
-        
+        pyqtSignal
         if classifi[0] in ['L', 'Y', 'A']:
             self.QR_add(1, parts)
         
@@ -304,13 +304,13 @@ class MainWindow(QMainWindow):
         print(selected_option)  # 글로벌 변수 접근
         
     def update_labels(self, opt):
-        if opt == 'Opt1':
+        if opt == 'Option1':
             self.label_9.setText("L")
             self.label_10.setText("F")
-        elif opt == 'Opt2':
+        elif opt == 'Option2':
             self.label_9.setText("Y")
             self.label_10.setText("N")
-        elif opt == 'Opt3':
+        elif opt == 'Option3':
             self.label_9.setText("A")
             self.label_10.setText("B")
         # print(f"Selected option: {opt}")
