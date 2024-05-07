@@ -38,11 +38,19 @@ def client_func():
 
     while True:
         try:
-            qr_data_receive = client_socket.recv(1024).decode('utf-8')
+            data = client_socket.recv(1024)
+            if not data:
+                print("No data received. Connection might be closed.")
+                break
+            qr_data_receive = data.decode('utf-8')
+            print("Received data:", qr_data_receive)
             # qr_data_receive = "LYA/456/789/131/345"
+        except UnicodeDecodeError as e:
+            print("Decoding error:", e)
+            continue  # 디코딩 오류시
         except socket.error as e:
             print("Error receiving data: ", e)
-            break
+            break   # 소켓 에러시
         
         if qr_data_receive:
             print("Received data:", qr_data_receive)

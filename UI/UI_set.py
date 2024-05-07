@@ -328,7 +328,7 @@ class MainWindow(QMainWindow):
         if reply == QMessageBox.Yes:
             self.resetOptions()
             self.clearLists()
-        else:
+        elif reply == QMessageBox.No:
             pause_clicked = None
     
     def resetOptions(self):
