@@ -23,12 +23,8 @@ lock = threading.Lock()
 client_soc = None
 selected_option = None
 last_sent_option = None
-
-# label1 = [UI_set.MainWindow.code_label_1, UI_set.MainWindow.departure_label_1, UI_set.MainWindow.arrival_label_1, UI_set.MainWindow.region_label_1, UI_set.MainWindow.product_label_1]
-# label2 = [UI_set.MainWindow.code_label_2, UI_set.MainWindow.departure_label_2, UI_set.MainWindow.arrival_label_2, UI_set.MainWindow.region_label_2, UI_set.MainWindow.product_label_2]
-
-# widgets1 = [UI_set.MainWindow.code_widget_1, UI_set.MainWindow.departure_widget_1, UI_set.MainWindow.arrival_widget_1, UI_set.MainWindow.region_widget_1, UI_set.MainWindow.product_widget_1]
-# widgets2 = [UI_set.MainWindow.code_widget_2, UI_set.MainWindow.departure_widget_2, UI_set.MainWindow.arrival_widget_2, UI_set.MainWindow.region_widget_2, UI_set.MainWindow.product_widget_2]
+pause_clicked = None
+last_sent_pause = None
 
 # -----------------------------------------------------------------------
 def client_func():
@@ -65,24 +61,6 @@ def client_func():
                 classifi = parts[0]
                 print(classifi)
                 
-                # if selected_option == 'Option1':
-                #     if classifi[0] in ['L']:
-                #         widgets = label1
-                #     elif classifi[0] in ['F']:
-                #         widgets = label2
-                
-                # elif selected_option == 'Option2':
-                #     if classifi[1] in ['Y']:
-                #         widgets = label1
-                #     elif classifi[1] in ['N']:
-                #         widgets = label2
-                
-                # elif selected_option == 'Option3':
-                #     if classifi[0] in ['A']:
-                #         widgets = label1
-                #     elif classifi[0] in ['B']:
-                #         widgets = label2
-                
                 if selected_option == 'Option1':
                     print("Option1")
                     if classifi[0] in ['L']:
@@ -107,12 +85,12 @@ def client_func():
                 if widgets:  # widgets 리스트가 비어있지 않은 경우에만 실행
                     for widget, part in zip(widgets, parts):
                         widget.addItem(part)
-                    widgets = None  # 메모리 
+                    widgets = None  # 메모리
                     print("widget reset")
 # -----------------------------------------------------------------------
 def server_func():
     global client_soc, selected_option, last_sent_option
-    # global pause_clicked, last_sent_pause
+    global pause_clicked, last_sent_pause
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.bind((UI_host, port))
     server_socket.listen()
@@ -123,7 +101,8 @@ def server_func():
     
     while True:
         selected_option = UI_set.get_selected_option()
-        # pause_clicked = UI_set.get_pause_clicked()
+        pause_clicked = UI_set.get_pause_clicked()
+        
         if selected_option is not None and selected_option != last_sent_option:
             try:
                 client_soc.sendall((selected_option + '\n').encode('utf-8'))
@@ -133,13 +112,15 @@ def server_func():
                 print("Error sending data:", e)
                 break
             
-        # if pause_clicked is not None and pause_clicked != last_sent_pause:
-        #     try:
-        #         client_soc.sendall((pause_clicked + '\n').encode('utf-8'))
-        #         last_sent_pause = pause_clicked
-        #     except socket.error as e:
-        #         print("Error sending data:", e)
-        #         break
+        if pause_clicked is not None and pause_clicked != last_sent_pause:
+            try:
+                client_soc.sendall((pause_clicked + '\n').encode('utf-8'))
+                last_sent_pause = pause_clicked
+                print("Pause clicked:", last_sent_pause)
+                pause_clicked = None
+            except socket.error as e:
+                print("Error sending data:", e)
+                break
 
 # # -----------------------------------------------------------------------
 # def UI_func():
