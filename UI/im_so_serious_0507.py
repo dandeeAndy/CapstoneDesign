@@ -223,7 +223,7 @@ def client_func():
         except socket.error as e:
             print(f"Error receiving data: {e}")
             break
-                
+        
     while Option_select:
         if Vision_start_signal:
             
@@ -250,7 +250,7 @@ def client_func():
             print("No data received, closing connection")
             break
         
-    client_socket.close()    
+    client_socket.close()
     
 # ---------------------------------------------------------------------------------------------------------------
 # 서버와 클라이언트를 멀티스레드로 

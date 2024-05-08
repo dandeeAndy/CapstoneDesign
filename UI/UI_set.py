@@ -128,7 +128,7 @@ class MainWindow(QMainWindow):
                 
         # 시스템 로고 설정
         self.logo_label = QLabel(self)
-        self.logo_pixmap = QPixmap('JALK3_logo.png')
+        self.logo_pixmap = QPixmap('JALK3_logo_image.png')
         self.logo_label.setPixmap(self.logo_pixmap)
         self.logo_label.setAlignment(Qt.AlignLeft)
         self.logo_label.mousePressEvent = self.refresh_system
@@ -272,25 +272,6 @@ class MainWindow(QMainWindow):
             self.update_buttons(active_button_index)
         # 이제 여기에서 각 버튼의 상태를 확인하고 필요한 작업을 수행할 수 있습니다.
     
-    def addQRData(self, qr_data):
-        parts = qr_data.split('/')
-        classifi = parts[0]
-        pyqtSignal
-        if classifi[0] in ['L', 'Y', 'A']:
-            self.QR_add(1, parts)
-        
-        elif classifi[0] in ['F', 'N', 'B']:
-            self.QR_add(2, parts)
-    
-    def QR_add(self, widget_set_number, parts):
-        if widget_set_number == 1:
-            widgets = [self.code_widget_1, self.departure_widget_1, self.arrival_widget_1, self.region_widget_1, self.product_widget_1]
-        elif widget_set_number == 2:
-            widgets = [self.code_widget_2, self.departure_widget_2, self.arrival_widget_2, self.region_widget_2, self.product_widget_2]
-        
-        for widget, part in zip(widgets, parts):
-            widget.addItem(part)
-    
     def clearLists(self):
         history_widgets = [self.NO_widget, self.ALARM_widget, self.EQ_widget, self.STATE_widget, self.DATETIME_widget]
         details_1_widgets = [self.code_widget_1, self.departure_widget_1, self.arrival_widget_1, self.region_widget_1, self.product_widget_1]
@@ -340,18 +321,10 @@ class MainWindow(QMainWindow):
                 print(f"{button.opt_text} pause")
                 button.is_on = False
                 button.setScaledPixmap()
-        
+    
     def buttonClicked(self):
             print("Button clicked!")
-
-    # def toggleButton(self, selected_button):
-    #     for button in self.option_buttons:
-    #         if button == selected_button:
-    #             button.option_sel()
-    #         else:
-    #             button.is_on = False
-    #             button.setScaledPixmap()
-
+    
     def refresh_system(self, event):
         print('새로고침')
     
@@ -409,20 +382,6 @@ class OptionButton(QWidget):
         scaled_off_pixmap = self.off_pixmap.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
         self.label.setPixmap(scaled_off_pixmap if not self.is_on else scaled_on_pixmap)
         self.update()
-    
-    # def opt_callback(opt):
-    #     # print(f"Selected option: {opt}")
-    #     global selected_option
-
-    # def option_sel(self):
-    #     global selected_option  # 전역 변수 사용을 명시
-    #     self.is_on = not self.is_on
-    #     self.setScaledPixmap()
-    #     if self.is_on:
-    #         selected_option = self.opt_text  # 선택된 옵션을 전역 변수에 할당
-    #         print(f"Selected option: {selected_option}")
-    #         if self.callback:
-    #             self.callback(self.opt_text)  # 변경된 selected_option 값을 사용하여 callback 함수 호출
     
     def button_clicked(self):
         other_buttons_on = any(btn.is_on for btn in self.parent().children() if isinstance(btn, OptionButton) and btn is not self)

@@ -123,14 +123,14 @@ def server_func():
                 break
 
 # # -----------------------------------------------------------------------
-# def UI_func():
-#     app = QApplication(sys.argv)
-#     font = QFont("NanumSquare", 9)
-#     app.setFont(font)
-#     mainWin = UI_set.MainWindow()
-#     mainWin.showMaximized()
-#     mainWin.show()
-#     sys.exit(app.exec_())
+def UI_func():
+    app = QApplication(sys.argv)
+    font = QFont("NanumSquare", 9)
+    app.setFont(font)
+    mainWin = UI_set.MainWindow()
+    mainWin.showMaximized()
+    mainWin.show()
+    sys.exit(app.exec_())
     
 # # -----------------------------------------------------------------------
 # if __name__ == '__main__':
