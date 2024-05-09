@@ -91,6 +91,7 @@ def client_func():
 def server_func():
     global client_soc, selected_option, last_sent_option
     global pause_clicked, last_sent_pause
+    global option_reset, last_sent_reset
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.bind((UI_host, port))
     server_socket.listen()
@@ -102,16 +103,17 @@ def server_func():
     while True:
         selected_option = UI_set.get_selected_option()
         pause_clicked = UI_set.get_pause_clicked()
+        option_reset = UI_set.get_option_reset()
         
         if selected_option is not None and selected_option != last_sent_option:
             try:
                 client_soc.sendall((selected_option + '\n').encode('utf-8'))
                 last_sent_option = selected_option
-                selected_option = None  # 메시지 전송 후 변수 초기화
+                selected_option = None
             except socket.error as e:
-                print("Error sending data:", e)
+                print("Error sending option_data:", e)
                 break
-            
+        
         if pause_clicked is not None and pause_clicked != last_sent_pause:
             try:
                 client_soc.sendall((pause_clicked + '\n').encode('utf-8'))
@@ -119,34 +121,19 @@ def server_func():
                 print("Pause clicked:", last_sent_pause)
                 pause_clicked = None
             except socket.error as e:
-                print("Error sending data:", e)
+                print("Error sending pause_data:", e)
                 break
-
-# # -----------------------------------------------------------------------
-def UI_func():
-    app = QApplication(sys.argv)
-    font = QFont("NanumSquare", 9)
-    app.setFont(font)
-    mainWin = UI_set.MainWindow()
-    mainWin.showMaximized()
-    mainWin.show()
-    sys.exit(app.exec_())
-    
-# # -----------------------------------------------------------------------
-# if __name__ == '__main__':
-#     server_thread = threading.Thread(target=server_func)
-#     client_thread = threading.Thread(target=client_func)
-#     UI_thread = threading.Thread(target=UI_func)
-
-#     server_thread.start()
-#     client_thread.start()
-#     UI_thread.start()
-
-#     server_thread.join()
-#     client_thread.join()
-#     UI_thread.join()
-    
-    
+        
+        if option_reset is not None and option_reset != last_sent_reset:
+            try:
+                client_soc.sendall((option_reset + '\n').encode('utf-8'))
+                last_sent_reset = option_reset
+                print("Pause clicked:", last_sent_reset)
+                option_reset = None
+            except socket.error as e:
+                print("Error sending reset_data:", e)
+                break
+# -----------------------------------------------------------------------
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     font = QFont("NanumSquare", 9)

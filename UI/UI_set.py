@@ -4,14 +4,17 @@ from PyQt5.QtGui import *
 
 selected_option = None
 pause_clicked = None
+option_reset = None
 
 def get_selected_option():
     global selected_option
     return selected_option
-
 def get_pause_clicked():
     global pause_clicked
     return pause_clicked
+def get_option_reset():
+    global option_reset
+    return option_reset
 
 font_title = QFont("NanumSquare", 12)
 border_style_1 = "border-top: 2px solid black; border-left: 2px solid black;"
@@ -316,6 +319,8 @@ class MainWindow(QMainWindow):
             pause_clicked = None
     
     def resetOptions(self):
+        global option_reset
+        option_reset = "reset"
         for button in self.option_buttons:
             if button.is_on:
                 print(f"{button.opt_text} pause")
