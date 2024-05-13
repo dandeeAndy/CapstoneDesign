@@ -1,3 +1,4 @@
+import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
@@ -9,9 +10,11 @@ option_reset = None
 def get_selected_option():
     global selected_option
     return selected_option
+
 def get_pause_clicked():
     global pause_clicked
     return pause_clicked
+
 def get_option_reset():
     global option_reset
     return option_reset
@@ -22,7 +25,6 @@ border_style_2 = "border-top: 2px solid black; border-left: 2px solid black; bor
 border_style_3 = "border-top: 2px solid black; border-left: 2px solid black; border-bottom: 2px solid black;"
 border_style_4 = "background-color: white; border: 2px solid black;"
 
-# ---------------------------------------------------------------------------------------------------------------------
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -77,8 +79,8 @@ class MainWindow(QMainWindow):
         self.grid_layout.addWidget(label_1, 0, 0, 1, 5)
         label_2 = QLabel()
         self.grid_layout.addWidget(label_2, 0, 5, 1, 14)
-        label_3 = QLabel()
-        self.grid_layout.addWidget(label_3, 1, 0, 2, 12)
+        self.label_3 = QLabel()
+        self.grid_layout.addWidget(self.label_3, 1, 0, 2, 12)
         label_4 = QLabel()
         self.grid_layout.addWidget(label_4, 1, 12, 1, 2)
         label_5 = QLabel()
@@ -89,10 +91,10 @@ class MainWindow(QMainWindow):
         self.grid_layout.addWidget(label_7, 2, 12, 1, 7)
         label_8 = QLabel()
         self.grid_layout.addWidget(label_8, 3, 0, 1, 5)
-        label_9 = QLabel()
-        self.grid_layout.addWidget(label_9, 3, 6, 1, 5)
-        label_10 = QLabel()
-        self.grid_layout.addWidget(label_10, 3, 12, 1, 7)
+        self.label_9 = QLabel()
+        self.grid_layout.addWidget(self.label_9, 3, 6, 1, 5)
+        self.label_10 = QLabel()
+        self.grid_layout.addWidget(self.label_10, 3, 12, 1, 7)
 
         for i in range(5):  # 4행
             for j in range(7):  # 5열
@@ -107,7 +109,6 @@ class MainWindow(QMainWindow):
                         (i == 3 and 6 <= j <= 11) or 
                         (i == 3 and 12 <= j <= 19)):
                     label = QLabel()
-                    # label.setStyleSheet("border: 2px solid black;border-radius: 10px;")
                     self.grid_layout.addWidget(label, i, j)
         
 # ---------------------------------------------------------------------------------------------------------------------
@@ -142,10 +143,10 @@ class MainWindow(QMainWindow):
         self.assembly_label = QLabel(self)
         pixmap = QPixmap('assembly_image.jpg')
         self.assembly_label.setPixmap(pixmap)
-        label_3.setLayout(QHBoxLayout())
-        label_3.layout().addWidget(self.assembly_label)
-        width = label_3.size().width()
-        height = label_3.size().height()
+        self.label_3.setLayout(QHBoxLayout())
+        self.label_3.layout().addWidget(self.assembly_label)
+        width = self.label_3.size().width()
+        height = self.label_3.size().height()
         print(f"label_3 Width: {width}, Height: {height}")
         
 # ---------------------------------------------------------------------------------------------------------------------
@@ -277,7 +278,6 @@ class MainWindow(QMainWindow):
         active_button_index = next((i for i, button in enumerate(self.option_buttons) if button.is_on), -1)
         if is_any_button_on:
             self.update_buttons(active_button_index)
-        # 이제 여기에서 각 버튼의 상태를 확인하고 필요한 작업을 수행할 수 있습니다.
     
     def clearLists(self):
         history_widgets = [self.NO_widget, self.ALARM_widget, self.EQ_widget, self.STATE_widget, self.DATETIME_widget]
@@ -295,22 +295,29 @@ class MainWindow(QMainWindow):
         print(selected_option)  # 글로벌 변수 접근
         
     def update_labels(self, opt):
-        if opt == 'Option1':
-            self.label_9.setText("L")
-            self.label_10.setText("F")
-        elif opt == 'Option2':
-            self.label_9.setText("Y")
-            self.label_10.setText("N")
-        elif opt == 'Option3':
-            self.label_9.setText("A")
-            self.label_10.setText("B")
-        # print(f"Selected option: {opt}")
+        global selected_option, option_reset
+        self.selected_option = selected_option
+        
+        if selected_option is None or option_reset == 'reset':
+            self.label_9.setText("-")
+            self.label_10.setText("-")
+        else:
+            if opt == 'Option1':
+                self.label_9.setText("L")
+                self.label_10.setText("F")
+            elif opt == 'Option2':
+                self.label_9.setText("Y")
+                self.label_10.setText("N")
+            elif opt == 'Option3':
+                self.label_9.setText("A")
+                self.label_10.setText("B")
+        print(f"Selected option: {opt}")
         
     # 클릭 이벤트 처리
     def pauseClicked(self, event):
         global pause_clicked
-        pause_clicked = "pause"
         print('PAUSE!')
+        pause_clicked = "pause"
         QMessageBox.information(self, '알림', '작업이 중지되었습니다.')
 
         reply = QMessageBox.question(self, '확인', '분류기준을 초기화하시겠습니까?',
@@ -340,7 +347,7 @@ class MainWindow(QMainWindow):
     def printWidgetSize(self, widget):
         size = widget.size()
         print("Width:", size.width(), "Height:", size.height())
-        
+
 class TransparentButton(QPushButton):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -402,9 +409,12 @@ class OptionButton(QWidget):
         if self.is_on:
             selected_option = self.opt_text
             self.optionSelected.emit(selected_option)  # 신호 발생
-    
-    def label_maker(self, label_name, text):
-        label = QLabel(text, self)
-        setattr(self, label_name, label)
-        label.setFont(font_title)
-        label.setAlignment(Qt.AlignHCenter | Qt.AlignBottom)    
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    font = QFont("NanumSquare", 9)
+    app.setFont(font)
+    mainWin = MainWindow()
+    mainWin.showMaximized()
+    mainWin.show()
+    sys.exit(app.exec_())
