@@ -25,6 +25,18 @@ border_style_2 = "border-top: 2px solid black; border-left: 2px solid black; bor
 border_style_3 = "border-top: 2px solid black; border-left: 2px solid black; border-bottom: 2px solid black;"
 border_style_4 = "background-color: white; border: 2px solid black;"
 
+class PauseButtonHandler:
+    def __init__(self):
+        self.pause_clicked = False
+
+    def handle_pause_button_click(self):
+        if self.pause_clicked:
+            # Send "pause" to the system
+            self.pause_clicked = False
+        else:
+            # Display the reset notification window
+            self.pause_clicked = True
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -158,7 +170,7 @@ class MainWindow(QMainWindow):
         ]
         button_positions = [(1, 12, 1, 2), (1, 14, 1, 3), (1, 17, 1, 2)]
         for i, option_button in enumerate(self.option_buttons):
-            option_button.setButtonSize(240, 270)
+            # option_button.setButtonSize(240, 270)
             transparent_button = TransparentButton(option_button)
             transparent_button.setFixedSize(240, 135)
             transparent_button.clicked.connect(lambda _, b=option_button: b.button_clicked())
@@ -174,7 +186,7 @@ class MainWindow(QMainWindow):
         self.pause_button_label.mousePressEvent = self.pauseClicked
         self.grid_layout.addWidget(self.pause_button_label, 2, 12, 1, 7)
         
-        self.history_maker("label_8", "장애이력", 2, 3, 0, 1, 5)
+        self.history_maker("label_8", "통신이력", 2, 3, 0, 1, 5)
         self.label_maker("label_9", "-", 2, 3, 6, 1, 5)
         self.label_maker("label_10", "-", 2, 3, 12, 1, 7)
 
@@ -218,7 +230,7 @@ class MainWindow(QMainWindow):
         central_widget.setLayout(self.grid_layout)
         self.setCentralWidget(central_widget)
         
-        # Connect the OptionButton signals to the label update method
+        # label 업데이트 메서드에 OptionButton 신호 연결
         for button in self.option_buttons:
             button.optionSelected.connect(self.update_labels)
     
@@ -286,6 +298,7 @@ class MainWindow(QMainWindow):
 
         for widget in history_widgets + details_1_widgets + details_2_widgets:
             widget.clear()
+        print('CLEAR!') 
         
     def update_option(new_value):
         global selected_option  # 글로벌 변수 사용 선언
@@ -296,47 +309,55 @@ class MainWindow(QMainWindow):
         
     def update_labels(self, opt):
         global selected_option, option_reset
-        self.selected_option = selected_option
-        
-        if selected_option is None or option_reset == 'reset':
+        # 리셋 명령 처리 중인지 확인
+        if opt == 'reset':
             self.label_9.setText("-")
             self.label_10.setText("-")
+            option_reset = None  # 처리 후 option_reset 상태 리셋
         else:
-            if opt == 'Option1':
-                self.label_9.setText("L")
-                self.label_10.setText("F")
-            elif opt == 'Option2':
-                self.label_9.setText("Y")
-                self.label_10.setText("N")
-            elif opt == 'Option3':
-                self.label_9.setText("A")
-                self.label_10.setText("B")
+            if selected_option:
+                if opt == 'Option1':
+                    self.label_9.setText("L")
+                    self.label_10.setText("F")
+                elif opt == 'Option2':
+                    self.label_9.setText("Y")
+                    self.label_10.setText("N")
+                elif opt == 'Option3':
+                    self.label_9.setText("A")
+                    self.label_10.setText("B")
         print(f"Selected option: {opt}")
         
     # 클릭 이벤트 처리
     def pauseClicked(self, event):
         global pause_clicked
-        print('PAUSE!')
-        pause_clicked = "pause"
-        QMessageBox.information(self, '알림', '작업이 중지되었습니다.')
+        if pause_clicked is None:  # pause_clicked가 None일 때만 pause로 설정
+            print('PAUSE!')
+            pause_clicked = "pause"
+            QMessageBox.information(self, '알림', '작업이 중지되었습니다.')
+            reply = QMessageBox.question(self, '확인', '분류기준을 초기화하시겠습니까?',
+                                        QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 
-        reply = QMessageBox.question(self, '확인', '분류기준을 초기화하시겠습니까?',
-                                     QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
-
-        if reply == QMessageBox.Yes:
-            self.resetOptions()
-            self.clearLists()
-        elif reply == QMessageBox.No:
-            pause_clicked = None
+            if reply == QMessageBox.Yes:
+                self.resetOptions()
+                self.clearLists()
+                pause_clicked = None
+            elif reply == QMessageBox.No:
+                pause_clicked = None
+        else:
+            QMessageBox.information(self, '알림', '이미 일시 중지 상태입니다.')
     
     def resetOptions(self):
-        global option_reset
+        global option_reset, pause_clicked
         option_reset = "reset"
+        pause_clicked = None  # resetOptions 호출 시 pause_clicked도 초기화
+        print('RESET!')
         for button in self.option_buttons:
             if button.is_on:
-                print(f"{button.opt_text} pause")
+                print(f"{button.opt_text} reset")
                 button.is_on = False
                 button.setScaledPixmap()
+        # 리셋 신호를 발생시키거나 'reset' 파라미터를 사용하여 update_labels를 수동으로 호출
+        self.update_labels('reset')
     
     def buttonClicked(self):
         print("Button clicked!")
@@ -367,11 +388,14 @@ class OptionButton(QWidget):
             return
         
         self.label = QLabel(self)
+        self.setFixedSize(240, 270)  # 초기 크기 설정
+        self.label.setFixedSize(240, 270)
         self.setScaledPixmap()
+        
         self.transparent_button = TransparentButton(self)
         self.transparent_button.clicked.connect(self.button_clicked)
         self.transparent_button.setFixedSize(240, 135)
-        self.transparent_button.setStyleSheet("background:transparent;")
+        # self.transparent_button.setStyleSheet("background:transparent;")
 
         layout = QVBoxLayout(self)
         layout.addWidget(self.label)
@@ -380,19 +404,26 @@ class OptionButton(QWidget):
         
         self.transparent_button.raise_()
     
-    def setButtonSize(self, width, height):
-        scaled_off_pixmap = self.off_pixmap.scaled(width, height, Qt.KeepAspectRatio, Qt.SmoothTransformation)
-        self.setFixedSize(width, height)
-        self.label.setFixedSize(width, height)
-        self.label.setPixmap(scaled_off_pixmap)
-        self.transparent_button.setFixedSize(width, height)
+    # def setButtonSize(self, width, height):
+    #     scaled_off_pixmap = self.off_pixmap.scaled(width, height, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+    #     self.setFixedSize(width, height)
+    #     self.label.setFixedSize(width, height)
+    #     self.label.setPixmap(scaled_off_pixmap)
+    #     self.transparent_button.setFixedSize(width, height)
 
     def setScaledPixmap(self):
-        label_size = self.size()
-        scaled_on_pixmap = self.on_pixmap.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
-        scaled_off_pixmap = self.off_pixmap.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
-        self.label.setPixmap(scaled_off_pixmap if not self.is_on else scaled_on_pixmap)
-        self.update()
+        # label_size = self.size()
+        # scaled_on_pixmap = self.on_pixmap.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        # scaled_off_pixmap = self.off_pixmap.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        # self.label.setPixmap(scaled_off_pixmap if not self.is_on else scaled_on_pixmap)
+        # self.update()
+        
+        if self.is_on:
+            pixmap = self.on_pixmap.scaled(self.label.size(), Qt.KeepAspectRatioByExpanding, Qt.SmoothTransformation)
+        else:
+            pixmap = self.off_pixmap.scaled(self.label.size(), Qt.KeepAspectRatioByExpanding, Qt.SmoothTransformation)
+        self.label.setPixmap(pixmap)
+        # self.update()
     
     def button_clicked(self):
         other_buttons_on = any(btn.is_on for btn in self.parent().children() if isinstance(btn, OptionButton) and btn is not self)

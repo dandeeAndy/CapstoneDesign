@@ -119,7 +119,7 @@ def server_func():
                 client_soc.sendall((pause_clicked + '\n').encode('utf-8'))
                 last_sent_pause = pause_clicked
                 print("Pause clicked:", last_sent_pause)
-                # pause_clicked = None/
+                pause_clicked = None
             except socket.error as e:
                 print("Error sending pause_data:", e)
                 break
