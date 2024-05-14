@@ -217,9 +217,9 @@ class MainWindow(QMainWindow):
         central_widget.setLayout(self.grid_layout)
         self.setCentralWidget(central_widget)
         
-        # Connect the OptionButton signals to the label update method
-        for button in self.option_buttons:
-            button.optionSelected.connect(self.update_labels)
+        # # Connect the OptionButton signals to the label update method
+        # for button in self.option_buttons:
+        #     button.optionSelected.connect(self.update_labels)
     
     def history_maker(self, label_name, text, style_num, row, col, rowspan=1, colspan=1):
         label = QLabel(text, self)
@@ -309,18 +309,22 @@ class MainWindow(QMainWindow):
     # 클릭 이벤트 처리
     def pauseClicked(self, event):
         global pause_clicked
-        pause_clicked = "pause"
-        print('PAUSE!')
-        QMessageBox.information(self, '알림', '작업이 중지되었습니다.')
+        if pause_clicked is None:  # pause_clicked가 None일 때만 pause로 설정
+            print('PAUSE!')
+            pause_clicked = "pause"
+            QMessageBox.information(self, '알림', '작업이 중지되었습니다.')
+            reply = QMessageBox.question(self, '확인', '분류기준을 초기화하시겠습니까?',
+                                        QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 
-        reply = QMessageBox.question(self, '확인', '분류기준을 초기화하시겠습니까?',
-                                     QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
-
-        if reply == QMessageBox.Yes:
-            self.resetOptions()
-            self.clearLists()
-        elif reply == QMessageBox.No:
-            pause_clicked = None
+            if reply == QMessageBox.Yes:
+                self.resetOptions()
+                self.clearLists()
+                pause_clicked = None
+            elif reply == QMessageBox.No:
+                pause_clicked = None
+        else:
+            QMessageBox.information(self, '알림', '이미 일시 중지 상태입니다.')
+    
     
     def resetOptions(self):
         global option_reset
