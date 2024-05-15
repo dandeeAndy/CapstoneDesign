@@ -173,9 +173,9 @@ class MainWindow(QMainWindow):
         self.pause_button_label.mousePressEvent = self.pauseClicked
         self.grid_layout.addWidget(self.pause_button_label, 2, 12, 1, 7)
         
-        self.history_maker("label_8", "장애이력", 2, 3, 0, 1, 5)
-        self.label_maker("label_9", "-", 2, 3, 6, 1, 5)
-        self.label_maker("label_10", "-", 2, 3, 12, 1, 7)
+        self.history_maker("label_8", "통신이력", 2, 3, 0, 1, 5)
+        self.label_maker("label_9", "A", 2, 3, 6, 1, 5)
+        self.label_maker("label_10", "B", 2, 3, 12, 1, 7)
 
         self.label_maker("NO_label", "NO", 1, 4, 0)
         self.label_maker("ALARM_label", "ALARM", 1, 4, 1)
@@ -216,10 +216,6 @@ class MainWindow(QMainWindow):
         central_widget = QWidget()
         central_widget.setLayout(self.grid_layout)
         self.setCentralWidget(central_widget)
-        
-        # # Connect the OptionButton signals to the label update method
-        # for button in self.option_buttons:
-        #     button.optionSelected.connect(self.update_labels)
     
     def history_maker(self, label_name, text, style_num, row, col, rowspan=1, colspan=1):
         label = QLabel(text, self)
@@ -293,18 +289,6 @@ class MainWindow(QMainWindow):
         
     def print_option():
         print(selected_option)  # 글로벌 변수 접근
-        
-    def update_labels(self, opt):
-        if opt == 'Option1':
-            self.label_9.setText("L")
-            self.label_10.setText("F")
-        elif opt == 'Option2':
-            self.label_9.setText("Y")
-            self.label_10.setText("N")
-        elif opt == 'Option3':
-            self.label_9.setText("A")
-            self.label_10.setText("B")
-        # print(f"Selected option: {opt}")
         
     # 클릭 이벤트 처리
     def pauseClicked(self, event):

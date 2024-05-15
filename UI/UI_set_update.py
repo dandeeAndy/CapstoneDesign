@@ -187,8 +187,8 @@ class MainWindow(QMainWindow):
         self.grid_layout.addWidget(self.pause_button_label, 2, 12, 1, 7)
         
         self.history_maker("label_8", "통신이력", 2, 3, 0, 1, 5)
-        self.label_maker("label_9", "-", 2, 3, 6, 1, 5)
-        self.label_maker("label_10", "-", 2, 3, 12, 1, 7)
+        self.label_maker("label_9", "A", 2, 3, 6, 1, 5)
+        self.label_maker("label_10", "B", 2, 3, 12, 1, 7)
 
         self.label_maker("NO_label", "NO", 1, 4, 0)
         self.label_maker("ALARM_label", "ALARM", 1, 4, 1)
@@ -229,10 +229,6 @@ class MainWindow(QMainWindow):
         central_widget = QWidget()
         central_widget.setLayout(self.grid_layout)
         self.setCentralWidget(central_widget)
-        
-        # label 업데이트 메서드에 OptionButton 신호 연결
-        for button in self.option_buttons:
-            button.optionSelected.connect(self.update_labels)
     
     def history_maker(self, label_name, text, style_num, row, col, rowspan=1, colspan=1):
         label = QLabel(text, self)
@@ -307,26 +303,6 @@ class MainWindow(QMainWindow):
     def print_option():
         print(selected_option)  # 글로벌 변수 접근
         
-    def update_labels(self, opt):
-        global selected_option, option_reset
-        # 리셋 명령 처리 중인지 확인
-        if opt == 'reset':
-            self.label_9.setText("-")
-            self.label_10.setText("-")
-            option_reset = None  # 처리 후 option_reset 상태 리셋
-        else:
-            if selected_option:
-                if opt == 'Option1':
-                    self.label_9.setText("L")
-                    self.label_10.setText("F")
-                elif opt == 'Option2':
-                    self.label_9.setText("Y")
-                    self.label_10.setText("N")
-                elif opt == 'Option3':
-                    self.label_9.setText("A")
-                    self.label_10.setText("B")
-        print(f"Selected option: {opt}")
-        
     # 클릭 이벤트 처리
     def pauseClicked(self, event):
         global pause_clicked
@@ -356,8 +332,6 @@ class MainWindow(QMainWindow):
                 print(f"{button.opt_text} reset")
                 button.is_on = False
                 button.setScaledPixmap()
-        # 리셋 신호를 발생시키거나 'reset' 파라미터를 사용하여 update_labels를 수동으로 호출
-        self.update_labels('reset')
     
     def buttonClicked(self):
         print("Button clicked!")
