@@ -411,4 +411,4 @@ class OptionButton(QWidget):
         label = QLabel(text, self)
         setattr(self, label_name, label)
         label.setFont(font_title)
-        label.setAlignment(Qt.AlignHCenter | Qt.AlignBottom)    
+        label.setAlignment(Qt.AlignHCenter | Qt.AlignBottom)
