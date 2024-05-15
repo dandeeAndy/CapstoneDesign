@@ -1,3 +1,4 @@
+import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
@@ -396,3 +397,13 @@ class OptionButton(QWidget):
         setattr(self, label_name, label)
         label.setFont(font_title)
         label.setAlignment(Qt.AlignHCenter | Qt.AlignBottom)
+    
+    
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    font = QFont("NanumSquare", 9)
+    app.setFont(font)
+    mainWin = MainWindow()
+    mainWin.showMaximized()
+    mainWin.show()
+    sys.exit(app.exec_())

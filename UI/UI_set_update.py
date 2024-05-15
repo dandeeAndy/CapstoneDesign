@@ -10,11 +10,9 @@ option_reset = None
 def get_selected_option():
     global selected_option
     return selected_option
-
 def get_pause_clicked():
     global pause_clicked
     return pause_clicked
-
 def get_option_reset():
     global option_reset
     return option_reset
@@ -25,18 +23,19 @@ border_style_2 = "border-top: 2px solid black; border-left: 2px solid black; bor
 border_style_3 = "border-top: 2px solid black; border-left: 2px solid black; border-bottom: 2px solid black;"
 border_style_4 = "background-color: white; border: 2px solid black;"
 
-class PauseButtonHandler:
-    def __init__(self):
-        self.pause_clicked = False
+# class PauseButtonHandler:
+#     def __init__(self):
+#         self.pause_clicked = False
 
-    def handle_pause_button_click(self):
-        if self.pause_clicked:
-            # Send "pause" to the system
-            self.pause_clicked = False
-        else:
-            # Display the reset notification window
-            self.pause_clicked = True
+#     def handle_pause_button_click(self):
+#         if self.pause_clicked:
+#             # Send "pause" to the system
+#             self.pause_clicked = False
+#         else:
+#             # Display the reset notification window
+#             self.pause_clicked = True
 
+# ---------------------------------------------------------------------------------------------------------------------
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -68,7 +67,7 @@ class MainWindow(QMainWindow):
         
         self.grid_layout.setColumnStretch(5, 1)
         
-        #코드/출발날짜/도착날짜/지역/상품명
+        #place위치/출발날짜/도착날짜/기업or개인/상품명/시간
         self.grid_layout.setColumnStretch(6, 12)
         self.grid_layout.setColumnStretch(7, 30)
         self.grid_layout.setColumnStretch(8, 30)
@@ -146,15 +145,17 @@ class MainWindow(QMainWindow):
         self.logo_label = QLabel(self)
         self.logo_pixmap = QPixmap('JALK3_logo_image.png')
         self.logo_label.setPixmap(self.logo_pixmap)
-        self.logo_label.setAlignment(Qt.AlignLeft)
+        self.logo_label.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
         self.logo_label.mousePressEvent = self.refresh_system
         scaled_pixmap = self.logo_pixmap.scaled(200, 200, Qt.KeepAspectRatio, Qt.SmoothTransformation)
-        self.logo_label.setPixmap(scaled_pixmap)
+        self.logo_label.setPixmap(scaled_pixma)p
         self.grid_layout.addWidget(self.logo_label, 0, 0, 1, 5)
         
         self.assembly_label = QLabel(self)
-        pixmap = QPixmap('assembly_image.jpg')
+        pixmap = QPixmap('delta_total.png')
         self.assembly_label.setPixmap(pixmap)
+        self.assembly_label.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
+        
         self.label_3.setLayout(QHBoxLayout())
         self.label_3.layout().addWidget(self.assembly_label)
         width = self.label_3.size().width()
@@ -186,7 +187,7 @@ class MainWindow(QMainWindow):
         self.pause_button_label.mousePressEvent = self.pauseClicked
         self.grid_layout.addWidget(self.pause_button_label, 2, 12, 1, 7)
         
-        self.history_maker("label_8", "통신이력", 2, 3, 0, 1, 5)
+        self.label_maker("label_8", "통신이력", 2, 3, 0, 1, 5)
         self.label_maker("label_9", "A", 2, 3, 6, 1, 5)
         self.label_maker("label_10", "B", 2, 3, 12, 1, 7)
 
@@ -294,8 +295,8 @@ class MainWindow(QMainWindow):
 
         for widget in history_widgets + details_1_widgets + details_2_widgets:
             widget.clear()
-        print('CLEAR!') 
-        
+        print('CLEAR!')
+    
     def update_option(new_value):
         global selected_option  # 글로벌 변수 사용 선언
         selected_option = new_value  # 글로벌 변수 업데이트

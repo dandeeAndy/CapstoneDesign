@@ -42,7 +42,7 @@ def client_func():
             print("Connection attempt failed. Retrying...")
             time.sleep(5)  
             continue
-
+    
     while True:
         try:
             data = client_socket.recv(1024)
@@ -62,7 +62,9 @@ def client_func():
             print(parts)
             if parts:
                 classifi = parts[0]
+                datetime = parts[5]
                 print(classifi)
+                print(datetime)
                 
                 if selected_option == 'Option1':
                     print("Option1")
@@ -90,6 +92,8 @@ def client_func():
                         widget.addItem(part)
                     widgets = None
                     print("widget reset")
+
+                t_label.addItem(datetime)
 # -----------------------------------------------------------------------
 def server_func():
     global client_soc, selected_option, last_sent_option
@@ -154,6 +158,8 @@ if __name__ == '__main__':
         mainWin.arrival_widget_2, 
         mainWin.region_widget_2, 
         mainWin.product_widget_2]
+    
+    t_label = mainWin.DATETIME_label
     
     mainWin.showMaximized()
     mainWin.show()

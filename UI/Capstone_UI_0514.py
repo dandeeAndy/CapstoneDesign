@@ -23,8 +23,9 @@ port = 1111
 lock = threading.Lock()
 client_soc = None
 selected_option = None
-last_sent_option = None
 pause_clicked = None
+option_reset = None
+last_sent_option = None
 last_sent_pause = None
 last_sent_reset = None
 
@@ -130,7 +131,7 @@ def server_func():
             try:
                 client_soc.sendall((option_reset + '\n').encode('utf-8'))
                 last_sent_reset = option_reset
-                print("Pause clicked:", last_sent_reset)
+                print("Reset signal:", last_sent_reset)
                 option_reset = None
             except socket.error as e:
                 print("Error sending reset_data:", e)
