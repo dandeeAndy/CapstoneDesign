@@ -22,9 +22,12 @@ port = 1111
 lock = threading.Lock()
 client_soc = None
 selected_option = None
-last_sent_option = None
 pause_clicked = None
+option_reset = None
+last_sent_option = None
 last_sent_pause = None
+last_sent_reset = None
+
 
 # -----------------------------------------------------------------------
 def client_func():
@@ -128,7 +131,7 @@ def server_func():
             try:
                 client_soc.sendall((option_reset + '\n').encode('utf-8'))
                 last_sent_reset = option_reset
-                print("Pause clicked:", last_sent_reset)
+                print("Reset signal:", last_sent_reset)
                 option_reset = None
             except socket.error as e:
                 print("Error sending reset_data:", e)
@@ -139,19 +142,19 @@ if __name__ == '__main__':
     font = QFont("NanumSquare", 9)
     app.setFont(font)
     
-    main_window_instance = UI_set.MainWindow()
-    widgets1 = [main_window_instance.code_widget_1, 
-        main_window_instance.departure_widget_1, 
-        main_window_instance.arrival_widget_1, 
-        main_window_instance.region_widget_1, 
-        main_window_instance.product_widget_1]
-    widgets2 = [main_window_instance.code_widget_2, 
-        main_window_instance.departure_widget_2, 
-        main_window_instance.arrival_widget_2, 
-        main_window_instance.region_widget_2, 
-        main_window_instance.product_widget_2]
-    
     mainWin = UI_set.MainWindow()
+    widgets1 = [mainWin.code_widget_1, 
+        mainWin.departure_widget_1, 
+        mainWin.arrival_widget_1, 
+        mainWin.region_widget_1, 
+        mainWin.product_widget_1]
+    
+    widgets2 = [mainWin.code_widget_2, 
+        mainWin.departure_widget_2, 
+        mainWin.arrival_widget_2, 
+        mainWin.region_widget_2, 
+        mainWin.product_widget_2]
+    
     mainWin.showMaximized()
     mainWin.show()
     
