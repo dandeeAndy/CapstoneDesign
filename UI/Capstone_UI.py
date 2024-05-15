@@ -28,10 +28,12 @@ last_sent_option = None
 last_sent_pause = None
 last_sent_reset = None
 
+last_received_data = None
+receive_count = 0  # 수신된 데이터의 개수를 세기 위한 카운터
 
 # -----------------------------------------------------------------------
 def client_func():
-    global client_soc, selected_option
+    global client_soc, selected_option, last_received_data, receive_count
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     while True:
         try:
@@ -56,44 +58,64 @@ def client_func():
             break   # 소켓 에러시
         
         widgets = []
-        if qr_data_receive:
-            print("Received data:", qr_data_receive)
-            parts = qr_data_receive.split('/')
-            print(parts)
-            if parts:
-                classifi = parts[0]
-                datetime = parts[5]
-                print(classifi)
-                print(datetime)
+        print("Received data:", qr_data_receive)
+        if qr_data_receive and qr_data_receive != last_received_data:
+            receive_count += 1  # 데이터를 받을 때마다 카운터 증가
+            last_received_data = qr_data_receive  # 마지막으로 받은 데이터 업데이트
+            
+            if receive_count % 2 == 1:  # 홀수 번째 데이터 처리
+                print("odd numbered data")
                 
-                if selected_option == 'Option1':
-                    print("Option1")
-                    if classifi[0] in ['A']:
-                        widgets = widgets1
-                    elif classifi[0] in ['B']:
-                        widgets = widgets2
-                
-                elif selected_option == 'Option2':
-                    print("Option2")
-                    if classifi[1] in ['A']:
-                        widgets = widgets1
-                    elif classifi[1] in ['B']:
-                        widgets = widgets2
-                
-                elif selected_option == 'Option3':
-                    print("Option3")
-                    if classifi[2] in ['A']:
-                        widgets = widgets1
-                    elif classifi[2] in ['B']:
-                        widgets = widgets2
-                
-                if widgets:  # widgets 리스트가 비어있지 않은 경우에만 실행
-                    for widget, part in zip(widgets, parts):
-                        widget.addItem(part)
-                    widgets = None
-                    print("widget reset")
+                if qr_data_receive:
+                    parts = qr_data_receive.split('/')
+                    print(parts)
+                    
+                    if parts:
+                        classifi = parts[0]
+                        alarm = parts[5]
+                        state = parts[6]
+                        v_datetime = parts[7]
+                        print(classifi)
+                        print(v_datetime)
+                        
+                        if selected_option == 'Option1':
+                            print("Option1")
+                            if classifi[0] in ['A']:
+                                widgets = widgets1
+                            elif classifi[0] in ['B']:
+                                widgets = widgets2
+                        
+                        elif selected_option == 'Option2':
+                            print("Option2")
+                            if classifi[1] in ['A']:
+                                widgets = widgets1
+                            elif classifi[1] in ['B']:
+                                widgets = widgets2
+                        
+                        elif selected_option == 'Option3':
+                            print("Option3")
+                            if classifi[2] in ['A']:
+                                widgets = widgets1
+                            elif classifi[2] in ['B']:
+                                widgets = widgets2
+                        
+                        if widgets:  # widgets 리스트가 비어있지 않은 경우에만 실행
+                            for widget, part in zip(widgets, parts):
+                                widget.addItem(part)
+                            widgets = None
+                            print("widget reset")
 
-                t_label.addItem(datetime)
+                        t_label.addItem(v_datetime)
+                
+            else:  # 짝수 번째 데이터 처리
+                print("even numbered data")
+                
+                if qr_data_receive:
+                    parts = qr_data_receive.split('/')
+                    print(parts)
+        
+        time.sleep(1)  # 데이터 처리 사이에 짧은 딜레이
+        
 # -----------------------------------------------------------------------
 def server_func():
     global client_soc, selected_option, last_sent_option

@@ -147,15 +147,17 @@ class MainWindow(QMainWindow):
         self.logo_label.setPixmap(self.logo_pixmap)
         self.logo_label.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
         self.logo_label.mousePressEvent = self.refresh_system
-        scaled_pixmap = self.logo_pixmap.scaled(200, 200, Qt.KeepAspectRatio, Qt.SmoothTransformation)
-        self.logo_label.setPixmap(scaled_pixma)p
+        logo_scaled_pixmap = self.logo_pixmap.scaled(400, 200, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        self.logo_label.setPixmap(logo_scaled_pixmap)
         self.grid_layout.addWidget(self.logo_label, 0, 0, 1, 5)
         
         self.assembly_label = QLabel(self)
-        pixmap = QPixmap('delta_total.png')
-        self.assembly_label.setPixmap(pixmap)
+        self.assembly_pixmap = QPixmap('delta_total.png')
+        self.assembly_label.setPixmap(self.assembly_pixmap)
         self.assembly_label.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
-        
+
+        assembly_scaled_pixmap = self.assembly_pixmap.scaled(1142, 416, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        self.assembly_label.setPixmap(assembly_scaled_pixmap)
         self.label_3.setLayout(QHBoxLayout())
         self.label_3.layout().addWidget(self.assembly_label)
         width = self.label_3.size().width()
@@ -193,8 +195,8 @@ class MainWindow(QMainWindow):
 
         self.label_maker("NO_label", "NO", 1, 4, 0)
         self.label_maker("ALARM_label", "ALARM", 1, 4, 1)
-        self.label_maker("EQ_label", "EQ", 1, 4, 2)
-        self.label_maker("STATE_label", "STATE", 1, 4, 3)
+        self.label_maker("STATE_label", "STATE", 1, 4, 2)
+        self.label_maker("EQ_label", "EQ", 1, 4, 3)
         self.label_maker("DATETIME_label", "DATETIME", 2, 4, 4)
 
         self.label_maker("code_label_1", "코드", 1, 4, 6)
