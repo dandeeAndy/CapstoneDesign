@@ -66,29 +66,29 @@ def client_func():
                 
                 if selected_option == 'Option1':
                     print("Option1")
-                    if classifi[0] in ['L']:
-                        widgets = widgets1
-                    elif classifi[0] in ['F']:
-                        widgets = widgets2
-                
-                elif selected_option == 'Option2':
-                    print("Option2")
-                    if classifi[1] in ['Y']:
-                        widgets = widgets1
-                    elif classifi[1] in ['N']:
-                        widgets = widgets2
-                
-                elif selected_option == 'Option3':
-                    print("Option3")
                     if classifi[0] in ['A']:
                         widgets = widgets1
                     elif classifi[0] in ['B']:
                         widgets = widgets2
                 
+                elif selected_option == 'Option2':
+                    print("Option2")
+                    if classifi[1] in ['A']:
+                        widgets = widgets1
+                    elif classifi[1] in ['B']:
+                        widgets = widgets2
+                
+                elif selected_option == 'Option3':
+                    print("Option3")
+                    if classifi[2] in ['A']:
+                        widgets = widgets1
+                    elif classifi[2] in ['B']:
+                        widgets = widgets2
+                
                 if widgets:  # widgets 리스트가 비어있지 않은 경우에만 실행
                     for widget, part in zip(widgets, parts):
                         widget.addItem(part)
-                    widgets = None  # 메모리
+                    widgets = None
                     print("widget reset")
 # -----------------------------------------------------------------------
 def server_func():
