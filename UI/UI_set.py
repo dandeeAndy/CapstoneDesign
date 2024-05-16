@@ -107,7 +107,6 @@ class MainWindow(QMainWindow):
                         (i == 3 and 6 <= j <= 11) or 
                         (i == 3 and 12 <= j <= 19)):
                     label = QLabel()
-                    # label.setStyleSheet("border: 2px solid black;border-radius: 10px;")
                     self.grid_layout.addWidget(label, i, j)
         
 # ---------------------------------------------------------------------------------------------------------------------
@@ -128,7 +127,7 @@ class MainWindow(QMainWindow):
         exit_action.triggered.connect(self.close)
         file_menu.addAction(exit_action)
         self.setMenuBar(self.menu_bar)
-                
+        
         # 시스템 로고 설정
         self.logo_label = QLabel(self)
         self.logo_pixmap = QPixmap('JALK3_logo_image.png')
@@ -173,44 +172,44 @@ class MainWindow(QMainWindow):
         self.pause_button_label.mousePressEvent = self.pauseClicked
         self.grid_layout.addWidget(self.pause_button_label, 2, 12, 1, 7)
         
-        self.history_maker("label_8", "통신이력", 2, 3, 0, 1, 5)
+        self.label_maker("label_8", "통신이력", 2, 3, 0, 1, 5)
         self.label_maker("label_9", "A", 2, 3, 6, 1, 5)
         self.label_maker("label_10", "B", 2, 3, 12, 1, 7)
 
         self.label_maker("NO_label", "NO", 1, 4, 0)
         self.label_maker("ALARM_label", "ALARM", 1, 4, 1)
-        self.label_maker("EQ_label", "EQ", 1, 4, 2)
-        self.label_maker("STATE_label", "STATE", 1, 4, 3)
+        self.label_maker("STATE_label", "STATE", 1, 4, 2)
+        self.label_maker("EQ_label", "EQ", 1, 4, 3)
         self.label_maker("DATETIME_label", "DATETIME", 2, 4, 4)
 
-        self.label_maker("code_label_1", "코드", 1, 4, 6)
+        self.label_maker("position_label_1", "현재위치", 1, 4, 6)
         self.label_maker("departure_label_1", "출발날짜", 1, 4, 7)
-        self.label_maker("arrival_label_1", "도착날짜", 1, 4, 8)
-        self.label_maker("region_label_1", "지역", 1, 4, 9)
+        self.label_maker("number_label_1", "전화번호", 1, 4, 8)
+        self.label_maker("order_label_1", "주문요청", 1, 4, 9)
         self.label_maker("product_label_1", "상품명", 2, 4, 10)
 
-        self.label_maker("code_label_2", "코드", 1, 4, 12)
+        self.label_maker("position_label_2", "현재위치", 1, 4, 12)
         self.label_maker("departure_label_2", "출발날짜", 1, 4, 13, 1, 2)
-        self.label_maker("arrival_label_2", "도착날짜", 1, 4, 15)
-        self.label_maker("region_label_2", "지역", 1, 4, 16, 1, 2)
+        self.label_maker("number_label_2", "전화번호", 1, 4, 15)
+        self.label_maker("order_label_2", "주문요청", 1, 4, 16, 1, 2)
         self.label_maker("product_label_2", "상품명", 2, 4, 18)
 
         self.widget_maker("NO_widget", 3, 5, 0)
         self.widget_maker("ALARM_widget", 3, 5, 1)
-        self.widget_maker("EQ_widget", 3, 5, 2)
-        self.widget_maker("STATE_widget", 3, 5, 3)
+        self.widget_maker("STATE_widget", 3, 5, 2)
+        self.widget_maker("EQ_widget", 3, 5, 3)
         self.widget_maker("DATETIME_widget", 4, 5, 4)
 
-        self.widget_maker("code_widget_1", 3, 5, 6)
+        self.widget_maker("position_widget_1", 3, 5, 6)
         self.widget_maker("departure_widget_1", 3, 5, 7)
-        self.widget_maker("arrival_widget_1", 3, 5, 8)
-        self.widget_maker("region_widget_1", 3, 5, 9)
+        self.widget_maker("number_widget_1", 3, 5, 8)
+        self.widget_maker("order_widget_1", 3, 5, 9)
         self.widget_maker("product_widget_1", 4, 5, 10)
 
-        self.widget_maker("code_widget_2", 3, 5, 12)
+        self.widget_maker("position_widget_2", 3, 5, 12)
         self.widget_maker("departure_widget_2", 3, 5, 13, 1, 2)
-        self.widget_maker("arrival_widget_2", 3, 5, 15)
-        self.widget_maker("region_widget_2", 3, 5, 16, 1, 2)
+        self.widget_maker("number_widget_2", 3, 5, 15)
+        self.widget_maker("order_widget_2", 3, 5, 16, 1, 2)
         self.widget_maker("product_widget_2", 4, 5, 18)
         
         central_widget = QWidget()
@@ -277,8 +276,8 @@ class MainWindow(QMainWindow):
     
     def clearLists(self):
         history_widgets = [self.NO_widget, self.ALARM_widget, self.EQ_widget, self.STATE_widget, self.DATETIME_widget]
-        details_1_widgets = [self.code_widget_1, self.departure_widget_1, self.arrival_widget_1, self.region_widget_1, self.product_widget_1]
-        details_2_widgets = [self.code_widget_2, self.departure_widget_2, self.arrival_widget_2, self.region_widget_2, self.product_widget_2]
+        details_1_widgets = [self.position_widget_1, self.departure_widget_1, self.number_widget_1, self.order_widget_1, self.product_widget_1]
+        details_2_widgets = [self.position_widget_2, self.departure_widget_2, self.number_widget_2, self.order_widget_2, self.product_widget_2]
 
         for widget in history_widgets + details_1_widgets + details_2_widgets:
             widget.clear()
