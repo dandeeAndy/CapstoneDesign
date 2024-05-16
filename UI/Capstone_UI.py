@@ -74,9 +74,9 @@ def client_func():
                         classifi = parts[0]
                         alarm = parts[5]
                         state = parts[6]
-                        v_datetime = parts[7]
+                        vision_datetime = parts[7]
                         print(classifi)
-                        print(v_datetime)
+                        print(vision_datetime)
                         
                         if selected_option == 'Option1':
                             print("Option1")
@@ -105,7 +105,7 @@ def client_func():
                             widgets = None
                             print("widget reset")
 
-                        t_label.addItem(v_datetime)
+                        t_label.addItem(vision_datetime)
                 
             else:  # 짝수 번째 데이터 처리
                 print("even numbered data")
@@ -113,6 +113,15 @@ def client_func():
                 if qr_data_receive:
                     parts = qr_data_receive.split('/')
                     print(parts)
+                    
+                    if parts:
+                        place_position = parts[0]
+                        alarm = parts[1]
+                        state = parts[2]
+                        motor_datetime = parts[3]
+                        print(place_position)
+                        print(motor_datetime)
+                    
         
         time.sleep(1)  # 데이터 처리 사이에 짧은 딜레이
         
@@ -169,17 +178,22 @@ if __name__ == '__main__':
     app.setFont(font)
     
     mainWin = UI_set.MainWindow()
-    widgets1 = [mainWin.code_widget_1, 
-        mainWin.departure_widget_1, 
-        mainWin.arrival_widget_1, 
-        mainWin.region_widget_1, 
-        mainWin.product_widget_1]
     
-    widgets2 = [mainWin.code_widget_2, 
-        mainWin.departure_widget_2, 
-        mainWin.arrival_widget_2, 
-        mainWin.region_widget_2, 
-        mainWin.product_widget_2]
+    widgets1 = [mainWin.position_label_1, 
+                mainWin.departure_widget_1, 
+                mainWin.arrival_widget_1, 
+                mainWin.region_widget_1, 
+                mainWin.product_widget_1]
+    
+    widgets2 = [mainWin.position_label_2, 
+                mainWin.departure_widget_2, 
+                mainWin.arrival_widget_2, 
+                mainWin.region_widget_2, 
+                mainWin.product_widget_2]
+    
+    history_widgets = [mainWin.ALARM_widget, 
+                       mainWin.STATE_widget, 
+                       mainWin.DATETIME_widget]
     
     t_label = mainWin.DATETIME_label
     

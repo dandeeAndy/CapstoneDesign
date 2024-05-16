@@ -156,7 +156,7 @@ class MainWindow(QMainWindow):
         ]
         button_positions = [(1, 12, 1, 2), (1, 14, 1, 3), (1, 17, 1, 2)]
         for i, option_button in enumerate(self.option_buttons):
-            option_button.setButtonSize(240, 270)
+            # option_button.setButtonSize(240, 270)
             transparent_button = TransparentButton(option_button)
             transparent_button.setFixedSize(240, 135)
             transparent_button.clicked.connect(lambda _, b=option_button: b.button_clicked())
@@ -179,7 +179,7 @@ class MainWindow(QMainWindow):
         self.label_maker("NO_label", "NO", 1, 4, 0)
         self.label_maker("ALARM_label", "ALARM", 1, 4, 1)
         self.label_maker("STATE_label", "STATE", 1, 4, 2)
-        self.label_maker("EQ_label", "EQ", 1, 4, 3)
+        self.label_maker("CODE_label", "CODE", 1, 4, 3)
         self.label_maker("DATETIME_label", "DATETIME", 2, 4, 4)
 
         self.label_maker("position_label_1", "현재위치", 1, 4, 6)
@@ -197,7 +197,7 @@ class MainWindow(QMainWindow):
         self.widget_maker("NO_widget", 3, 5, 0)
         self.widget_maker("ALARM_widget", 3, 5, 1)
         self.widget_maker("STATE_widget", 3, 5, 2)
-        self.widget_maker("EQ_widget", 3, 5, 3)
+        self.widget_maker("CODE_widget", 3, 5, 3)
         self.widget_maker("DATETIME_widget", 4, 5, 4)
 
         self.widget_maker("position_widget_1", 3, 5, 6)
@@ -275,7 +275,7 @@ class MainWindow(QMainWindow):
         # 이제 여기에서 각 버튼의 상태를 확인하고 필요한 작업을 수행할 수 있습니다.
     
     def clearLists(self):
-        history_widgets = [self.NO_widget, self.ALARM_widget, self.EQ_widget, self.STATE_widget, self.DATETIME_widget]
+        history_widgets = [self.NO_widget, self.ALARM_widget, self.STATE_widget, self.EQ_widget, self.DATETIME_widget]
         details_1_widgets = [self.position_widget_1, self.departure_widget_1, self.number_widget_1, self.order_widget_1, self.product_widget_1]
         details_2_widgets = [self.position_widget_2, self.departure_widget_2, self.number_widget_2, self.order_widget_2, self.product_widget_2]
 
@@ -359,13 +359,6 @@ class OptionButton(QWidget):
         self.setLayout(layout)
         
         self.transparent_button.raise_()
-    
-    def setButtonSize(self, width, height):
-        scaled_off_pixmap = self.off_pixmap.scaled(width, height, Qt.KeepAspectRatio, Qt.SmoothTransformation)
-        self.setFixedSize(width, height)
-        self.label.setFixedSize(width, height)
-        self.label.setPixmap(scaled_off_pixmap)
-        self.transparent_button.setFixedSize(width, height)
 
     def setScaledPixmap(self):
         label_size = self.size()
