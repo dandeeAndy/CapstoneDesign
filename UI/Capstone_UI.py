@@ -3,21 +3,16 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 import UI_set
-
 from queue import Queue
 import socket
 import threading
 import time
 
-# -----------------------------------------------------------------------
 print(socket.gethostbyname(socket.gethostname()))
 
 Vision_Motor_host ='192.168.163.251'
-# Vision_Motor_host ='192.168.144.231'
 UI_host = '192.168.163.1'
-# UI_host = '192.168.144.1'
-
-port = 1111
+port = 3333
 
 lock = threading.Lock()
 client_soc = None
@@ -29,11 +24,11 @@ last_sent_pause = None
 last_sent_reset = None
 
 last_received_data = None
-receive_count = 0  # 수신된 데이터의 개수를 세기 위한 카운터
+receive_count = 0
+flag = True  # flag to manage odd/even data processing
 
-# -----------------------------------------------------------------------
 def client_func():
-    global client_soc, selected_option, last_received_data, receive_count, widgets
+    global client_soc, selected_option, last_received_data, receive_count, widgets, flag
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     while True:
         try:
@@ -56,83 +51,81 @@ def client_func():
             print("Received data:", qr_data_receive)
         except socket.error as e:
             print("Error receiving data: ", e)
-            break   # 소켓 에러시
+            break
         
         widgets = []
-        print("Received data:", qr_data_receive)
         if qr_data_receive and qr_data_receive != last_received_data:
-            receive_count += 1  # 데이터를 받을 때마다 카운터 증가
-            last_received_data = qr_data_receive  # 마지막으로 받은 데이터 업데이트
+            receive_count += 1
+            last_received_data = qr_data_receive
             
-            if receive_count % 2 == 1:  # 홀수 번째 데이터 처리
-                print("odd numbered data")
+            if flag:  # Odd-numbered data processing
+                print("odd numbered data--------------------------------")
+                parts_odd = last_received_data.split('/')
+                print(parts_odd)
                 
-                if qr_data_receive:
-                    parts = qr_data_receive.split('/')
-                    print(parts)
+                if parts_odd:
+                    classifi = parts_odd[0]
                     
-                    if parts:
-                        classifi = parts[0]
-                        vision_datetime = parts[7]
-                        print("vision datetime: ", vision_datetime)
-                        
-                        if selected_option == 'Option1':
-                            print("Option1")
-                            if classifi[0] in ['A']:
-                                widgets = widgets1
-                                option = 0
-                            elif classifi[0] in ['B']:
-                                widgets = widgets2
-                                option = 1
-                        
-                        elif selected_option == 'Option2':
-                            print("Option2")
-                            if classifi[1] in ['A']:
-                                widgets = widgets1
-                                option = 0
-                            elif classifi[1] in ['B']:
-                                widgets = widgets2
-                                option = 1
-                        
-                        elif selected_option == 'Option3':
-                            print("Option3")
-                            if classifi[2] in ['A']:
-                                widgets = widgets1
-                                option = 0
-                            elif classifi[2] in ['B']:
-                                widgets = widgets2
-                                option = 1
-                        
-                        if widgets:  # widgets 리스트가 비어있지 않은 경우에만 실행
-                            for widget, part in zip(widgets, parts[1:5]):
-                                widget.addItem(part)
-                            widgets = None
-                            mainWin.E_CODE_widget.addItem("0")
-                            
-                        for widget, part in zip(history_widgets, parts[6:]):
+                    if selected_option == 'Option1':
+                        print("Option1")
+                        if classifi[0] in ['A']:
+                            widgets = widgets1
+                            option = 0
+                        elif classifi[0] in ['B']:
+                            widgets = widgets2
+                            option = 1
+                    
+                    elif selected_option == 'Option2':
+                        print("Option2")
+                        if classifi[1] in ['A']:
+                            widgets = widgets1
+                            option = 0
+                        elif classifi[1] in ['B']:
+                            widgets = widgets2
+                            option = 1
+                    
+                    elif selected_option == 'Option3':
+                        print("Option3")
+                        if classifi[2] in ['A']:
+                            widgets = widgets1
+                            option = 0
+                        elif classifi[2] in ['B']:
+                            widgets = widgets2
+                            option = 1
+                    
+                    if widgets:
+                        for widget, part in zip(widgets, parts_odd[1:5]):
                             widget.addItem(part)
+                        widgets = None
+                        mainWin.E_CODE_widget.addItem("0")
                         
-            else:  # 짝수 번째 데이터 처리
-                print("even numbered data")
+                    for widget, part in zip(history_widgets, parts_odd[5:]):
+                        widget.addItem(part)
+                    print(parts_odd[5:])
+                    parts_odd = None
                 
-                if qr_data_receive:
-                    parts = qr_data_receive.split('/')
-                    print(parts)
+            else:  # Even-numbered data processing
+                print("even numbered data--------------------------------")
+                parts_even = qr_data_receive.split('/')
+                print(parts_even)
+                
+                if parts_even:
+                    motor_datetime = parts_even[3]
+                    print("motor datetime: ", motor_datetime)
+                    for widget, part in zip(history_widgets, parts_even[1:]):
+                        widget.addItem(part)
                     
-                    if parts:
-                        motor_datetime = parts[3]
-                        print("motor datetime: ", motor_datetime)
-                        for widget, part in zip(history_widgets, parts[1:]):
-                            widget.addItem(part)
-                        
-                        if option == 0:
-                            mainWin.place_widget_1.addItem(parts[0])
-                        elif option == 1:
-                            mainWin.place_widget_2.addItem(parts[0])
+                    if option == 0:
+                        mainWin.position_widget_1.addItem(parts_even[0])
+                    elif option == 1:
+                        mainWin.position_widget_2.addItem(parts_even[0])
+                    parts_even = None
+
+            flag = not flag
+            qr_data_receive = None
         
-        time.sleep(1)  # 데이터 처리 사이에 짧은 딜레이
-        
-# -----------------------------------------------------------------------
+        time.sleep(1)
+
 def server_func():
     global client_soc, selected_option, last_sent_option
     global pause_clicked, last_sent_pause
@@ -183,11 +176,10 @@ def server_func():
         print(f"Socket error: {e}")
     finally:
         server_socket.close()
-# -----------------------------------------------------------------------
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     font = QFont("NanumSquare", 10)
-    # font.setBold(True)
     app.setFont(font)
     
     mainWin = UI_set.MainWindow()
