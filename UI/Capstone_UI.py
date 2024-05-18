@@ -120,7 +120,7 @@ def client_func():
                     elif option == 1:
                         mainWin.position_widget_2.addItem(parts_even[0])
                     parts_even = None
-
+                mainWin.E_CODE_widget.addItem("0")
             flag = not flag
             qr_data_receive = None
         
