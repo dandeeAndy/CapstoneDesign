@@ -2,7 +2,7 @@ import sys, os
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
-from UI_set import *
+import UI_set
 
 from queue import Queue
 import socket
@@ -12,9 +12,9 @@ import time
 # -----------------------------------------------------------------------
 print(socket.gethostbyname(socket.gethostname()))
 
-Vision_Motor_host ='192.168.95.231'
+Vision_Motor_host ='192.168.163.251'
 # Vision_Motor_host ='192.168.144.231'
-UI_host = '192.168.95.1'
+UI_host = '192.168.163.1'
 # UI_host = '192.168.144.1'
 
 port = 1111
@@ -29,7 +29,6 @@ last_sent_pause = None
 last_sent_reset = None
 
 last_received_data = None
-option = ['A', 'B']
 receive_count = 0  # 수신된 데이터의 개수를 세기 위한 카운터
 
 # -----------------------------------------------------------------------
@@ -46,6 +45,7 @@ def client_func():
             time.sleep(5)
             continue
     
+    buffer = ""
     while True:
         try:
             data = client_socket.recv(1024)
@@ -107,6 +107,7 @@ def client_func():
                             for widget, part in zip(widgets, parts[1:5]):
                                 widget.addItem(part)
                             widgets = None
+                            mainWin.E_CODE_widget.addItem("0")
                             
                         for widget, part in zip(history_widgets, parts[6:]):
                             widget.addItem(part)
@@ -137,54 +138,59 @@ def server_func():
     global pause_clicked, last_sent_pause
     global option_reset, last_sent_reset
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_socket.bind((UI_host, port))
-    server_socket.listen()
-    print('UI server waiting for connection....')
+    try:
+        server_socket.bind((UI_host, port))
+        server_socket.listen()
+        print('UI server waiting for connection....')
+        
+        client_soc, addr = server_socket.accept()
+        print('UI server connected')
     
-    client_soc, addr = server_socket.accept()
-    print('UI server connected')
-    
-    while True:
-        selected_option = get_selected_option()
-        pause_clicked = get_pause_clicked()
-        option_reset = get_option_reset()
-        
-        if selected_option is not None and selected_option != last_sent_option:
-            try:
-                client_soc.sendall((selected_option + '\n').encode('utf-8'))
-                last_sent_option = selected_option
-                selected_option = None
-            except socket.error as e:
-                print("Error sending option_data:", e)
-                break
-        
-        if pause_clicked is not None and pause_clicked != last_sent_pause:
-            try:
-                client_soc.sendall((pause_clicked + '\n').encode('utf-8'))
-                last_sent_pause = pause_clicked
-                print("Pause clicked:", last_sent_pause)
-                pause_clicked = None
-            except socket.error as e:
-                print("Error sending pause_data:", e)
-                break
-        
-        if option_reset is not None and option_reset != last_sent_reset:
-            try:
-                client_soc.sendall((option_reset + '\n').encode('utf-8'))
-                last_sent_reset = option_reset
-                print("Reset signal:", last_sent_reset)
-                option_reset = None
-            except socket.error as e:
-                print("Error sending reset_data:", e)
-                break
+        while True:
+            selected_option = UI_set.get_selected_option()
+            pause_clicked = UI_set.get_pause_clicked()
+            option_reset = UI_set.get_option_reset()
+            
+            if selected_option is not None and selected_option != last_sent_option:
+                try:
+                    client_soc.sendall((selected_option + '\n').encode('utf-8'))
+                    last_sent_option = selected_option
+                    selected_option = None
+                except socket.error as e:
+                    print("Error sending option_data:", e)
+                    break
+            
+            if pause_clicked is not None and pause_clicked != last_sent_pause:
+                try:
+                    client_soc.sendall((pause_clicked + '\n').encode('utf-8'))
+                    last_sent_pause = pause_clicked
+                    print("Pause clicked:", last_sent_pause)
+                    pause_clicked = None
+                except socket.error as e:
+                    print("Error sending pause_data:", e)
+                    break
+            
+            if option_reset is not None and option_reset != last_sent_reset:
+                try:
+                    client_soc.sendall((option_reset + '\n').encode('utf-8'))
+                    last_sent_reset = option_reset
+                    print("Reset signal:", last_sent_reset)
+                    option_reset = None
+                except socket.error as e:
+                    print("Error sending reset_data:", e)
+                    break
+    except socket.error as e:
+        print(f"Socket error: {e}")
+    finally:
+        server_socket.close()
 # -----------------------------------------------------------------------
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     font = QFont("NanumSquare", 10)
-    font.setBold(True)
+    # font.setBold(True)
     app.setFont(font)
     
-    mainWin = MainWindow()
+    mainWin = UI_set.MainWindow()
     
     widgets1 = [mainWin.package_number_widget_1, 
                 mainWin.email_widget_1, 
@@ -199,8 +205,6 @@ if __name__ == '__main__':
     history_widgets = [mainWin.ALARM_widget, 
                        mainWin.STATE_widget, 
                        mainWin.DATETIME_widget]
-    
-    place_widgets = [mainWin.place_widget_1, mainWin.place_widget_2]
     
     mainWin.showMaximized()
     mainWin.show()
