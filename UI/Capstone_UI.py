@@ -2,7 +2,7 @@ import sys, os
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
-import UI_set
+from UI_set import *
 
 from queue import Queue
 import socket
@@ -33,7 +33,7 @@ receive_count = 0  # 수신된 데이터의 개수를 세기 위한 카운터
 
 # -----------------------------------------------------------------------
 def client_func():
-    global client_soc, selected_option, last_received_data, receive_count
+    global client_soc, selected_option, last_received_data, receive_count, widgets
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     while True:
         try:
@@ -42,7 +42,7 @@ def client_func():
             break
         except socket.error:
             print("Connection attempt failed. Retrying...")
-            time.sleep(5)  
+            time.sleep(5)
             continue
     
     while True:
@@ -72,11 +72,8 @@ def client_func():
                     
                     if parts:
                         classifi = parts[0]
-                        alarm = parts[5]
-                        state = parts[6]
                         vision_datetime = parts[7]
-                        print(classifi)
-                        print(vision_datetime)
+                        print("vision datetime: ", vision_datetime)
                         
                         if selected_option == 'Option1':
                             print("Option1")
@@ -100,12 +97,12 @@ def client_func():
                                 widgets = widgets2
                         
                         if widgets:  # widgets 리스트가 비어있지 않은 경우에만 실행
-                            for widget, part in zip(widgets, parts):
+                            for widget, part in zip(widgets, parts[:5]):
                                 widget.addItem(part)
                             widgets = None
-                            print("widget reset")
-
-                        t_label.addItem(vision_datetime)
+                            
+                        for widget, part in zip(history_widgets, parts[6:]):
+                            widget.addItem(part)
                 
             else:  # 짝수 번째 데이터 처리
                 print("even numbered data")
@@ -115,13 +112,10 @@ def client_func():
                     print(parts)
                     
                     if parts:
-                        place_position = parts[0]
-                        alarm = parts[1]
-                        state = parts[2]
                         motor_datetime = parts[3]
-                        print(place_position)
-                        print(motor_datetime)
-                    
+                        print("motor datetime: ", motor_datetime)
+                        for widget, part in zip(history_widgets, parts[2:]):
+                            widget.addItem(part)
         
         time.sleep(1)  # 데이터 처리 사이에 짧은 딜레이
         
@@ -139,9 +133,9 @@ def server_func():
     print('UI server connected')
     
     while True:
-        selected_option = UI_set.get_selected_option()
-        pause_clicked = UI_set.get_pause_clicked()
-        option_reset = UI_set.get_option_reset()
+        selected_option = get_selected_option()
+        pause_clicked = get_pause_clicked()
+        option_reset = get_option_reset()
         
         if selected_option is not None and selected_option != last_sent_option:
             try:
@@ -177,25 +171,23 @@ if __name__ == '__main__':
     font = QFont("NanumSquare", 9)
     app.setFont(font)
     
-    mainWin = UI_set.MainWindow()
+    mainWin = MainWindow()
     
-    widgets1 = [mainWin.position_label_1, 
-                mainWin.departure_widget_1, 
-                mainWin.arrival_widget_1, 
-                mainWin.region_widget_1, 
-                mainWin.product_widget_1]
+    widgets1 = [mainWin.position_widget_1, 
+                mainWin.package_number_widget_1, 
+                mainWin.email_widget_1, 
+                mainWin.destination_widget_1, 
+                mainWin.phone_number_widget_1]
     
-    widgets2 = [mainWin.position_label_2, 
-                mainWin.departure_widget_2, 
-                mainWin.arrival_widget_2, 
-                mainWin.region_widget_2, 
-                mainWin.product_widget_2]
+    widgets2 = [mainWin.position_widget_2, 
+                mainWin.package_number_widget_2, 
+                mainWin.email_widget_2, 
+                mainWin.destination_widget_2, 
+                mainWin.phone_number_widget_2]
     
     history_widgets = [mainWin.ALARM_widget, 
                        mainWin.STATE_widget, 
                        mainWin.DATETIME_widget]
-    
-    t_label = mainWin.DATETIME_label
     
     mainWin.showMaximized()
     mainWin.show()
