@@ -29,6 +29,7 @@ last_sent_pause = None
 last_sent_reset = None
 
 last_received_data = None
+option = ['A', 'B']
 receive_count = 0  # 수신된 데이터의 개수를 세기 위한 카운터
 
 # -----------------------------------------------------------------------
@@ -79,31 +80,37 @@ def client_func():
                             print("Option1")
                             if classifi[0] in ['A']:
                                 widgets = widgets1
+                                option = 0
                             elif classifi[0] in ['B']:
                                 widgets = widgets2
+                                option = 1
                         
                         elif selected_option == 'Option2':
                             print("Option2")
                             if classifi[1] in ['A']:
                                 widgets = widgets1
+                                option = 0
                             elif classifi[1] in ['B']:
                                 widgets = widgets2
+                                option = 1
                         
                         elif selected_option == 'Option3':
                             print("Option3")
                             if classifi[2] in ['A']:
                                 widgets = widgets1
+                                option = 0
                             elif classifi[2] in ['B']:
                                 widgets = widgets2
+                                option = 1
                         
                         if widgets:  # widgets 리스트가 비어있지 않은 경우에만 실행
-                            for widget, part in zip(widgets, parts[:5]):
+                            for widget, part in zip(widgets, parts[1:5]):
                                 widget.addItem(part)
                             widgets = None
                             
                         for widget, part in zip(history_widgets, parts[6:]):
                             widget.addItem(part)
-                
+                        
             else:  # 짝수 번째 데이터 처리
                 print("even numbered data")
                 
@@ -114,8 +121,13 @@ def client_func():
                     if parts:
                         motor_datetime = parts[3]
                         print("motor datetime: ", motor_datetime)
-                        for widget, part in zip(history_widgets, parts[2:]):
+                        for widget, part in zip(history_widgets, parts[1:]):
                             widget.addItem(part)
+                        
+                        if option == 0:
+                            mainWin.place_widget_1.addItem(parts[0])
+                        elif option == 1:
+                            mainWin.place_widget_2.addItem(parts[0])
         
         time.sleep(1)  # 데이터 처리 사이에 짧은 딜레이
         
@@ -168,19 +180,18 @@ def server_func():
 # -----------------------------------------------------------------------
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    font = QFont("NanumSquare", 9)
+    font = QFont("NanumSquare", 10)
+    font.setBold(True)
     app.setFont(font)
     
     mainWin = MainWindow()
     
-    widgets1 = [mainWin.position_widget_1, 
-                mainWin.package_number_widget_1, 
+    widgets1 = [mainWin.package_number_widget_1, 
                 mainWin.email_widget_1, 
                 mainWin.destination_widget_1, 
                 mainWin.phone_number_widget_1]
     
-    widgets2 = [mainWin.position_widget_2, 
-                mainWin.package_number_widget_2, 
+    widgets2 = [mainWin.package_number_widget_2, 
                 mainWin.email_widget_2, 
                 mainWin.destination_widget_2, 
                 mainWin.phone_number_widget_2]
@@ -188,6 +199,8 @@ if __name__ == '__main__':
     history_widgets = [mainWin.ALARM_widget, 
                        mainWin.STATE_widget, 
                        mainWin.DATETIME_widget]
+    
+    place_widgets = [mainWin.place_widget_1, mainWin.place_widget_2]
     
     mainWin.showMaximized()
     mainWin.show()
