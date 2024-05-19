@@ -3,11 +3,22 @@
 
 block_cipher = None
 
-add_files = [('delta_total.png','.'),('opt1_OFF.png','.'),('opt1_ON.png','.'),('opt2_OFF.png','.'),('opt2_ON.png','.'),('opt3_OFF.png','.'),('opt3_ON.png','.'),('pause_button.png','.'),('system_logo.png','.'),('robot_icon.png','.'),('JALK3_logo_image.png','.'),('exit.png','.')]
+add_files = [('./delta_total.png','.'),
+            ('./opt1_OFF.png','.'),
+            ('./opt1_ON.png','.'),
+            ('./opt2_OFF.png','.'),
+            ('./opt2_ON.png','.'),
+            ('./opt3_OFF.png','.'),
+            ('./opt3_ON.png','.'),
+            ('./pause_button.png','.'),
+            ('./system_logo.png','.'),
+            ('./robot_icon.png','.'),
+            ('./JALK3_logo_image.png','.'),
+            ('./exit.png','.')]
 
 a = Analysis(
     ['Capstone_UI.py'],
-    pathex=[C:/Users/schah/바탕 화면],
+    pathex=[],
     binaries=[],
     datas=add_files,
     hiddenimports=[],
