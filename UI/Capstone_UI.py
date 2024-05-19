@@ -56,7 +56,7 @@ def client_func():
         widgets = []
         if qr_data_receive and qr_data_receive != last_received_data:
             count += 1
-            Number = count//2
+            Number = count // 2
             last_received_data = qr_data_receive
             
             if flag:  # Odd-numbered data processing
@@ -98,7 +98,7 @@ def client_func():
                         for widget, part in zip(widgets, parts_odd[1:5]):
                             widget.addItem(part)
                         widgets = None
-                        mainWin.NO_widget.addItem(Number)
+                        mainWin.NO_widget.addItem(str(Number))
                         mainWin.E_CODE_widget.addItem("0")
                         
                     for widget, part in zip(history_widgets, parts_odd[5:]):
@@ -116,7 +116,7 @@ def client_func():
                     print("motor datetime: ", motor_datetime)
                     for widget, part in zip(history_widgets, parts_even[1:]):
                         widget.addItem(part)
-                    mainWin.NO_widget.addItem(Number)
+                    mainWin.NO_widget.addItem(str(Number))
                     if option == 0:
                         mainWin.position_widget_1.addItem(parts_even[0])
                     elif option == 1:
