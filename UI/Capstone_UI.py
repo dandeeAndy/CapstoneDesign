@@ -96,25 +96,13 @@ def client_func():
                     
                     if widgets:
                         for widget, part in zip(widgets, parts_odd[1:5]):
-                            item = QListWidgetItem(part)
-                            item.setTextAlignment(Qt.AlignCenter)
-                            widget.addItem(item)
-                        for widget, part in zip(widgets, parts_odd[1:5]):
-                            item = QListWidgetItem(part)
-                            item.setTextAlignment(Qt.AlignCenter)
-                            widget.addItem(item)
+                            add_centered_item(part, widget)
                         widgets = None
-                        item = QListWidgetItem(str(Number))
-                        item.setTextAlignment(Qt.AlignCenter)
-                        mainWin.NO_widget.addItem(item)
-                        item = QListWidgetItem("0")
-                        item.setTextAlignment(Qt.AlignCenter)
-                        mainWin.E_CODE_widget.addItem(item)
+                        add_centered_item(str(Number), mainWin.NO_widget)
+                        add_centered_item("0", mainWin.E_CODE_widget)
                         
                     for widget, part in zip(history_widgets, parts_odd[5:]):
-                        item = QListWidgetItem(part)
-                        item.setTextAlignment(Qt.AlignCenter)
-                        widget.addItem(item)
+                        add_centered_item(part, widget)
                     print(parts_odd[5:])
                     parts_odd = None
                 
@@ -134,9 +122,7 @@ def client_func():
                     elif option == 1:
                         add_centered_item(parts_even[0], mainWin.position_widget_2)
                     parts_even = None
-                item = QListWidgetItem("0")
-                item.setTextAlignment(Qt.AlignCenter)
-                mainWin.E_CODE_widget.addItem(item)
+                add_centered_item("0", mainWin.E_CODE_widget)
             flag = not flag
             qr_data_receive = None
         
