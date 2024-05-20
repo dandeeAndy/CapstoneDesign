@@ -74,7 +74,7 @@ class MainWindow(QMainWindow):
         # [분류] 현재위치/패키지번호/이메일/목적지/차주전화번호
         self.grid_layout.setColumnStretch(6, 12) # [분류] 현재위치
         self.grid_layout.setColumnStretch(7, 17) # [분류] 패키지번호
-        self.grid_layout.setColumnStretch(8, 35) # [분류] 이메일
+        self.grid_layout.setColumnStretch(8, 38) # [분류] 이메일
         self.grid_layout.setColumnStretch(9, 11) # [분류] 목적지
         
         self.grid_layout.setColumnStretch(10, 30) # Option1 # [분류] 차주전화번호
@@ -84,9 +84,9 @@ class MainWindow(QMainWindow):
         
         self.grid_layout.setColumnStretch(14, 15) # Option2 # [분류] ~패키지번호
         self.grid_layout.setColumnStretch(15, 4)  # [분류] 이메일~
-        self.grid_layout.setColumnStretch(16, 26) # [분류] ~
+        self.grid_layout.setColumnStretch(16, 21) # [분류] ~
         
-        self.grid_layout.setColumnStretch(17, 5) # Option3 # [분류] ~이메일
+        self.grid_layout.setColumnStretch(17, 2) # Option3 # [분류] ~이메일
         self.grid_layout.setColumnStretch(18, 2) # [분류] 목적지~
         self.grid_layout.setColumnStretch(19, 9) # [분류] ~목적지
         self.grid_layout.setColumnStretch(20, 30) # [분류] 차주전화번호

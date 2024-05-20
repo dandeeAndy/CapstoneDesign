@@ -39,7 +39,7 @@ def client_func():
             print("Connection attempt failed. Retrying...")
             time.sleep(5)
             continue
-    
+
     buffer = ""
     while True:
         try:
@@ -96,13 +96,25 @@ def client_func():
                     
                     if widgets:
                         for widget, part in zip(widgets, parts_odd[1:5]):
-                            widget.addItem(part)
+                            item = QListWidgetItem(part)
+                            item.setTextAlignment(Qt.AlignCenter)
+                            widget.addItem(item)
+                        for widget, part in zip(widgets, parts_odd[1:5]):
+                            item = QListWidgetItem(part)
+                            item.setTextAlignment(Qt.AlignCenter)
+                            widget.addItem(item)
                         widgets = None
-                        mainWin.NO_widget.addItem(str(Number))
-                        mainWin.E_CODE_widget.addItem("0")
+                        item = QListWidgetItem(str(Number))
+                        item.setTextAlignment(Qt.AlignCenter)
+                        mainWin.NO_widget.addItem(item)
+                        item = QListWidgetItem("0")
+                        item.setTextAlignment(Qt.AlignCenter)
+                        mainWin.E_CODE_widget.addItem(item)
                         
                     for widget, part in zip(history_widgets, parts_odd[5:]):
-                        widget.addItem(part)
+                        item = QListWidgetItem(part)
+                        item.setTextAlignment(Qt.AlignCenter)
+                        widget.addItem(item)
                     print(parts_odd[5:])
                     parts_odd = None
                 
@@ -114,15 +126,17 @@ def client_func():
                 if parts_even:
                     motor_datetime = parts_even[3]
                     print("motor datetime: ", motor_datetime)
-                    for widget, part in zip(history_widgets, parts_even[1:]):
-                        widget.addItem(part)
-                    mainWin.NO_widget.addItem(str(Number))
+                    for widget, part in zip(history_widgets, parts_even[1:5]):
+                        add_centered_item(part, widget)
+                    add_centered_item(str(Number), mainWin.NO_widget)
                     if option == 0:
-                        mainWin.position_widget_1.addItem(parts_even[0])
+                        add_centered_item(parts_even[0], mainWin.position_widget_1)
                     elif option == 1:
-                        mainWin.position_widget_2.addItem(parts_even[0])
+                        add_centered_item(parts_even[0], mainWin.position_widget_2)
                     parts_even = None
-                mainWin.E_CODE_widget.addItem("0")
+                item = QListWidgetItem("0")
+                item.setTextAlignment(Qt.AlignCenter)
+                mainWin.E_CODE_widget.addItem(item)
             flag = not flag
             qr_data_receive = None
         
@@ -140,7 +154,7 @@ def server_func():
         
         client_soc, addr = server_socket.accept()
         print('UI server connected')
-    
+
         while True:
             selected_option = UI_set.get_selected_option()
             pause_clicked = UI_set.get_pause_clicked()
@@ -178,6 +192,11 @@ def server_func():
         print(f"Socket error: {e}")
     finally:
         server_socket.close()
+
+def add_centered_item(text, widget):
+    item = QListWidgetItem(text)
+    item.setTextAlignment(Qt.AlignCenter)
+    widget.addItem(item)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
