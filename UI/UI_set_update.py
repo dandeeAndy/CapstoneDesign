@@ -175,7 +175,7 @@ class MainWindow(QMainWindow):
         button_positions = [(1, 10, 1, 4), (1, 14, 1, 3), (1, 17, 1, 4)]
         for i, option_button in enumerate(self.option_buttons):
             transparent_button = TransparentButton(option_button)
-            transparent_button.setFixedSize(240, 135)
+            transparent_button.setFixedSize(300, 140)
             transparent_button.clicked.connect(lambda _, b=option_button: b.button_clicked())
             pos = button_positions[i]
             self.grid_layout.addWidget(option_button, *pos)
