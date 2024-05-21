@@ -11,7 +11,9 @@ import time
 print(socket.gethostbyname(socket.gethostname()))
 
 Vision_Motor_host ='192.168.163.251'
+# Vision_Motor_host ='192.168.145.251'
 UI_host = '192.168.163.1'
+# UI_host = '192.168.145.1'
 port = 3333
 
 lock = threading.Lock()
@@ -126,7 +128,7 @@ def client_func():
             flag = not flag
             qr_data_receive = None
         
-        time.sleep(1)
+        time.sleep(0.5)
 
 def server_func():
     global client_soc, selected_option, last_sent_option
