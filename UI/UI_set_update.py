@@ -2,6 +2,7 @@ import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
+from datetime import datetime
 
 selected_option = None
 pause_clicked = None
@@ -34,6 +35,15 @@ class MainWindow(QMainWindow):
         self.option2_status = 0
         self.option3_status = 0
         self.initUI()
+        
+        # 3. 상태바 설정
+        self.statusbar = QStatusBar(self)
+        self.setStatusBar(self.statusbar)
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.time_date)
+        self.timer.start(1000)
+        # 날짜와 시간 출력하기
+        self.statusBar().showMessage(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         
     def initUI(self):
         self.grid_layout = QGridLayout()
@@ -232,6 +242,13 @@ class MainWindow(QMainWindow):
         central_widget = QWidget()
         central_widget.setLayout(self.grid_layout)
         self.setCentralWidget(central_widget)
+    
+    def time_date(self):
+        current_time = QTime.currentTime()
+        current_date = QDate.currentDate()
+        label_time = current_time.toString('hh:mm:ss')
+        label_date = current_date.toString('yyyy년 MM월 dd일')
+        self.statusbar.showMessage(label_date + ' ' + label_time)
     
     def history_maker(self, label_name, text, style_num, row, col, rowspan=1, colspan=1):
         label = QLabel(text, self)
