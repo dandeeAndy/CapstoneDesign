@@ -309,7 +309,7 @@ class MainWindow(QMainWindow):
             self.label_9.setText("A")
             self.label_10.setText("B")
         # print(f"Selected option: {opt}")
-        
+    
     # 클릭 이벤트 처리
     def pauseClicked(self, event):
         QMessageBox.information(self, '알림', '작업이 중지되었습니다.')
@@ -358,7 +358,7 @@ class OptionButton(QWidget):
         super().__init__(parent)
         self.on_pixmap = QPixmap(on_image_path)
         self.off_pixmap = QPixmap(off_image_path)
-        self.opt_text = opt_text
+        self.opt_text = opt_text 
         self.is_on = False
         if self.on_pixmap.isNull() or self.off_pixmap.isNull():
             print("이미지 로드 실패:", on_image_path, "또는", off_image_path)
