@@ -10,17 +10,17 @@ import time
 
 print(socket.gethostbyname(socket.gethostname()))
 
-# Vision_Motor_host ='192.168.248.251'
-Vision_Motor_host ='192.168.112.251'
-# UI_host = '192.168.248.1'
-UI_host = '192.168.112.1'
+Vision_Motor_host ='192.168.248.251'
+# Vision_Motor_host ='192.168.112.251'
+UI_host = '192.168.248.1'
+# UI_host = '192.168.112.1'
 port = 3333
 
 lock = threading.Lock()
 client_soc = None
 selected_option = None
 pause_clicked = None
-option_reset = None
+option_reset = None   
 last_sent_option = None
 last_sent_pause = None
 last_sent_reset = None
