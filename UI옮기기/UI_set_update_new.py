@@ -4,19 +4,9 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from datetime import datetime
 
-selected_option = None
-pause_clicked = None
-option_reset = None
-
-def get_selected_option():
-    global selected_option
-    return selected_option
-def get_pause_clicked():
-    global pause_clicked
-    return pause_clicked
-def get_option_reset():
-    global option_reset
-    return option_reset
+# self.selected_option = None
+# self.pause_clicked = None
+# self.option_reset = None
 
 font_title = QFont("NanumSquare", 12)
 font_bold = QFont("NanumSquare", 12)
@@ -35,6 +25,11 @@ class MainWindow(QMainWindow):
         self.option2_status = 0
         self.option3_status = 0
         self.initUI()
+                    
+        # Initialize instance variables instead of using globals
+        self.selected_option = None
+        self.pause_clicked = None
+        self.option_reset = None
         
         self.statusbar = QStatusBar(self)
         self.setStatusBar(self.statusbar)
@@ -308,19 +303,18 @@ class MainWindow(QMainWindow):
             widget.clear()
         print('CLEAR!')
     
-    def update_option(new_value):
-        global selected_option
-        selected_option = new_value
+    # def update_option(new_value):
+    #     global self.selected_option
+    #     self.selected_option = new_value
         
-    def print_option():
-        print(selected_option)
+    # def print_option():
+    #     print(self.selected_option)
         
     # 클릭 이벤트 처리
     def pauseClicked(self, event):
-        global pause_clicked
-        if pause_clicked is None:
+        if self.pause_clicked is None:
             print('PAUSE!')
-            pause_clicked = "pause"
+            self.pause_clicked = "pause"
             QMessageBox.information(self, '알림', '작업이 중지되었습니다.')
             reply = QMessageBox.question(self, '확인', '분류기준을 초기화하시겠습니까?',
                                         QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
@@ -328,16 +322,15 @@ class MainWindow(QMainWindow):
             if reply == QMessageBox.Yes:
                 self.resetOptions()
                 self.clearLists()
-                pause_clicked = None
+                self.pause_clicked = None
             elif reply == QMessageBox.No:
-                pause_clicked = None
+                self.pause_clicked = None
         else:
             QMessageBox.information(self, '알림', '이미 일시 중지 상태입니다.')
     
     def resetOptions(self):
-        global option_reset, pause_clicked
-        option_reset = "reset"
-        pause_clicked = None
+        self.option_reset = "reset"
+        self.pause_clicked = None
         print('RESET!')
         for button in self.option_buttons:
             if button.is_on:
@@ -403,13 +396,12 @@ class OptionButton(QWidget):
             self.toggle()
     
     def toggle(self):
-        global selected_option, pause_clicked
-        pause_clicked = None
+        self.pause_clicked = None
         self.is_on = not self.is_on
         self.setScaledPixmap()
         if self.is_on:
-            selected_option = self.opt_text
-            self.optionSelected.emit(selected_option)
+            self.selected_option = self.opt_text
+            self.optionSelected.emit(self.selected_option)
 
 
 if __name__ == '__main__':
