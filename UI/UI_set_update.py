@@ -72,16 +72,6 @@ class MainWindow(QMainWindow):
         
         self.grid_layout.setColumnStretch(5, 5)
         
-        # 각 행에 대한 비율 설정
-        # [통신이력] NO/ALARM/STATE/E_CODE/DATETIME
-        self.grid_layout.setColumnStretch(0, 1)
-        self.grid_layout.setColumnStretch(1, 16)
-        self.grid_layout.setColumnStretch(2, 8)
-        self.grid_layout.setColumnStretch(3, 4)
-        self.grid_layout.setColumnStretch(4, 36)
-        
-        self.grid_layout.setColumnStretch(5, 5)
-        
         # [분류] 현재위치/패키지번호/이메일/목적지/차주전화번호
         self.grid_layout.setColumnStretch(6, 12) # [분류] 현재위치
         self.grid_layout.setColumnStretch(7, 17) # [분류] 패키지번호
@@ -239,10 +229,6 @@ class MainWindow(QMainWindow):
         self.widget_maker("destination_widget_2", 3, 5, 18, 1, 2)
         self.widget_maker("phone_number_widget_2", 4, 5, 20)
         
-        central_widget = QWidget()
-        central_widget.setLayout(self.grid_layout)
-        self.setCentralWidget(central_widget)
-    
     def time_date(self):
         current_time = QTime.currentTime()
         current_date = QDate.currentDate()
