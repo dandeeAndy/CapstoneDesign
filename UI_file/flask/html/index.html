@@ -1,9 +1,13 @@
-<!DOCTYPE html>
-<html>
-<head>
+<!DOCTYPE html><html><head>
     <title>Delta Robot Control</title>
-</head>
-<body>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script></head><body>
+    <h1>Delta Robot Control</h1>
     {{ html_content }}
-</body>
-</html>
+
+    <!-- Control buttons or UI elements to interact with the robot -->
+    <button onclick="sendControlCommand('move_up')">Move Up</button>
+    <button onclick="sendControlCommand('move_down')">Move Down</button>
+
+    <div id="response"></div></body></html>
