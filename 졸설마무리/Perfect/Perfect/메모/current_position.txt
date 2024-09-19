@@ -1,0 +1,118 @@
+V1
+Dynamixel#1 | Current Angle: 23.27 degrees | Goal Angle: 23.00 degrees | Error: -0.27 degrees
+Dynamixel#2 | Current Angle: -0.45 degrees | Goal Angle: -1.00 degrees | Error: -0.55 degrees
+Dynamixel#3 | Current Angle: -19.18 degrees | Goal Angle: -20.00 degrees | Error: -0.82 degrees
+V2
+Dynamixel#1 | Current Angle: 22.27 degrees | Goal Angle: 22.00 degrees | Error: -0.27 degrees
+Dynamixel#2 | Current Angle: -19.27 degrees | Goal Angle: -20.00 degrees | Error: -0.73 degrees
+Dynamixel#3 | Current Angle: -3.45 degrees | Goal Angle: -4.00 degrees | Error: -0.55 degrees
+V3
+Dynamixel#1 | Current Angle: 40.64 degrees | Goal Angle: 41.00 degrees | Error: 0.36 degrees
+Dynamixel#2 | Current Angle: -17.18 degrees | Goal Angle: -18.00 degrees | Error: -0.82 degrees
+Dynamixel#3 | Current Angle: -0.36 degrees | Goal Angle: -1.00 degrees | Error: -0.64 degrees
+V4
+Dynamixel#1 | Current Angle: 41.64 degrees | Goal Angle: 42.00 degrees | Error: 0.36 degrees
+Dynamixel#2 | Current Angle: 0.64 degrees | Goal Angle: 0.00 degrees | Error: -0.64 degrees
+Dynamixel#3 | Current Angle: -17.18 degrees | Goal Angle: -18.00 degrees | Error: -0.82 degrees
+V5
+Dynamixel#1 | Current Angle: 30.27 degrees | Goal Angle: 30.00 degrees | Error: -0.27 degrees
+Dynamixel#2 | Current Angle: 9.55 degrees | Goal Angle: 9.00 degrees | Error: -0.55 degrees
+Dynamixel#3 | Current Angle: -8.09 degrees | Goal Angle: -9.00 degrees | Error: -0.91 degrees
+V6
+Dynamixel#1 | Current Angle: 30.27 degrees | Goal Angle: 30.00 degrees | Error: -0.27 degrees
+Dynamixel#2 | Current Angle: -7.27 degrees | Goal Angle: -8.00 degrees | Error: -0.73 degrees
+Dynamixel#3 | Current Angle: 6.64 degrees | Goal Angle: 6.00 degrees | Error: -0.64 degrees
+V7
+Dynamixel#1 | Current Angle: 48.45 degrees | Goal Angle: 49.00 degrees | Error: 0.55 degrees
+Dynamixel#2 | Current Angle: -6.18 degrees | Goal Angle: -7.00 degrees | Error: -0.82 degrees
+Dynamixel#3 | Current Angle: 10.64 degrees | Goal Angle: 10.00 degrees | Error: -0.64 degrees
+V8
+Dynamixel#1 | Current Angle: 47.82 degrees | Goal Angle: 48.00 degrees | Error: 0.18 degrees
+Dynamixel#2 | Current Angle: 10.55 degrees | Goal Angle: 10.00 degrees | Error: -0.55 degrees
+Dynamixel#3 | Current Angle: -5.91 degrees | Goal Angle: -8.00 degrees | Error: -2.09 degrees
+V9
+Dynamixel#1 | Current Angle: 38.36 degrees | Goal Angle: 38.00 degrees | Error: -0.36 degrees
+Dynamixel#2 | Current Angle: 19.45 degrees | Goal Angle: 19.00 degrees | Error: -0.45 degrees
+Dynamixel#3 | Current Angle: 2.82 degrees | Goal Angle: 2.00 degrees | Error: -0.82 degrees
+V10
+Dynamixel#1 | Current Angle: 38.36 degrees | Goal Angle: 38.00 degrees | Error: -0.36 degrees
+Dynamixel#2 | Current Angle: 4.73 degrees | Goal Angle: 3.00 degrees | Error: -1.73 degrees
+Dynamixel#3 | Current Angle: 16.64 degrees | Goal Angle: 16.00 degrees | Error: -0.64 degrees
+V11
+Dynamixel#1 | Current Angle: 55.36 degrees | Goal Angle: 56.00 degrees | Error: 0.64 degrees
+Dynamixel#2 | Current Angle: 4.91 degrees | Goal Angle: 4.00 degrees | Error: -0.91 degrees
+Dynamixel#3 | Current Angle: 19.64 degrees | Goal Angle: 19.00 degrees | Error: -0.64 degrees
+V12
+Dynamixel#1 | Current Angle: 54.73 degrees | Goal Angle: 55.00 degrees | Error: 0.27 degrees
+Dynamixel#2 | Current Angle: 20.55 degrees | Goal Angle: 20.00 degrees | Error: -0.55 degrees
+Dynamixel#3 | Current Angle: 5.36 degrees | Goal Angle: 3.00 degrees | Error: -2.36 degrees
+
+A1
+Dynamixel#1 | Current Angle: 5.00 degrees | Goal Angle: 4.00 degrees | Error: -1.00 degrees
+Dynamixel#2 | Current Angle: 27.73 degrees | Goal Angle: 27.00 degrees | Error: -0.73 degrees
+Dynamixel#3 | Current Angle: 68.27 degrees | Goal Angle: 69.00 degrees | Error: 0.73 degrees
+A2
+Dynamixel#1 | Current Angle: -2.45 degrees | Goal Angle: -5.00 degrees | Error: -2.55 degrees
+Dynamixel#2 | Current Angle: 32.45 degrees | Goal Angle: 32.00 degrees | Error: -0.45 degrees
+Dynamixel#3 | Current Angle: 50.27 degrees | Goal Angle: 50.00 degrees | Error: -0.27 degrees
+A3
+Dynamixel#1 | Current Angle: 8.82 degrees | Goal Angle: 8.00 degrees | Error: -0.82 degrees
+Dynamixel#2 | Current Angle: 16.55 degrees | Goal Angle: 15.00 degrees | Error: -1.55 degrees
+Dynamixel#3 | Current Angle: 58.18 degrees | Goal Angle: 59.00 degrees | Error: 0.82 degrees
+A4
+Dynamixel#1 | Current Angle: 0.09 degrees | Goal Angle: -2.00 degrees | Error: -2.09 degrees
+Dynamixel#2 | Current Angle: 21.55 degrees | Goal Angle: 21.00 degrees | Error: -0.55 degrees
+Dynamixel#3 | Current Angle: 40.55 degrees | Goal Angle: 40.00 degrees | Error: -0.55 degrees
+A5
+Dynamixel#1 | Current Angle: -5.82 degrees | Goal Angle: -8.00 degrees | Error: -2.18 degrees
+Dynamixel#2 | Current Angle: 17.36 degrees | Goal Angle: 16.00 degrees | Error: -1.36 degrees
+Dynamixel#3 | Current Angle: 59.82 degrees | Goal Angle: 61.00 degrees | Error: 1.18 degrees
+A6
+Dynamixel#1 | Current Angle: -14.55 degrees | Goal Angle: -17.00 degrees | Error: -2.45 degrees
+Dynamixel#2 | Current Angle: 22.45 degrees | Goal Angle: 22.00 degrees | Error: -0.45 degrees
+Dynamixel#3 | Current Angle: 41.27 degrees | Goal Angle: 41.00 degrees | Error: -0.27 degrees
+A7
+Dynamixel#1 | Current Angle: -5.09 degrees | Goal Angle: -6.00 degrees | Error: -0.91 degrees
+Dynamixel#2 | Current Angle: 4.55 degrees | Goal Angle: 3.00 degrees | Error: -1.55 degrees
+Dynamixel#3 | Current Angle: 50.36 degrees | Goal Angle: 51.00 degrees | Error: 0.64 degrees
+A8
+Dynamixel#1 | Current Angle: -11.82 degrees | Goal Angle: -14.00 degrees | Error: -2.18 degrees
+Dynamixel#2 | Current Angle: 11.55 degrees | Goal Angle: 11.00 degrees | Error: -0.55 degrees
+Dynamixel#3 | Current Angle: 32.64 degrees | Goal Angle: 32.00 degrees | Error: -0.64 degrees
+
+B1
+Dynamixel#1 | Current Angle: 2.91 degrees | Goal Angle: 2.00 degrees | Error: -0.91 degrees
+Dynamixel#2 | Current Angle: 65.27 degrees | Goal Angle: 66.00 degrees | Error: 0.73 degrees
+Dynamixel#3 | Current Angle: 28.82 degrees | Goal Angle: 28.00 degrees | Error: -0.82 degrees
+B2
+Dynamixel#1 | Current Angle: -2.45 degrees | Goal Angle: -5.00 degrees | Error: -2.55 degrees
+Dynamixel#2 | Current Angle: 49.18 degrees | Goal Angle: 49.00 degrees | Error: -0.18 degrees
+Dynamixel#3 | Current Angle: 35.36 degrees | Goal Angle: 35.00 degrees | Error: -0.36 degrees
+B3
+Dynamixel#1 | Current Angle: 6.82 degrees | Goal Angle: 6.00 degrees | Error: -0.82 degrees
+Dynamixel#2 | Current Angle: 57.55 degrees | Goal Angle: 58.00 degrees | Error: 0.45 degrees
+Dynamixel#3 | Current Angle: 18.91 degrees | Goal Angle: 17.00 degrees | Error: -1.91 degrees
+B4
+Dynamixel#1 | Current Angle: 0.00 degrees | Goal Angle: -2.00 degrees | Error: -2.00 degrees
+Dynamixel#2 | Current Angle: 38.36 degrees | Goal Angle: 38.00 degrees | Error: -0.36 degrees
+Dynamixel#3 | Current Angle: 22.45 degrees | Goal Angle: 22.00 degrees | Error: -0.45 degrees
+B5
+Dynamixel#1 | Current Angle: -6.91 degrees | Goal Angle: -9.00 degrees | Error: -2.09 degrees
+Dynamixel#2 | Current Angle: 59.18 degrees | Goal Angle: 60.00 degrees | Error: 0.82 degrees
+Dynamixel#3 | Current Angle: 19.55 degrees | Goal Angle: 18.00 degrees | Error: -1.55 degrees
+B6
+Dynamixel#1 | Current Angle: -13.64 degrees | Goal Angle: -16.00 degrees | Error: -2.36 degrees
+Dynamixel#2 | Current Angle: 41.27 degrees | Goal Angle: 41.00 degrees | Error: -0.27 degrees
+Dynamixel#3 | Current Angle: 26.45 degrees | Goal Angle: 26.00 degrees | Error: -0.45 degrees
+B7
+Dynamixel#1 | Current Angle: -5.18 degrees | Goal Angle: -6.00 degrees | Error: -0.82 degrees
+Dynamixel#2 | Current Angle: 50.55 degrees | Goal Angle: 51.00 degrees | Error: 0.45 degrees
+Dynamixel#3 | Current Angle: 7.82 degrees | Goal Angle: 6.00 degrees | Error: -1.82 degrees
+B8
+Dynamixel#1 | Current Angle: -11.82 degrees | Goal Angle: -14.00 degrees | Error: -2.18 degrees
+Dynamixel#2 | Current Angle: 31.45 degrees | Goal Angle: 31.00 degrees | Error: -0.45 degrees
+Dynamixel#3 | Current Angle: 13.45 degrees | Goal Angle: 13.00 degrees | Error: -0.45 degrees
+Home
+Dynamixel#1 | Current Angle: -14.82 degrees | Goal Angle: -16.00 degrees | Error: -1.18 degrees
+Dynamixel#2 | Current Angle: -14.73 degrees | Goal Angle: -16.00 degrees | Error: -1.27 degrees
+Dynamixel#3 | Current Angle: -14.82 degrees | Goal Angle: -16.00 degrees | Error: -1.18 degrees
