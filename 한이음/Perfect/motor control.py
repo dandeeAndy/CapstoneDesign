@@ -102,6 +102,18 @@ def move(goal_angles):
         if dxl_comm_result != COMM_SUCCESS:
             print(f"Failed to set goal position for Dynamixel#{dxl_id}")
             exit()
+
+# ---------------------------------------------------------------------------------------------------------------
+def move_plus(goal_angles,):
+    goal_positions = [int(MID_POSITION + angle * ANGLE_PER_UNIT) for angle in goal_angles]
+    for dxl_id, goal_position in zip(DXL_IDs, goal_positions):
+        if goal_position < 0 or goal_position > 4095:  
+            print(f"Goal position {goal_position} out of range for Dynamixel#{dxl_id}")
+            continue
+        dxl_comm_result, dxl_error = packetHandler.write4ByteTxRx(portHandler, dxl_id, ADDR_GOAL_POSITION, goal_position)
+        if dxl_comm_result != COMM_SUCCESS:
+            print(f"Failed to set goal position for Dynamixel#{dxl_id}")
+            exit()
             
 # ---------------------------------------------------------------
 #def move_with_pump(angles_list):
