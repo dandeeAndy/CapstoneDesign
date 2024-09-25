@@ -8,16 +8,16 @@ MY_DXL = 'X_SERIES'
 PROTOCOL_VERSION = 2.0
 
 # Default setting
-DXL_IDs = [1, 2, 3]  # Dynamixel IDs
+DXL_IDs = [1, 2, 3, 4]  # Dynamixel IDs
 BAUDRATE = 57600
-DEVICENAME = 'COM3'  # Port Name
+DEVICENAME = 'COM17'  # Port Namex
 TORQUE_ENABLE = 1
 TORQUE_DISABLE = 0
 
 # Control Table Addresses
 ADDR_OPERATING_MODE = 11
 EXTENDED_POSITION_CONTROL_MODE = 4
-ADDR_TORQUE_ENABLE = 64
+ADDR_TORQUE_ENABLE = 64 
 ADDR_GOAL_POSITION = 116
 
 ADDR_GOAL_VELOCITY = 104
@@ -104,9 +104,15 @@ def move(goal_angles):
             exit()
 
 # ---------------------------------------------------------------------------------------------------------------
-def move_plus(goal_angles,):
+def move_plus(goal_angles, rotation):
+    if rotation < -180 or rotation > 180:
+        print(f"Rotation value {rotation} out of range (-180 to 180)")
+        return
     goal_positions = [int(MID_POSITION + angle * ANGLE_PER_UNIT) for angle in goal_angles]
-    for dxl_id, goal_position in zip(DXL_IDs, goal_positions):
+
+    goal_position_4 = int(MID_POSITION + rotation * ANGLE_PER_UNIT)
+
+    for dxl_id, goal_position in zip(DXL_IDs[:-1], goal_positions):
         if goal_position < 0 or goal_position > 4095:  
             print(f"Goal position {goal_position} out of range for Dynamixel#{dxl_id}")
             continue
@@ -114,16 +120,31 @@ def move_plus(goal_angles,):
         if dxl_comm_result != COMM_SUCCESS:
             print(f"Failed to set goal position for Dynamixel#{dxl_id}")
             exit()
-            
+
+    if goal_position_4 < 0 or goal_position_4 > 4095:
+        print(f"Goal position {goal_position_4} out of range for Dynamixel#4")
+    else:
+        dxl_comm_result, dxl_error = packetHandler.write4ByteTxRx(portHandler, 4, ADDR_GOAL_POSITION, goal_position_4)
+        if dxl_comm_result != COMM_SUCCESS:
+            print(f"Failed to set goal position for Dynamixel#4")
+            exit()
+
+
 # ---------------------------------------------------------------
-#def move_with_pump(angles_list):
-#    time.sleep(2)
-#    solenoid.airpump_on()
-#    time.sleep(1)
-#    for angles in angles_list:
-#        move(angles)
-#        time.sleep(1)
-#    solenoid.airpump_off()
+def move_with_pump(angles_list):
+   time.sleep(2)
+   solenoid.airpump_on()
+   time.sleep(1)
+   for angles in angles_list:
+       move(angles)
+       time.sleep(1)
+   solenoid.airpump_off()
+   
+
+def move_to_position(angles_list):
+   for angles in angles_list:
+       move(angles)
+       time.sleep(1)
     
     
 # ---------------------------------------------------------------
@@ -142,7 +163,9 @@ def place(angles_list):
         time.sleep(1)
         
 # ---------------------------------------------------------------
-Home = [-16,-16,-16]
+Home = [-20,-20,-20,50]
+# Home = [-60,-60,-60,60]
+# Home = [-16,-16,-16,30]
 V1 = [[11,-17,-42], [23,0,-20],[11,-17,-42],[0,0,400]]
 V2 = [[32,-17,-40], [41,1,-19],[32,-17,-40],[0,0,400]]
 V3 = [[31,-39,-20], [41,-18,-2], [32,-45,-25],[-57,-5,20]]
@@ -157,7 +180,7 @@ V11 =[[31,-39,-20], [56,4,19],[31,-39,-20],[0,0,400]]
 V12 =[[13,-37,-20], [38,3,16],[13,-37,-20],[0,0,400]]
 
 # ---------------------------------------------------------------
-A1 = [[-40,-6,48], [3,26,68], [-40,-6,48]]
+A1 = [[-40,-6,48,10], [3,26,68,100], [-40,-6,48,40]]
 A2 = [[-47,3,26], [-8,31,49], [-47,3,26]]
 A3 = [[-30,-23,37], [6,14,58],[-30,-23,37]]
 A4 = [[-41,-10,15], [-2,21,40],[-41,-10,15]]
@@ -175,8 +198,8 @@ B6 = [[-46,24,4], [-16,41,26], [-46,24,4]]
 B7 = [[-36,35,-23], [-6,51,6],[-36,35,-23]]
 B8 = [[-43,12,-9], [-14,31,13],[-43,12,-9]]
 
-position_safe = [13,-37,-20]
-position = [30,-8,6]
+position_safe = [13,-37,-20,1]
+position = [30,-8,6,100]
 
 # ---------------------------------------------------------------
 #move_with_pump(A1)
@@ -191,16 +214,19 @@ position = [30,-8,6]
 
 # move(position_safe)
 # time.sleep(1)
-move(Home)
-
-
 # move(Home)
-# time.sleep(1)
+# move_plus(Home, 30)
+
+move(Home)
+time.sleep(1)
+move_to_position(A1)
 # move(position_safe)
 # time.sleep(1)
 # move(position)
-#time.sleep(1)
-#move(position)
-#time.sleep(1)
-#move(position)
+# time.sleep(1)
+# move(position)
+# time.sleep(1)
+# move(position)
+
+
 
