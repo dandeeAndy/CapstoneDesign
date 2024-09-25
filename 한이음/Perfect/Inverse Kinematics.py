@@ -44,7 +44,7 @@ class DeltaRobot:
             return gamma
 
 # 객체 생성 및 위치 설정
-robot_move = DeltaRobot().Move()
+robot_move = DeltaRobot.Move()
 
 print("Gamma for servo A:", robot_move.deltakinematic('A'))
 print("Gamma for servo B:", robot_move.deltakinematic('B'))

@@ -131,14 +131,14 @@ def move_plus(goal_angles, rotation):
 
 
 # ---------------------------------------------------------------
-def move_with_pump(angles_list):
-   time.sleep(2)
-   solenoid.airpump_on()
-   time.sleep(1)
-   for angles in angles_list:
-       move(angles)
-       time.sleep(1)
-   solenoid.airpump_off()
+# def move_with_pump(angles_list):
+#    time.sleep(2)
+#    solenoid.airpump_on()
+#    time.sleep(1)
+#    for angles in angles_list:
+#        move(angles)
+#        time.sleep(1)
+#    solenoid.airpump_off()
    
 
 def move_to_position(angles_list):
@@ -148,12 +148,12 @@ def move_to_position(angles_list):
     
     
 # ---------------------------------------------------------------
-#def pick(angles_list):
-#    time.sleep(2)
+def pick(angles_list):
+   time.sleep(2)
 #    solenoid.airpump_on()
-#    for angles in angles_list:
-#        move(angles)
-#        time.sleep(1)
+   for angles in angles_list:
+       move(angles)
+       time.sleep(1)
         
 # ---------------------------------------------------------------
 def place(angles_list):
@@ -163,9 +163,7 @@ def place(angles_list):
         time.sleep(1)
         
 # ---------------------------------------------------------------
-Home = [-20,-20,-20,50]
-# Home = [-60,-60,-60,60]
-# Home = [-16,-16,-16,30]
+Home = [-16,-16,-16,30]
 V1 = [[11,-17,-42], [23,0,-20],[11,-17,-42],[0,0,400]]
 V2 = [[32,-17,-40], [41,1,-19],[32,-17,-40],[0,0,400]]
 V3 = [[31,-39,-20], [41,-18,-2], [32,-45,-25],[-57,-5,20]]
@@ -204,7 +202,7 @@ position = [30,-8,6,100]
 # ---------------------------------------------------------------
 #move_with_pump(A1)
 
-#pick(V3)
+#pick(V3)   
 #place(A6)
 
 
