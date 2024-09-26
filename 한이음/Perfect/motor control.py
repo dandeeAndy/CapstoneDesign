@@ -163,7 +163,7 @@ def place(angles_list):
         time.sleep(1)
         
 # ---------------------------------------------------------------
-Home = [-16,-16,-16,30]
+Home = [-16,-16,-16,0]
 V1 = [[11,-17,-42], [23,0,-20],[11,-17,-42],[0,0,400]]
 V2 = [[32,-17,-40], [41,1,-19],[32,-17,-40],[0,0,400]]
 V3 = [[31,-39,-20], [41,-18,-2], [32,-45,-25],[-57,-5,20]]
@@ -196,23 +196,31 @@ B6 = [[-46,24,4], [-16,41,26], [-46,24,4]]
 B7 = [[-36,35,-23], [-6,51,6],[-36,35,-23]]
 B8 = [[-43,12,-9], [-14,31,13],[-43,12,-9]]
 
-position_safe = [13,-37,-20,1]
-position = [30,-8,6,100]
+# position_safe = [13,-37,-20,1]
+# position = [30,-8,6,100]
 zero = [0,0,0,0]
+
+a = 8.424
+b = 20.448
+c = 49.097
+minus = 12.253
+position_upgrade = [a - minus, b - minus, c - minus, 0]
+print("position_upgrade: ", position_upgrade)
+position = [30,-8,6,0]
 # ---------------------------------------------------------------
-#move_with_pump(A1)
+move(Home)
+# move(zero)
+time.sleep(1)
+move(position_upgrade)
+# move(position)
 
-#pick(V3)   
-#place(A6)
 
-
-# move(Home)
 # time.sleep(1)
+# move_with_pump(A1)
+# pick(V3)   
+# place(A6)
 # move(position_safe)
 
-# move(position_safe)
-# time.sleep(1)
-# move(Home)
 # move_plus(Home, 30)
 
 # move(Home)
@@ -225,10 +233,5 @@ zero = [0,0,0,0]
 # move(position)
 # time.sleep(1)
 # move(position)
-move(Home)
-time.sleep(1)
-move(zero)
-time.sleep(1)
-
-
-
+# move(zero)
+# time.sleep(1)
