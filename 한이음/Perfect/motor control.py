@@ -44,7 +44,7 @@ else:
     print("Failed to open the port or set the baud rate")
 
 # ---------------------------------------------------------------------------------------------------------------
-# Set operating mode and enable torque for each Dynamixel motor
+# Set operating mode and enable torque for each Dynamixel motor3
 for dxl_id in DXL_IDs:
     # Set operating mode
     dxl_comm_result, dxl_error = packetHandler.write1ByteTxRx(portHandler, dxl_id, ADDR_OPERATING_MODE, EXTENDED_POSITION_CONTROL_MODE)
@@ -198,7 +198,7 @@ B8 = [[-43,12,-9], [-14,31,13],[-43,12,-9]]
 
 position_safe = [13,-37,-20,1]
 position = [30,-8,6,100]
-
+zero = [0,0,0,0]
 # ---------------------------------------------------------------
 #move_with_pump(A1)
 
@@ -215,9 +215,9 @@ position = [30,-8,6,100]
 # move(Home)
 # move_plus(Home, 30)
 
-move(Home)
-time.sleep(1)
-move_to_position(A1)
+# move(Home)
+# time.sleep(1)
+# move_to_position(A1)
 # move(position_safe)
 # time.sleep(1)
 # move(position)
@@ -225,6 +225,10 @@ move_to_position(A1)
 # move(position)
 # time.sleep(1)
 # move(position)
+move(Home)
+time.sleep(1)
+move(zero)
+time.sleep(1)
 
 
 
