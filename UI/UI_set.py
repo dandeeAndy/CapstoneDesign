@@ -379,7 +379,7 @@ class OptionButton(QWidget):
         self.transparent_button = TransparentButton(self)
         self.transparent_button.clicked.connect(self.button_clicked)
         self.transparent_button.setFixedSize(240, 135)
-
+        
         layout = QVBoxLayout(self)
         layout.addWidget(self.label)
         layout.addWidget(self.transparent_button)
