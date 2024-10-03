@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="CustomCalibration.cpp" />
+    <ClCompile Include="CalibrationManager.cpp" />
+    <ClCompile Include="CustomCalibrationWrapper.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="..\Common\Rs400Device.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Common\CalibParamXmlWrite.h" />
+    <ClInclude Include="CalibrationManager.h" />
+    <ClInclude Include="CustomCalibration.h" />
+    <ClInclude Include="CustomCalibrationWrapper.h" />
+    <ClInclude Include="FileOp.h" />
+  </ItemGroup>
+</Project>
