@@ -7,9 +7,9 @@ class DeltaRobot:
             self.b = 260.0
             self.c = 600.0
             self.d = 42.5
-            self.posX = 250
-            self.posY = -250
-            self.posZ = 502
+            self.posX = -127
+            self.posY = 163
+            self.posZ = 602
 
         def deltakinematic(self, servo):
             pi120 = 120.0 * (math.pi / 180.0)
