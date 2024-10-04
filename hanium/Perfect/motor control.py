@@ -1,15 +1,26 @@
 import os
 import time
-# import solenoid
 
 from dynamixel_sdk import *  # Uses Dynamixel SDK library
 
-# Inverse Kinematics 모듈이 있을 때만 사용(없어도 동작)
+# ---- IK import (robust) -------------------------------------------------------
+# 1) 패키지 경로: hanium/Perfect/Inverse_Kinematics_latest.py
+# 2) 로컬 파일:   Inverse_Kinematics.py
+# 3) 없으면 HAS_IK=False 로 동작
+ik = None
+HAS_IK = False
 try:
-    import Inverse_Kinematics as ik
+    # 올바른 문법: from ... import ... as ...
+    from hanium.Perfect import Inverse_Kinematics_latest as ik
     HAS_IK = True
-except Exception:
-    HAS_IK = False
+except ModuleNotFoundError:
+    try:
+        import Inverse_Kinematics as ik
+        HAS_IK = True
+    except ModuleNotFoundError:
+        print("[IK] No IK module found. Running without IK.")
+# ------------------------------------------------------------------------------
+
 
 # DYNAMIXEL Model & Protocol Version
 MY_DXL = 'X_SERIES'
