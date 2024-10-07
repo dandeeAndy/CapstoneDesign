@@ -7,14 +7,12 @@ class DeltaRobot:
             self.b = 260.0
             self.c = 600.0
             self.d = 42.5
-            self.posX, self.posY, self.posZ = 100,-149,555
+            self.posX, self.posY, self.posZ = 230,-144,542
             print("posX:", self.posX)
             print("posY:", self.posY)
             print("posZ:", self.posZ)
             
         def deltakinematic(self, servo):
-            pi120 = 120.0 * (math.pi / 180.0)
-            pi240 = 240.0 * (math.pi / 180.0)
             pi180 = 180.0 * (math.pi / 180.0)
             pi300 = 300.0 * (math.pi / 180.0)
             pi420 = 420.0 * (math.pi / 180.0)
@@ -58,7 +56,3 @@ CC=robot_move.deltakinematic('C')-minus
 print("AA:", AA)
 print("BB:", BB)
 print("CC:", CC)
-
-print("Gamma for servo A:", robot_move.deltakinematic('A'))
-print("Gamma for servo B:", robot_move.deltakinematic('B'))
-print("Gamma for servo C:", robot_move.deltakinematic('C'))
