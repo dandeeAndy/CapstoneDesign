@@ -4,7 +4,7 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "$C:/Andy/Design/CapstoneDesign/hanium/DynamicCalibrationAPI/DynamicCalibrationAPI/2.13.1.0/librealsense/**"
+                "C:\\Program Files (x86)\\Intel RealSense SDK 2.0\\include"
             ],
             "defines": [
                 "_DEBUG",
@@ -12,7 +12,7 @@
                 "_UNICODE"
             ],
             "windowsSdkVersion": "10.0.19041.0",
-            "compilerPath": "c:/mingw/bin/g++.exe",
+            "compilerPath": "C:\\msys64\\mingw64\\bin\\g++.exe",
             "cStandard": "c17",
             "cppStandard": "c++17",
             "intelliSenseMode": "gcc-x64"
