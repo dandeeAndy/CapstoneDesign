@@ -7,7 +7,8 @@ class DeltaRobot:
             self.b = 260.0
             self.c = 600.0
             self.d = 42.5
-            self.posX, self.posY, self.posZ = 100,-149,555
+            self.posX, self.posY, self.posZ = -114,320,494
+            
             print("posX:", self.posX)
             print("posY:", self.posY)
             print("posZ:", self.posZ)
@@ -59,6 +60,6 @@ print("AA:", AA)
 print("BB:", BB)
 print("CC:", CC)
 
-print("Gamma for servo A:", robot_move.deltakinematic('A'))
-print("Gamma for servo B:", robot_move.deltakinematic('B'))
-print("Gamma for servo C:", robot_move.deltakinematic('C'))
+# print("Gamma for servo A:", robot_move.deltakinematic('A'))
+# print("Gamma for servo B:", robot_move.deltakinematic('B'))
+# print("Gamma for servo C:", robot_move.deltakinematic('C'))
