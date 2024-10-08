@@ -1,5 +1,6 @@
 import os
 #import solenoid
+import math
 
 from dynamixel_sdk import *  # Uses Dynamixel SDK library
 import Inverse_Kinematics_latest as ik
@@ -72,6 +73,7 @@ for dxl_id in DXL_IDs:
     
 # ---------------------------------------------------------------------------------------------------------------    
 # Set goal profile acceleration
+    # goal_profile_acceleration = 1500  # 기본값
     goal_profile_acceleration = 2000
     dxl_comm_result, dxl_error = packetHandler.write4ByteTxRx(portHandler, dxl_id, ADDR_GOAL_PROFILE_ACCELERATION, goal_profile_acceleration)
     if dxl_comm_result != COMM_SUCCESS:
@@ -83,6 +85,7 @@ for dxl_id in DXL_IDs:
 
 # ---------------------------------------------------------------------------------------------------------------
 # Set goal profile velocity
+    # goal_profile_velocity = 550  # 기본값
     goal_profile_velocity = 900
     dxl_comm_result, dxl_error = packetHandler.write4ByteTxRx(portHandler, dxl_id, ADDR_GOAL_PROFILE_VELOCITY, goal_profile_velocity)
     if dxl_comm_result != COMM_SUCCESS:
@@ -117,14 +120,130 @@ def place(angles_list):
     for angles in angles_list:
         move(angles)
         time.sleep(1)
-        
+
+# ===========================================================================================================================
+# ===========================================================================================================================
+# ===========================================================================================================================
+class DeltaRobot:
+    class Move:
+        def __init__(self):
+            self.a = 100.0
+            self.b = 260.0
+            self.c = 600.0
+            self.d = 42.5
+            self.posX, self.posY, self.posZ = 230, -144, 542
+            
+        def set_position(self, x, y, z):
+            self.posX, self.posY, self.posZ = x, y, z
+            
+        def deltakinematic(self, servo):
+            pi180 = 180.0 * (math.pi / 180.0)
+            pi300 = 300.0 * (math.pi / 180.0)
+            pi420 = 420.0 * (math.pi / 180.0)
+
+            x = y = z = 0.0
+            
+            if servo == 'A':
+                x = math.cos(pi180) * self.posX + math.sin(pi180) * self.posY
+                y = -math.sin(pi180) * self.posX + math.cos(pi180) * self.posY
+                z = self.posZ
+            elif servo == 'B':
+                x = math.cos(pi300) * self.posX + math.sin(pi300) * self.posY
+                y = -math.sin(pi300) * self.posX + math.cos(pi300) * self.posY
+                z = self.posZ
+            elif servo == 'C':
+                x = math.cos(pi420) * self.posX + math.sin(pi420) * self.posY
+                y = -math.sin(pi420) * self.posX + math.cos(pi420) * self.posY
+                z = self.posZ
+
+            length1 = (self.a - self.d - y)
+            alpha = (360.0 / (2.0 * math.pi)) * math.atan2(z, length1)
+            length2 = math.sqrt(math.pow(self.c, 2) - math.pow(x, 2))
+            length3 = math.sqrt(math.pow(length1, 2) + math.pow(z, 2))
+
+            cosine_angle = (math.pow(length3, 2) - math.pow(length2, 2) + math.pow(self.b, 2)) / (2.0 * length2 * self.b)
+            beta = (360.0 / (2.0 * math.pi)) * math.acos(cosine_angle)
+            gamma = 180.0 - alpha - beta
+
+            return gamma
+
+    @staticmethod
+    def calculate_angles(x, y, z):
+        robot_move = DeltaRobot.Move()
+        robot_move.set_position(x, y, z)
+        minus = 10.046
+        AA = robot_move.deltakinematic('A') - minus
+        BB = robot_move.deltakinematic('B') - minus
+        CC = robot_move.deltakinematic('C') - minus
+        return [AA, BB, CC, 0]
+
+# Define position arrays
+A1 = DeltaRobot.calculate_angles(230, -240, 578)
+A2 = DeltaRobot.calculate_angles(100, -240, 590)
+A3 = DeltaRobot.calculate_angles(230, -144, 590)
+A4 = DeltaRobot.calculate_angles(100, -144, 600)
+A5 = DeltaRobot.calculate_angles(230, -240, 540)
+A6 = DeltaRobot.calculate_angles(100, -250, 542)
+A7 = DeltaRobot.calculate_angles(230, -144, 548)
+A8 = DeltaRobot.calculate_angles(100, -149, 555)
+
+
+# A1 = [[],DeltaRobot.calculate_angles(230, -240, 578),[]]
+# A2 = [[],DeltaRobot.calculate_angles(100, -240, 590),[]]
+# A2 = [[],DeltaRobot.calculate_angles(100, -240, 590),[]]
+# A3 = [[],DeltaRobot.calculate_angles(230, -144, 590),[]]
+# A4 = [[],DeltaRobot.calculate_angles(100, -144, 600),[]]
+# A5 = [[],DeltaRobot.calculate_angles(230, -240, 540),[]]
+# A6 = [[],DeltaRobot.calculate_angles(100, -250, 542),[]]
+# A7 = [[],DeltaRobot.calculate_angles(230, -144, 548),[]]
+# A8 = [[],DeltaRobot.calculate_angles(100, -149, 555),[]]
+
+Home = [-16,-16,-16, 0]
+
+move(Home)
+time.sleep(1)
+move(A1)
+time.sleep(1)
+move(A2)
+time.sleep(1)
+move(A3)
+time.sleep(1)
+move(A4)
+time.sleep(1)
+move(A5)
+time.sleep(1)
+move(A6)
+time.sleep(1)
+move(A7)
+time.sleep(1)
+move(A8)
+time.sleep(1)
+
+# ===========================================================================================================================
+# ===========================================================================================================================
 # ===========================================================================================================================
 Home = [-16,-16,-16,-21]
-# ===========================================================================================================================
-position_upgrade = [ik.AA, ik.BB, ik.CC, 0]
-print("position_upgrade: ", position_upgrade)
+# position_upgrade = [ik.AA, ik.BB, ik.CC, 0]
+# print("position_upgrade: ", position_upgrade)
 # ===========================================================================================================================
 # 실행
 move(Home)
+# time.sleep(1)
+# move(position_upgrade)
+
+move(A1)
 time.sleep(1)
-move(position_upgrade)
+move(A2)
+time.sleep(1)
+move(A3)
+time.sleep(1)
+move(A4)
+time.sleep(1)
+move(A5)
+time.sleep(1)
+move(A6)
+time.sleep(1)
+move(A7)
+time.sleep(1)
+move(A8)
+time.sleep(1)

@@ -59,7 +59,3 @@ CC=robot_move.deltakinematic('C')-minus
 print("AA:", AA)
 print("BB:", BB)
 print("CC:", CC)
-
-# print("Gamma for servo A:", robot_move.deltakinematic('A'))
-# print("Gamma for servo B:", robot_move.deltakinematic('B'))
-# print("Gamma for servo C:", robot_move.deltakinematic('C'))
