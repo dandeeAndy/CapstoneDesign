@@ -54,4 +54,3 @@ class IK:
         degree_motor2 = robot_move.deltakinematic('B') - minus
         degree_motor3 = robot_move.deltakinematic('C') - minus
         return [degree_motor1, degree_motor2, degree_motor3]
-    
