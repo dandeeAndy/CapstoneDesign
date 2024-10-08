@@ -1,5 +1,6 @@
 import os
 import socket
+import math
 import threading
 import cv2
 import numpy as np
@@ -27,6 +28,7 @@ new_data_available = threading.Event()
 Vision_start_signal = False
 Option_select = False
 Motor_start_signal = False
+theta_printed = False  
 
 lock = threading.Lock()
 data_queue_QR = Queue()
@@ -45,16 +47,22 @@ current_location = None
 frame_count = 0
 previous_location = None
 box_info = None
+qr_data = None
+theta_frame_count = 0
+previous_theta = None
+consistent_theta = None
+
 
 # Constants
 DEPTH_RANGES = [(300, 340), (360, 390), (400, 450)]  # 3층, 2층, 1층 순서로 정의
-SHORT_RANGE = (10, 300)  # 짧은 변의 범위 (픽셀)
-LONG_RANGE = (20, 250)  # 긴 변의 범위 (픽셀)
-CONSISTENT_FRAMES = 10
-
+# SHORT_RANGE = (20, 300)  # 짧은 변의 범위 (픽셀)
+# LONG_RANGE = (100, 350)  # 긴 변의 범위 (픽셀)
+SHORT_RANGE = (100, 180)  # 짧은 변의 범위 (픽셀)
+LONG_RANGE = (100, 190)
+CONSISTENT_FRAMES_ROI = 70
+CONSISTENT_FRAMES_THETA = 30
 
 def set_rois(color_width, color_height, depth_width, depth_height, roi_width, roi_height):
-    """ROI 설정 (십자가 모양으로 나누고 각 영역 중앙에 사용자 지정 크기의 ROI 추가, 시계 방향으로 설정)"""
     color_center_x, color_center_y = color_width // 2, color_height // 2
 
     rois = [
@@ -78,56 +86,89 @@ def set_rois(color_width, color_height, depth_width, depth_height, roi_width, ro
     return rois
 
 def calculate_theta(rect):
-    angle = rect[2]
-    width, height = rect[1]
-    
-    if width < height:
-        # 세로가 더 길 경우
-        angle = -angle
-    else:
-        # 가로가 더 길 경우
-        if angle < 0:
-            angle = 90 + angle
-        else:
-            angle = angle - 90
-    
-    # 각도를 -90에서 90 사이로 조정
-    if angle > 90:
-        angle -= 180
-    elif angle < -90:
-        angle += 180
-    
-    return round(angle)
+    (cx, cy), (width, height), angle = rect
+    box = cv2.boxPoints(rect)
+    box = np.int32(box)
+
+    right_points = box[np.argsort(box[:, 0])[-2:]]
+    right_mid_x = int(np.mean(right_points[:, 0]))
+    right_mid_y = int(np.mean(right_points[:, 1]))
+
+    vector_x = right_mid_x - cx
+    vector_y = right_mid_y - cy
+
+    theta = math.degrees(math.atan2(vector_y, vector_x))
+      # 부호를 반대로 바꿉니다.
+
+    if theta > 90:
+        theta = theta - 180
+    elif theta < -90:
+        theta = theta + 180
+
+    return round(theta)
+
+def visualize_angle(image, rect, theta):
+    (cx, cy), (width, height), angle = rect
+    cx, cy = int(cx), int(cy)
+    box = cv2.boxPoints(rect)
+    box = np.int32(box)
+
+    right_points = box[np.argsort(box[:, 0])[-2:]]
+    right_mid_x = int(np.mean(right_points[:, 0]))
+    right_mid_y = int(np.mean(right_points[:, 1]))
+
+    cv2.circle(image, (cx, cy), 5, (0, 255, 0), -1)  # 중점
+    cv2.circle(image, (right_mid_x, right_mid_y), 5, (0, 0, 255), -1)  # 오른쪽 변의 중점
+    cv2.line(image, (cx, cy), (right_mid_x, right_mid_y), (0, 150, 255), 2)
+    cv2.line(image, (cx - 100, cy), (cx + 100, cy), (0, 255, 255), 2)
 
 def find_rectangle(roi):
-    """ROI 내에서 직사각형 찾기 (크기 제한 적용)"""
     gray = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
     edges = cv2.Canny(gray, 50, 150)
+    
+    # 모폴로지 연산을 통해 엣지를 더 굵게 만듭니다.
+    kernel = np.ones((3,3), np.uint8)
+    edges = cv2.dilate(edges, kernel, iterations=1)
+    
     contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     
     best_rect = None
+    max_area = 0
     
     for contour in contours:
-        rect = cv2.minAreaRect(contour)
-        box = cv2.boxPoints(rect)
-        box = np.int32(box)
+        # 컨투어를 근사화합니다.
+        epsilon = 0.02 * cv2.arcLength(contour, True)
+        approx = cv2.approxPolyDP(contour, epsilon, True)
         
-        width, height = rect[1]
-        short_side = min(width, height)
-        long_side = max(width, height)
-        
-        if SHORT_RANGE[0] <= short_side <= SHORT_RANGE[1] and LONG_RANGE[0] <= long_side <= LONG_RANGE[1]:
-            best_rect = rect
-            break
+        # 근사화된 컨투어가 4개의 꼭지점을 가지면 사각형으로 간주합니다.
+        if len(approx) == 4:
+            rect = cv2.minAreaRect(approx)
+            box = cv2.boxPoints(rect)
+            box = np.int32(box)
+            
+            # 사각형의 넓이를 계산합니다.
+            area = cv2.contourArea(box)
+            
+            # 사각형의 짧은 변과 긴 변 길이 계산
+            width, height = rect[1]
+            short_side = min(width, height)
+            long_side = max(width, height)
+            
+            # 크기 제한 조건 확인 (조건을 조금 더 유연하게 조정)
+            if (SHORT_RANGE[0] * 0.5 <= short_side <= SHORT_RANGE[1] * 1.5 and 
+                LONG_RANGE[0] * 0.5 <= long_side <= LONG_RANGE[1] * 1.5):
+                if area > max_area:
+                    max_area = area
+                    best_rect = rect
     
     if best_rect is not None:
         box = cv2.boxPoints(best_rect)
         box = np.int32(box)
-        center = tuple(map(int, np.mean(box, axis=0)))
-        theta = calculate_theta(best_rect)
-        return box, center, theta
+        center = tuple(map(int, best_rect[0]))
+        theta = calculate_theta(best_rect)  # 수정된 부분
+        return box, center, theta, roi.copy()  # visualized_image 대신 roi.copy() 반환
     
-    return None, None, None
+    return None, None, None, None
 
 def align_depth_to_color(frameset):
     """Depth 프레임을 Color 프레임에 정렬"""
@@ -149,7 +190,7 @@ def determine_floor(depth):
             return 3 - i  # 3층, 2층, 1층 순서
     return None
 
-def process_roi(color_image, depth_image, roi):
+def process_roi(color_image, depth_image, roi, roi_index=None):
     """ROI 처리 및 QR 코드 검출"""
     color_roi = color_image[roi['y']:roi['y']+roi['h'], roi['x']:roi['x']+roi['w']]
     depth_roi = depth_image[roi['y']:roi['y']+roi['h'], roi['x']:roi['x']+roi['w']]
@@ -159,22 +200,37 @@ def process_roi(color_image, depth_image, roi):
     if decoded_objects:
         qr_data = decoded_objects[0].data.decode('utf-8')
     
-    box, center, theta = find_rectangle(color_roi)
+    box, center, angle, visualized_roi = find_rectangle(color_roi)
     
     if box is not None and center is not None:
         global_center = (roi['x'] + center[0], roi['y'] + center[1])
         depth = depth_roi[center[1], center[0]]
         floor = determine_floor(depth)
-        return qr_data, global_center, theta, box, floor, depth
+        
+        color_image[roi['y']:roi['y']+roi['h'], roi['x']:roi['x']+roi['w']] = visualized_roi
+        
+        return qr_data, global_center, angle, box, floor, depth
     
     return None, None, None, None, None, None
 
-def process_frame(frameset, rois):
-    global find_rect, read_info, current_roi_index, location, current_location, frame_count, previous_location, QR_data, box_info
+def setup_windows():
+    """윈도우 설정"""
+    windows = [
+        "QR_Code_and_Box_Detection", "Depth_Visualization",
+        "Edges", "Contours"
+    ]
+    for window in windows:
+        cv2.namedWindow(window, cv2.WINDOW_NORMAL)
+    cv2.waitKey(1000)  # 윈도우가 생성될 시간을 주기 위해 잠시 대기
 
+def process_frame(frameset, rois):
+    global find_rect, read_info, current_roi_index, location, frame_count, previous_location, QR_data, box_info
+    global theta_frame_count, previous_theta, consistent_theta, theta_printed
+    
     aligned_depth_frame, color_frame = align_depth_to_color(frameset)
     
     color_image = np.asanyarray(color_frame.get_data())
+    original_color_image = color_image.copy()
     depth_image = np.asanyarray(aligned_depth_frame.get_data())
     depth_colormap = cv2.applyColorMap(cv2.convertScaleAbs(depth_image, alpha=0.03), cv2.COLORMAP_JET)
     
@@ -184,7 +240,7 @@ def process_frame(frameset, rois):
     if find_rect:
         rect_info = []
         for i, roi in enumerate(rois):
-            _, center, _, _, floor, depth = process_roi(color_image, depth_image, roi)
+            qr_data, center, theta, box, floor, depth = process_roi(color_image, depth_image, roi, i)
             
             if center is not None and floor is not None:
                 rect_info.append({
@@ -192,67 +248,102 @@ def process_frame(frameset, rois):
                     'center': center,
                     'depth': depth,
                     'floor': floor,
+                    'theta': theta,
+                    'box': box,
+                    'qr_data': qr_data
                 })
-        
-        if rect_info:
-            # 층 정보를 기반으로 ROI 선택
-            highest_rect = max(rect_info, key=lambda x: (x['floor'] or 0, -x['roi_index'], -float(x['depth'])))
-            current_roi_index = highest_rect['roi_index']
-            
-            # 선택된 ROI에서 QR 코드와 위치 정보 추출
-            selected_roi = rois[current_roi_index]
-            qr_data, center, theta, box, floor, depth = process_roi(color_image, depth_image, selected_roi)
-            
-            if center is not None:
-                current_location = (floor, current_roi_index + 1, theta)
-                print(current_location)
                 
-                if current_location == previous_location:
-                    frame_count += 1
-                    if frame_count >= CONSISTENT_FRAMES:
-                        location = current_location
-                        QR_data = qr_data
-                        print(f"Consistent detection for {CONSISTENT_FRAMES} frames.")
-                        print(f"Selected ROI: {current_roi_index + 1}")
-                        print(f"Floor: {location[0]}, ROI: {location[1]}, Theta: {location[2]:.2f}")
-                        if QR_data:
-                            print(f"QR Data: {QR_data}")
-                        find_rect = False
-                        read_info = True
-                        frame_count = 0
-                else:
-                    previous_location = current_location
-                    frame_count = 1
-                
-                # 시각화
-                cv2.drawContours(color_image, [box + np.array([selected_roi['x'], selected_roi['y']])], 0, (0, 255, 0), 2)
+                cv2.drawContours(color_image, [box + np.array([roi['x'], roi['y']])], 0, (0, 255, 0), 2)
                 cv2.circle(color_image, center, 5, (0, 0, 255), -1)
                 cv2.putText(color_image, f"Floor: {floor}, Depth: {depth:.2f}", 
                             (center[0]-50, center[1]-20), 
                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
-    elif read_info:
-        if current_roi_index is not None:
-            new_qr_data, center, theta, box, floor, depth = process_roi(color_image, depth_image, rois[current_roi_index])
-            if center is not None:
-                new_box_info = {
-                    'floor': floor,
-                    'roi': current_roi_index + 1,
-                    'theta': theta
-                }
-                if new_box_info != box_info and new_qr_data:
-                    box_info = new_box_info
-                    QR_data = new_qr_data
-                    location = (floor, current_roi_index + 1, theta)
-                    print(f"Box Info: Floor: {box_info['floor']}, ROI: {box_info['roi']}, Theta: {box_info['theta']:.2f}")
-                    print(f"QR Data: {QR_data}")
-                    
-                    read_info = False
-                    find_rect = True
-                    current_roi_index = None
+        
+        if rect_info:
+            # 층 정보를 기반으로 ROI 선택
+            highest_rect = max(rect_info, key=lambda x: (x['floor'] or 0, -x['roi_index'], -float(x['depth'])))
+            current_location = (highest_rect['floor'], highest_rect['roi_index'] + 1)
+            
+            # 선택된 ROI에서 QR 코드와 위치 정보 추출
+            if current_location == previous_location:
+                frame_count += 1
+                if frame_count >= CONSISTENT_FRAMES_ROI:
+                    location = current_location
+                    current_roi_index = highest_rect['roi_index']
+                    QR_data = highest_rect['qr_data']
+                    #print(f"Consistent detection for {CONSISTENT_FRAMES} frames.")
+                    print(f"Selected ROI: {current_roi_index + 1}")
+                    print(f"Floor: {location[0]}, ROI: {location[1]}")
+                    if QR_data:
+                        print(f"QR Data: {QR_data}")
+                    find_rect = False
+                    read_info = True
                     frame_count = 0
-                    previous_location = None
-                    print("Box info updated and QR code read. Resetting state and starting new ROI search...")
-    
+                    theta_frame_count = 0
+                    previous_theta = None
+                    consistent_theta = None
+                    theta_printed = False
+            else:
+                previous_location = current_location
+                frame_count = 1
+                
+    elif read_info:
+            if current_roi_index is not None:
+                new_qr_data, center, _, box, floor, depth = process_roi(color_image, depth_image, rois[current_roi_index])
+                if center is not None:
+                    roi = rois[current_roi_index]
+                    roi_image = color_image[roi['y']:roi['y']+roi['h'], roi['x']:roi['x']+roi['w']]
+                    
+                    rect = cv2.minAreaRect(box)
+                    new_theta = calculate_theta(rect)
+                    
+                    # ROI가 활성화된 후에만 시각화 수행
+                    visualize_angle(roi_image, rect, new_theta)
+                    color_image[roi['y']:roi['y']+roi['h'], roi['x']:roi['x']+roi['w']] = roi_image
+
+                    cv2.drawContours(color_image, [box + np.array([roi['x'], roi['y']])], 0, (0, 255, 0), 2)
+                    cv2.circle(color_image, center, 5, (0, 0, 255), -1)
+                    cv2.putText(color_image, f"Theta: {new_theta}", 
+                                (center[0]-50, center[1]-20), 
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
+
+                    # theta 값의 일관성 체크
+                    if new_theta == previous_theta:
+                        theta_frame_count += 1
+                        if theta_frame_count >= CONSISTENT_FRAMES_THETA:
+                            consistent_theta = new_theta
+                            if not theta_printed:
+                                theta_printed = True
+                    else:
+                        theta_frame_count = 1
+                        previous_theta = new_theta
+                        theta_printed = False
+
+                    if consistent_theta is not None:
+                        new_box_info = {
+                            'floor': floor,
+                            'roi': current_roi_index + 1,
+                            'theta': consistent_theta
+                        }
+                        if new_box_info != box_info and new_qr_data:
+                            box_info = new_box_info
+                            QR_data = new_qr_data
+                            location = (floor, current_roi_index + 1, consistent_theta)
+                            print(f"New Box Info: Floor: {box_info['floor']}, ROI: {box_info['roi']}, Theta: {box_info['theta']:.2f}")
+                            print(f"New QR Data: {QR_data}")
+                            
+                            # ROI 초기화
+                            read_info = False
+                            find_rect = True
+                            current_roi_index = None
+                            frame_count = 0
+                            previous_location = None
+                            theta_frame_count = 0
+                            previous_theta = None
+                            consistent_theta = None
+                            theta_printed = False
+                            print("Box info updated and QR code read. Resetting state and starting new ROI search...")
+        
     for i, roi in enumerate(rois):
         color = (0, 0, 255) if i == current_roi_index else (255, 0, 0)
         cv2.rectangle(color_image, (roi['x'], roi['y']), (roi['x'] + roi['w'], roi['y'] + roi['h']), color, 2)
@@ -262,7 +353,11 @@ def process_frame(frameset, rois):
                     cv2.FONT_HERSHEY_SIMPLEX, 0.7, color, 2)
         cv2.putText(depth_colormap, f"ROI {i+1}", (roi['x']+10, roi['y']+30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, color, 2)
 
-    return color_image, depth_colormap, new_qr_data, new_box_info
+    gray = cv2.cvtColor(original_color_image, cv2.COLOR_BGR2GRAY)
+    blurred = cv2.GaussianBlur(gray, (5, 5), 0)
+    edges = cv2.Canny(blurred, 50, 150)
+    
+    return color_image, depth_colormap, new_qr_data, new_box_info, edges
 
 def read_qr_code(client_socket):
     global QR_data, Vision_start_signal, Motor_start_signal, parts, current_roi_index, last_qr_data, qr_data_list
@@ -284,11 +379,18 @@ def read_qr_code(client_socket):
         while Vision_start_signal:
             frameset = pipeline.wait_for_frames()
             
-            color_image, depth_colormap, new_qr_data, new_box_info = process_frame(frameset, rois)
-
-            cv2.imshow("QR_Code_and_Box_Detection", color_image)
-            cv2.imshow("Depth_Visualization", depth_colormap)
-
+            color_frame = frameset.get_color_frame()
+            depth_frame = frameset.get_depth_frame()
+            
+            if not color_frame or not depth_frame:
+                continue
+            
+            color_image = np.asanyarray(color_frame.get_data())
+            color_image, depth_colormap, new_qr_data, new_box_info, edges = process_frame(frameset, rois)
+            cv2.imshow("Color Image", color_image)
+            cv2.imshow("Depth Colormap", depth_colormap)
+            cv2.imshow("Edges",edges)
+            
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
 
@@ -296,7 +398,8 @@ def read_qr_code(client_socket):
                 last_detection_time = time.time()
                 with lock:
                     if new_qr_data != last_qr_data:
-                        last_qr_data = new_qr_data
+                        la
+                        st_qr_data = new_qr_data
                         parts = new_qr_data.split('/')
                         classifi = parts[0]
                         PackageNumber = parts[1]
@@ -333,8 +436,8 @@ def read_qr_code(client_socket):
                         
                         Vision_start_signal = False
 
-            if time.time() - last_detection_time > 30:
-                print("No QR code detected for 30 seconds. Exiting...")
+            if time.time() - last_detection_time > 100:
+                print("No QR code detected for 100 seconds. Exiting...")
                 break
 
     except Exception as e:
@@ -477,6 +580,7 @@ def motor_move(user_option, data_queue_QR):
             time.sleep(1.5)
             solenoid.airpump_on()
             time.sleep(1)
+            print(f"Moving to {pick_positions}")
             motor_set_4.move(position + [theta])
             time.sleep(1)
         motor_set_4.place(place_angle)
@@ -564,7 +668,7 @@ def command_listener(client_socket):
                 if qr_data_list:
                     try:
                         df = pd.DataFrame(qr_data_list)
-                        save_path = 'C:\\Users\\Lee\\Shawn\\Capstone\\Perfect\\QR_Data\\qr_data.xlsx'
+                        save_path = 'C:\\Users\\Lee\\Desktop\\QR_Data\\qr_data.xlsx'
                         
                         print("QR 데이터 프레임 내용:")
                         print(df)

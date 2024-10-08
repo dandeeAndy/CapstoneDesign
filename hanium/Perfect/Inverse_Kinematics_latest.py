@@ -14,8 +14,6 @@ class DeltaRobot:
             print("posZ:", self.posZ)
             
         def deltakinematic(self, servo):
-            pi120 = 120.0 * (math.pi / 180.0)
-            pi240 = 240.0 * (math.pi / 180.0)
             pi180 = 180.0 * (math.pi / 180.0)
             pi300 = 300.0 * (math.pi / 180.0)
             pi420 = 420.0 * (math.pi / 180.0)

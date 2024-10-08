@@ -1,9 +1,7 @@
-import os
-#import solenoid
+# import solenoid
 import math
 
 from dynamixel_sdk import *  # Uses Dynamixel SDK library
-import Inverse_Kinematics_latest as ik
 
 # DYNAMIXEL Model & Protocol Version
 MY_DXL = 'X_SERIES'
@@ -25,7 +23,6 @@ ADDR_GOAL_POSITION = 116
 ADDR_GOAL_VELOCITY = 104
 ADDR_GOAL_PROFILE_ACCELERATION = 108
 ADDR_GOAL_PROFILE_VELOCITY = 112 
-
 
 # Data Length
 LEN_GOAL_POSITION = 4  # Length of the Goal Position data
@@ -113,14 +110,12 @@ def pick(angles_list):
    for angles in angles_list:
        move(angles)
        time.sleep(1)
-        
 # ===========================================================================================================================
 def place(angles_list):
     time.sleep(1)
     for angles in angles_list:
         move(angles)
         time.sleep(1)
-
 # ===========================================================================================================================
 # ===========================================================================================================================
 # ===========================================================================================================================
@@ -131,7 +126,6 @@ class DeltaRobot:
             self.b = 260.0
             self.c = 600.0
             self.d = 42.5
-            self.posX, self.posY, self.posZ = 230, -144, 542
             
         def set_position(self, x, y, z):
             self.posX, self.posY, self.posZ = x, y, z
@@ -172,61 +166,63 @@ class DeltaRobot:
         robot_move = DeltaRobot.Move()
         robot_move.set_position(x, y, z)
         minus = 10.046
-        AA = robot_move.deltakinematic('A') - minus
-        BB = robot_move.deltakinematic('B') - minus
-        CC = robot_move.deltakinematic('C') - minus
-        return [AA, BB, CC, 0]
+        degree_motor1 = robot_move.deltakinematic('A') - minus
+        degree_motor2 = robot_move.deltakinematic('B') - minus
+        degree_motor3 = robot_move.deltakinematic('C') - minus
+        return [degree_motor1, degree_motor2, degree_motor3, 0]
 
-# Define position arrays
-A1 = DeltaRobot.calculate_angles(230, -240, 578)
-A2 = DeltaRobot.calculate_angles(100, -240, 590)
-A3 = DeltaRobot.calculate_angles(230, -144, 590)
-A4 = DeltaRobot.calculate_angles(100, -144, 600)
-A5 = DeltaRobot.calculate_angles(230, -240, 540)
-A6 = DeltaRobot.calculate_angles(100, -250, 542)
-A7 = DeltaRobot.calculate_angles(230, -144, 548)
-A8 = DeltaRobot.calculate_angles(100, -149, 555)
-
-
-# A1 = [[],DeltaRobot.calculate_angles(230, -240, 578),[]]
-# A2 = [[],DeltaRobot.calculate_angles(100, -240, 590),[]]
-# A2 = [[],DeltaRobot.calculate_angles(100, -240, 590),[]]
-# A3 = [[],DeltaRobot.calculate_angles(230, -144, 590),[]]
-# A4 = [[],DeltaRobot.calculate_angles(100, -144, 600),[]]
-# A5 = [[],DeltaRobot.calculate_angles(230, -240, 540),[]]
-# A6 = [[],DeltaRobot.calculate_angles(100, -250, 542),[]]
-# A7 = [[],DeltaRobot.calculate_angles(230, -144, 548),[]]
-# A8 = [[],DeltaRobot.calculate_angles(100, -149, 555),[]]
+# ===========================================================================================================================
+# Pick_Angle
+pick_position = {
+    '1_1': [DeltaRobot.calculate_angles(-107, 170, 450), DeltaRobot.calculate_angles(-107, 170, 602), DeltaRobot.calculate_angles(-107, 170, 450)],
+    '1_2': [DeltaRobot.calculate_angles(-110, 175, 450), DeltaRobot.calculate_angles(-110, 175, 558), DeltaRobot.calculate_angles(-110, 175, 450)],
+    '1_3': [DeltaRobot.calculate_angles(-122, 182, 450), DeltaRobot.calculate_angles(-122, 182, 502), DeltaRobot.calculate_angles(-122, 182, 450)],
+    '2_1': [DeltaRobot.calculate_angles(65, 170, 450), DeltaRobot.calculate_angles(65, 170, 602), DeltaRobot.calculate_angles(65, 170, 450)],
+    '2_2': [DeltaRobot.calculate_angles(65, 170, 450), DeltaRobot.calculate_angles(65, 170, 558), DeltaRobot.calculate_angles(65, 170, 450)],
+    '2_3': [DeltaRobot.calculate_angles(70, 177, 450), DeltaRobot.calculate_angles(70, 177, 500), DeltaRobot.calculate_angles(70, 177, 450)],
+    '3_1': [DeltaRobot.calculate_angles(60, 310, 450), DeltaRobot.calculate_angles(60, 310, 585), DeltaRobot.calculate_angles(60, 310, 450)],
+    '3_2': [DeltaRobot.calculate_angles(59, 315, 450), DeltaRobot.calculate_angles(59, 315, 545), DeltaRobot.calculate_angles(59, 315, 450)],
+    '3_3': [DeltaRobot.calculate_angles(70, 320, 450), DeltaRobot.calculate_angles(70, 320, 495), DeltaRobot.calculate_angles(70, 320, 450)],
+    '4_1': [DeltaRobot.calculate_angles(-97, 310, 450), DeltaRobot.calculate_angles(-97, 310, 584), DeltaRobot.calculate_angles(-97, 310, 450)],
+    '4_2': [DeltaRobot.calculate_angles(-103, 315, 450), DeltaRobot.calculate_angles(-103, 315, 544), DeltaRobot.calculate_angles(-103, 315, 450)],
+    '4_3': [DeltaRobot.calculate_angles(-114, 320, 450), DeltaRobot.calculate_angles(-114, 320, 494), DeltaRobot.calculate_angles(-114, 320, 450)]
+}
+# ---------------------------------------------------------------------------------------------------------------
+# Place_Angle
+place_position = {
+    'A1': [DeltaRobot.calculate_angles(230, -240, 450), DeltaRobot.calculate_angles(230, -240, 578), DeltaRobot.calculate_angles(230, -240, 450)],
+    'A2': [DeltaRobot.calculate_angles(100, -240, 450), DeltaRobot.calculate_angles(100, -240, 590), DeltaRobot.calculate_angles(100, -240, 450)],
+    'A3': [DeltaRobot.calculate_angles(230, -144, 450), DeltaRobot.calculate_angles(230, -144, 590), DeltaRobot.calculate_angles(230, -144, 450)],
+    'A4': [DeltaRobot.calculate_angles(100, -144, 450), DeltaRobot.calculate_angles(100, -144, 590), DeltaRobot.calculate_angles(100, -144, 450)],
+    'A5': [DeltaRobot.calculate_angles(230, -240, 450), DeltaRobot.calculate_angles(230, -240, 578), DeltaRobot.calculate_angles(230, -240, 450)],
+    'A6': [DeltaRobot.calculate_angles(100, -240, 450), DeltaRobot.calculate_angles(100, -240, 590), DeltaRobot.calculate_angles(100, -240, 450)],
+    'A7': [DeltaRobot.calculate_angles(230, -144, 450), DeltaRobot.calculate_angles(230, -144, 590), DeltaRobot.calculate_angles(230, -144, 450)],
+    'A8': [DeltaRobot.calculate_angles(100, -144, 450), DeltaRobot.calculate_angles(100, -144, 590), DeltaRobot.calculate_angles(100, -144, 450)]
+    
+}
 
 Home = [-16,-16,-16, 0]
+x,y,z = -105,-142,548
 
+# move(Home)
+# time.sleep(1)
+# move(DeltaRobot.calculate_angles(x,y,z))
+
+
+move(DeltaRobot.calculate_angles(x,y,z-50))
+time.sleep(1)
 move(Home)
 time.sleep(1)
-move(A1)
+move(DeltaRobot.calculate_angles(x,y,z-50))
 time.sleep(1)
-move(A2)
-time.sleep(1)
-move(A3)
-time.sleep(1)
-move(A4)
-time.sleep(1)
-move(A5)
-time.sleep(1)
-move(A6)
-time.sleep(1)
-move(A7)
-time.sleep(1)
-move(A8)
-time.sleep(1)
+move(DeltaRobot.calculate_angles(x,y,z))
 
-# ===========================================================================================================================
-# ===========================================================================================================================
-# ===========================================================================================================================
-Home = [-16,-16,-16,-21]
-# position_upgrade = [ik.AA, ik.BB, ik.CC, 0]
-# print("position_upgrade: ", position_upgrade)
 # ===========================================================================================================================
 # 실행
-move(Home)
+# move(Home)
 # time.sleep(1)
-# move(position_upgrade)
+# move(Home)
+# time.sleep(1)
+# place(place_position['A2'])
+# time.sleep(1)
+# move(Home)
