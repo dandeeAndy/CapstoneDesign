@@ -202,20 +202,20 @@ place_position = {
 }
 
 Home = [-16,-16,-16, 0]
-x,y,z = -105,-142,548
+x,y,z = 96,-145,554
 
 # move(Home)
 # time.sleep(1)
 # move(DeltaRobot.calculate_angles(x,y,z))
 
 
-# move(DeltaRobot.calculate_angles(x,y,z-50))
-# time.sleep(1)
-# move(Home)
-# time.sleep(1)
-# move(DeltaRobot.calculate_angles(x,y,z-50))
-# time.sleep(1)
-# move(DeltaRobot.calculate_angles(x,y,z))
+move(DeltaRobot.calculate_angles(x,y,z-50))
+time.sleep(1)
+move(Home)
+time.sleep(1)
+move(DeltaRobot.calculate_angles(x,y,z-50))
+time.sleep(1)
+move(DeltaRobot.calculate_angles(x,y,z))
 
 # ===========================================================================================================================
 # 실행
