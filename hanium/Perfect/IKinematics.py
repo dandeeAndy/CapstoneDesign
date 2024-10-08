@@ -1,27 +1,17 @@
-import math
+import  math
 
-class DeltaRobot:
+class IK:
     class Move:
         def __init__(self):
             self.a = 100.0
             self.b = 260.0
             self.c = 600.0
             self.d = 42.5
-            self.posX = 250
-            self.posY = -250
-            self.posZ = 502
             
-            # self.a = 100.0
-            # self.b = 260.0
-            # self.c = 600.0
-            # self.d = 42.5
-            # self.posX = 9.27
-            # self.posY = -31.01
-            # self.posZ = 563
-        
+        def set_position(self, x, y, z):
+            self.posX, self.posY, self.posZ = x, y, z
+            
         def deltakinematic(self, servo):
-            pi120 = 120.0 * (math.pi / 180.0)
-            pi240 = 240.0 * (math.pi / 180.0)
             pi180 = 180.0 * (math.pi / 180.0)
             pi300 = 300.0 * (math.pi / 180.0)
             pi420 = 420.0 * (math.pi / 180.0)
@@ -32,13 +22,11 @@ class DeltaRobot:
                 x = math.cos(pi180) * self.posX + math.sin(pi180) * self.posY
                 y = -math.sin(pi180) * self.posX + math.cos(pi180) * self.posY
                 z = self.posZ
-
-            if servo == 'B':
+            elif servo == 'B':
                 x = math.cos(pi300) * self.posX + math.sin(pi300) * self.posY
                 y = -math.sin(pi300) * self.posX + math.cos(pi300) * self.posY
                 z = self.posZ
-
-            if servo == 'C':
+            elif servo == 'C':
                 x = math.cos(pi420) * self.posX + math.sin(pi420) * self.posY
                 y = -math.sin(pi420) * self.posX + math.cos(pi420) * self.posY
                 z = self.posZ
@@ -54,6 +42,16 @@ class DeltaRobot:
 
             return gamma
 
-# 객체 생성 및 위치 설정
-robot_move = DeltaRobot.Move()
-
+    @staticmethod
+    def c_deg(x, y, z):
+        robot_move = IK.Move()
+        robot_move.set_position(x, y, z)
+        minus = 10.046
+        # degree_motor1 = round(robot_move.deltakinematic('A'), 3) - minus
+        # degree_motor2 = round(robot_move.deltakinematic('B'), 3) - minus
+        # degree_motor3 = round(robot_move.deltakinematic('C'), 3) - minus
+        degree_motor1 = robot_move.deltakinematic('A') - minus
+        degree_motor2 = robot_move.deltakinematic('B') - minus
+        degree_motor3 = robot_move.deltakinematic('C') - minus
+        return [degree_motor1, degree_motor2, degree_motor3]
+    

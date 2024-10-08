@@ -397,7 +397,7 @@ def read_qr_code(client_socket):
 # 모터를 움직이는 함수
 
 def calculate_motor_angles(x, y, z, t):
-    robot_move = IKinematics.DeltaRobot().Move()
+    robot_move = IKinematics.IK().Move()
     robot_move.posX = x
     robot_move.posY = y
     robot_move.posZ = z

@@ -187,41 +187,50 @@ pick_position = {
     '1_1': [DeltaRobot.calculate_angles(-107, 170, 450), DeltaRobot.calculate_angles(-107, 170, 602), DeltaRobot.calculate_angles(-107, 170, 450)],
     '1_2': [DeltaRobot.calculate_angles(-110, 175, 450), DeltaRobot.calculate_angles(-110, 175, 558), DeltaRobot.calculate_angles(-110, 175, 450)],
     '1_3': [DeltaRobot.calculate_angles(-122, 182, 450), DeltaRobot.calculate_angles(-122, 182, 502), DeltaRobot.calculate_angles(-122, 182, 450)],
-    '2_1': [DeltaRobot.calculate_angles(65, 170, 450), DeltaRobot.calculate_angles(65, 170, 602), DeltaRobot.calculate_angles(65, 170, 450)],
-    '2_2': [DeltaRobot.calculate_angles(65, 170, 450), DeltaRobot.calculate_angles(65, 170, 558), DeltaRobot.calculate_angles(65, 170, 450)],
-    '2_3': [DeltaRobot.calculate_angles(70, 177, 450), DeltaRobot.calculate_angles(70, 177, 500), DeltaRobot.calculate_angles(70, 177, 450)],
-    '3_1': [DeltaRobot.calculate_angles(60, 310, 450), DeltaRobot.calculate_angles(60, 310, 585), DeltaRobot.calculate_angles(60, 310, 450)],
-    '3_2': [DeltaRobot.calculate_angles(59, 315, 450), DeltaRobot.calculate_angles(59, 315, 545), DeltaRobot.calculate_angles(59, 315, 450)],
-    '3_3': [DeltaRobot.calculate_angles(70, 320, 450), DeltaRobot.calculate_angles(70, 320, 495), DeltaRobot.calculate_angles(70, 320, 450)],
-    '4_1': [DeltaRobot.calculate_angles(-97, 310, 450), DeltaRobot.calculate_angles(-97, 310, 584), DeltaRobot.calculate_angles(-97, 310, 450)],
+    '2_1': [DeltaRobot.calculate_angles(65, 170, 450),   DeltaRobot.calculate_angles(65, 170, 602),   DeltaRobot.calculate_angles(65, 170, 450)],
+    '2_2': [DeltaRobot.calculate_angles(65, 170, 450),   DeltaRobot.calculate_angles(65, 170, 558),   DeltaRobot.calculate_angles(65, 170, 450)],
+    '2_3': [DeltaRobot.calculate_angles(70, 177, 450),   DeltaRobot.calculate_angles(70, 177, 500),   DeltaRobot.calculate_angles(70, 177, 450)],
+    '3_1': [DeltaRobot.calculate_angles(60, 310, 450),   DeltaRobot.calculate_angles(60, 310, 585),   DeltaRobot.calculate_angles(60, 310, 450)],
+    '3_2': [DeltaRobot.calculate_angles(59, 315, 450),   DeltaRobot.calculate_angles(59, 315, 545),   DeltaRobot.calculate_angles(59, 315, 450)],
+    '3_3': [DeltaRobot.calculate_angles(70, 320, 450),   DeltaRobot.calculate_angles(70, 320, 495),   DeltaRobot.calculate_angles(70, 320, 450)],
+    '4_1': [DeltaRobot.calculate_angles(-97, 310, 450),  DeltaRobot.calculate_angles(-97, 310, 584),  DeltaRobot.calculate_angles(-97, 310, 450)],
     '4_2': [DeltaRobot.calculate_angles(-103, 315, 450), DeltaRobot.calculate_angles(-103, 315, 544), DeltaRobot.calculate_angles(-103, 315, 450)],
     '4_3': [DeltaRobot.calculate_angles(-114, 320, 450), DeltaRobot.calculate_angles(-114, 320, 494), DeltaRobot.calculate_angles(-114, 320, 450)]
 }
 # ---------------------------------------------------------------------------------------------------------------
 # Place_Angle
 place_position = {
-    'A1': [DeltaRobot.calculate_angles(230, -240, 450), DeltaRobot.calculate_angles(230, -240, 578), DeltaRobot.calculate_angles(230, -240, 450)],
-    'A2': [DeltaRobot.calculate_angles(100, -240, 450), DeltaRobot.calculate_angles(100, -240, 590), DeltaRobot.calculate_angles(100, -240, 450)],
-    'A3': [DeltaRobot.calculate_angles(230, -144, 450), DeltaRobot.calculate_angles(230, -144, 590), DeltaRobot.calculate_angles(230, -144, 450)],
-    'A4': [DeltaRobot.calculate_angles(100, -144, 450), DeltaRobot.calculate_angles(100, -144, 590), DeltaRobot.calculate_angles(100, -144, 450)],
-    'A5': [DeltaRobot.calculate_angles(230, -240, 450), DeltaRobot.calculate_angles(230, -240, 578), DeltaRobot.calculate_angles(230, -240, 450)],
-    'A6': [DeltaRobot.calculate_angles(100, -240, 450), DeltaRobot.calculate_angles(100, -240, 590), DeltaRobot.calculate_angles(100, -240, 450)],
-    'A7': [DeltaRobot.calculate_angles(230, -144, 450), DeltaRobot.calculate_angles(230, -144, 590), DeltaRobot.calculate_angles(230, -144, 450)],
-    'A8': [DeltaRobot.calculate_angles(100, -144, 450), DeltaRobot.calculate_angles(100, -144, 590), DeltaRobot.calculate_angles(100, -144, 450)]
+    'A1': [DeltaRobot.calculate_angles(230, -240, 450), DeltaRobot.calculate_angles(230, -240, 578)],
+    'A2': [DeltaRobot.calculate_angles(100, -240, 450), DeltaRobot.calculate_angles(100, -240, 590)],
+    'A3': [DeltaRobot.calculate_angles(230, -144, 450), DeltaRobot.calculate_angles(230, -144, 590)],
+    'A4': [DeltaRobot.calculate_angles(100, -144, 450), DeltaRobot.calculate_angles(100, -144, 590)],
+    'A5': [DeltaRobot.calculate_angles(230, -240, 450), DeltaRobot.calculate_angles(230, -240, 578)],
+    'A6': [DeltaRobot.calculate_angles(100, -240, 450), DeltaRobot.calculate_angles(100, -240, 590)],
+    'A7': [DeltaRobot.calculate_angles(230, -144, 450), DeltaRobot.calculate_angles(230, -144, 590)],
+    'A8': [DeltaRobot.calculate_angles(100, -144, 450), DeltaRobot.calculate_angles(100, -144, 590)],
+    # 새로운 B1-B8 위치 추가
+    'B1': [DeltaRobot.calculate_angles(-165, -240, 450), DeltaRobot.calculate_angles(-165, -240, 590)],
+    'B2': [DeltaRobot.calculate_angles(-252, -238, 450), DeltaRobot.calculate_angles(-252, -238, 575)],
+    'B3': [DeltaRobot.calculate_angles(-105, -142, 450), DeltaRobot.calculate_angles(-105, -142, 600)],
+    'B4': [DeltaRobot.calculate_angles(-248, -146, 450), DeltaRobot.calculate_angles(-248, -146, 582)],
+    'B5': [DeltaRobot.calculate_angles(-116, -250, 450), DeltaRobot.calculate_angles(-116, -250, 542)],
+    'B6': [DeltaRobot.calculate_angles(-252, -247, 450), DeltaRobot.calculate_angles(-252, -247, 534)],
+    'B7': [DeltaRobot.calculate_angles(-105, -142, 450), DeltaRobot.calculate_angles(-105, -142, 548)],
+    'B8': [DeltaRobot.calculate_angles(-248, -146, 450), DeltaRobot.calculate_angles(-248, -146, 555)]
 }
-
+Home=[-16,-16,-16,0]
 # ---------------------------------------------------------------------------------------------------------------
 # Place_Angle
 safe_position = {
     # PALLET A   
-    'AS1' : [[-40,-6,48,0],[-16,-16,-16,0]],
-    'AS2' : [[-47,3,26,0],[-16,-16,-16,0]],
-    'AS3' : [[-30,-23,37,0],[-16,-16,-16,0]],
-    'AS4' : [[-41,-10,15,0],[-16,-16,-16,0]],
-    'AS5' : [[-40,-6,48,0],[-16,-16,-16,0]],
-    'AS6' : [[-47,3,26,0],[-16,-16,-16,0]],
-    'AS7' : [[-30,-23,37,0],[-16,-16,-16,0]],
-    'AS8' : [[-41,-10,15,0],[-16,-16,-16,0]],
+    'AS1' : [DeltaRobot.calculate_angles(230, -240, 450),Home],
+    'AS2' : [DeltaRobot.calculate_angles(100, -240, 450),Home],
+    'AS3' : [DeltaRobot.calculate_angles(230, -144, 450),Home],
+    'AS4' : [DeltaRobot.calculate_angles(100, -144, 450),Home],
+    'AS5' : [DeltaRobot.calculate_angles(230, -240, 450),Home],
+    'AS6' : [DeltaRobot.calculate_angles(100, -240, 450),Home],
+    'AS7' : [DeltaRobot.calculate_angles(230, -144, 450),Home],
+    'AS8' : [DeltaRobot.calculate_angles(100, -144, 450),Home],
     
     # PALLET B  
     'BS1' : [[-35,48,-4,0],[-16,-16,-16,0]],
