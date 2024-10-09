@@ -105,11 +105,11 @@ def move(goal_angles):
             exit()
 # ===========================================================================================================================
 def pick(angles_list):
-   time.sleep(2)
+    time.sleep(2)
 #    solenoid.airpump_on()
-   for angles in angles_list:
-       move(angles)
-       time.sleep(1)
+    for angles in angles_list:
+        move(angles)
+        time.sleep(1)
 # ===========================================================================================================================
 def place(angles_list):
     time.sleep(1)
@@ -202,20 +202,20 @@ place_position = {
 }
 
 Home = [-16,-16,-16, 0]
-x,y,z = -112,320,494
+x,y,z = -249,-150,547
 
-move(Home)
-# time.sleep(1)
-# move(DeltaRobot.calculate_angles(x,y,z))
-
-
-# move(DeltaRobot.calculate_angles(x,y,z-50))
-# time.sleep(1)
 # move(Home)
 # time.sleep(1)
-# move(DeltaRobot.calculate_angles(x,y,z-50))
-# time.sleep(1)
 # move(DeltaRobot.calculate_angles(x,y,z))
+
+
+move(DeltaRobot.calculate_angles(x,y,z-50))
+time.sleep(1)
+move(Home)
+time.sleep(1)
+move(DeltaRobot.calculate_angles(x,y,z-50))
+time.sleep(1)
+move(DeltaRobot.calculate_angles(x,y,z))
 
 # ===========================================================================================================================
 # 실행
