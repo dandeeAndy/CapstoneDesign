@@ -10,9 +10,9 @@ import time
 
 print(socket.gethostbyname(socket.gethostname()))
 
-Vision_Motor_host ='192.168.8.251'
+Vision_Motor_host ='192.168.172.251'
 # Vision_Motor_host ='192.168.112.251'
-UI_host = '192.168.8.1'
+UI_host = '192.168.172.1'
 # UI_host = '192.168.112.1'
 port = 3333
 

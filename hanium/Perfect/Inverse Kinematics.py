@@ -1,35 +1,34 @@
 import math
 
-class DeltaRobot:
+class IK:
     class Move:
         def __init__(self):
             self.a = 100.0
             self.b = 260.0
             self.c = 600.0
-            self.d = 40.0
-            self.posX = -150
-            self.posY = 150
-            self.posZ = 592
-        
+            self.d = 42.5
+            
+        def set_position(self, x, y, z):
+            self.posX, self.posY, self.posZ = x, y, z
+            
         def deltakinematic(self, servo):
-            pi120 = 120.0 * (math.pi / 180.0)
-            pi240 = 240.0 * (math.pi / 180.0)
+            pi180 = 180.0 * (math.pi / 180.0)
+            pi300 = 300.0 * (math.pi / 180.0)
+            pi420 = 420.0 * (math.pi / 180.0)
 
             x = y = z = 0.0
             
             if servo == 'A':
-                x = self.posX
-                y = self.posY
+                x = math.cos(pi180) * self.posX + math.sin(pi180) * self.posY
+                y = -math.sin(pi180) * self.posX + math.cos(pi180) * self.posY
                 z = self.posZ
-
-            if servo == 'B':
-                x = math.cos(pi120) * self.posX + math.sin(pi120) * self.posY
-                y = -math.sin(pi120) * self.posX + math.cos(pi120) * self.posY
+            elif servo == 'B':
+                x = math.cos(pi300) * self.posX + math.sin(pi300) * self.posY
+                y = -math.sin(pi300) * self.posX + math.cos(pi300) * self.posY
                 z = self.posZ
-
-            if servo == 'C':
-                x = math.cos(pi240) * self.posX + math.sin(pi240) * self.posY
-                y = -math.sin(pi240) * self.posX + math.cos(pi240) * self.posY
+            elif servo == 'C':
+                x = math.cos(pi420) * self.posX + math.sin(pi420) * self.posY
+                y = -math.sin(pi420) * self.posX + math.cos(pi420) * self.posY
                 z = self.posZ
 
             length1 = (self.a - self.d - y)
@@ -42,10 +41,13 @@ class DeltaRobot:
             gamma = 180.0 - alpha - beta
 
             return gamma
-
-# 객체 생성 및 위치 설정
-robot_move = DeltaRobot.Move()
-
-print("Gamma for servo A:", robot_move.deltakinematic('A'))
-print("Gamma for servo B:", robot_move.deltakinematic('B'))
-print("Gamma for servo C:", robot_move.deltakinematic('C'))
+        
+    @staticmethod
+    def c_deg(x, y, z):
+        robot_move = IK.Move()
+        robot_move.set_position(x, y, z)
+        minus = 10.046
+        degree_motor1 = round(robot_move.deltakinematic(0) - minus, 3)
+        degree_motor2 = round(robot_move.deltakinematic(1) - minus, 3)
+        degree_motor3 = round(robot_move.deltakinematic(2) - minus, 3)
+        return [degree_motor1, degree_motor2, degree_motor3]
