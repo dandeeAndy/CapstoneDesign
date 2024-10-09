@@ -7,7 +7,8 @@ import numpy as np
 import time
 import pandas as pd
 import pyrealsense2 as rs
-
+import logging
+import traceback
 from datetime import datetime
 from pyzbar import pyzbar
 from queue import Queue
@@ -51,6 +52,8 @@ qr_data = None
 theta_frame_count = 0
 previous_theta = None
 consistent_theta = None
+current_step_A = 0
+current_step_B = 0
 
 
 # Constants
@@ -59,8 +62,8 @@ DEPTH_RANGES = [(300, 340), (360, 390), (400, 450)]  # 3층, 2층, 1층 순서�
 # LONG_RANGE = (100, 350)  # 긴 변의 범위 (픽셀)
 SHORT_RANGE = (100, 180)  # 짧은 변의 범위 (픽셀)
 LONG_RANGE = (100, 190)
-CONSISTENT_FRAMES_ROI = 70
-CONSISTENT_FRAMES_THETA = 30
+CONSISTENT_FRAMES_ROI = 24
+CONSISTENT_FRAMES_THETA = 12
 
 def set_rois(color_width, color_height, depth_width, depth_height, roi_width, roi_height):
     color_center_x, color_center_y = color_width // 2, color_height // 2
@@ -360,7 +363,7 @@ def process_frame(frameset, rois):
     return color_image, depth_colormap, new_qr_data, new_box_info, edges
 
 def read_qr_code(client_socket):
-    global QR_data, Vision_start_signal, Motor_start_signal, parts, current_roi_index, last_qr_data, qr_data_list
+    global QR_data, Vision_start_signal, Motor_start_signal, parts, current_roi_index, last_qr_data, qr_data_list, location
 
     pipeline = rs.pipeline()
     config = rs.config()
@@ -398,8 +401,7 @@ def read_qr_code(client_socket):
                 last_detection_time = time.time()
                 with lock:
                     if new_qr_data != last_qr_data:
-                        la
-                        st_qr_data = new_qr_data
+                        last_qr_data = new_qr_data
                         parts = new_qr_data.split('/')
                         classifi = parts[0]
                         PackageNumber = parts[1]
@@ -417,6 +419,16 @@ def read_qr_code(client_socket):
                             'Recognition time': recognition_time, 
                             'Position': None
                         })
+                        floor = new_box_info.get('floor')
+                        roi = new_box_info.get('roi')
+                        theta = new_box_info.get('theta')
+                        
+                         # location 업데이트 전에 값 확인
+                        if floor is not None and roi is not None and theta is not None:
+                            location = (floor, roi, theta)
+                            print(f"Updated location: {location}")
+                        else:
+                            print(f"Error: Invalid box info. Floor: {floor}, ROI: {roi}, Theta: {theta}")
                         
                         QR_data = f"{new_qr_data}/{'Vision'}/{'STR'}/{recognition_time}"
                         
@@ -435,6 +447,8 @@ def read_qr_code(client_socket):
                         time.sleep(0.5)
                         
                         Vision_start_signal = False
+                        last_qr_data = new_qr_data
+                        
 
             if time.time() - last_detection_time > 100:
                 print("No QR code detected for 100 seconds. Exiting...")
@@ -446,103 +460,19 @@ def read_qr_code(client_socket):
         pipeline.stop()
         cv2.destroyAllWindows()
 
-# def motor_move(user_option, data_queue_QR):
-#     global parts, Motor_data, location
-
-#     if location is not None:
-#         try:
-#             floor, roi, theta = location
-#             print(f"Using location data: Floor: {floor}, ROI: {roi}, Theta: {theta:.2f}")
-            
-#             position_key = f"{floor}_{roi}"
-#             if position_key in motor_set_4.pick_position:
-#                 motor_positions = motor_set_4.pick_position[position_key]
-                
-#                 try:
-#                     time.sleep(1.5)
-#                     solenoid.airpump_on()
-#                     time.sleep(1)
-                    
-#                     for position in motor_positions:
-#                         motor_set_4.move(position + [theta])
-#                         time.sleep(1)
-                    
-#                     print("Moved to pick position")
-#                     time.sleep(1)
-#                 except PermissionError:
-#                     print("Permission denied when trying to move motor. Please check hardware permissions.")
-#                 except Exception as e:
-#                     print(f"Error moving motor: {e}")
-#             else:
-#                 print(f"No motor position data for Floor: {floor}, ROI: {roi}")
-#         except Exception as e:
-#             print(f"Error in motor movement calculation: {e}")
-#     else:
-#         print("No location data available")
-    
-#     if not data_queue_QR.empty():
-#         try:
-#             classifi = parts[0]
-#             print(classifi)
-
-#             index_map = {
-#                 'Option1': 0,
-#                 'Option2': 1,
-#                 'Option3': 2
-#             }
-
-#             classifi_index = index_map.get(user_option, 0)
-#             if len(classifi) > classifi_index:
-#                 classifi_letter = classifi[classifi_index]
-#             else:
-#                 print("Invalid classification data:", classifi)
-#                 return
-
-#             option_map = {
-#                 'Option1': {'A': 'motor_positions_A', 'B': 'motor_positions_B'},
-#                 'Option2': {'A': 'motor_positions_A', 'B': 'motor_positions_B'},
-#                 'Option3': {'A': 'motor_positions_A', 'B': 'motor_positions_B'}
-#             }
-
-#             user_option = option_map.get(user_option, {})
-#             criteria = user_option.get(classifi_letter)
-
-#             if criteria:
-#                 place_position = getattr(motor_set_4, criteria)
-#                 place_angle = motor_set_4.place_position[place_position]
-                
-#                 safe_position_key = place_position.replace('A', 'AS').replace('B', 'BS')
-#                 safe_angle = motor_set_4.safe_position[safe_position_key]
-
-#                 try:
-#                     motor_set_4.place(place_angle)
-#                     motor_set_4.safe_place(safe_angle)
-#                     print(f"Moving to {place_position}")
-#                 except PermissionError:
-#                     print("Permission denied when trying to move motor. Please check hardware permissions.")
-#                 except Exception as e:
-#                     print(f"Error in motor movement: {e}")
-                
-#                 for data in qr_data_list:
-#                     if data['Classification'] == classifi and data['Position'] is None:
-#                         data['Position'] = place_position
-#                         break
-#             else:
-#                 print("Invalid option or classifi received", classifi_letter)
-#         except Exception as e:
-#             print(f"Error in QR data processing: {e}")
-
-#     Motor_data = f"{place_position}/{'Motor'}/{'END'}/{datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-5]}"
-#     data_queue_Motor.put(Motor_data)
-        
 def motor_move(user_option, data_queue_QR):
     global current_step_A, current_step_B, current_step_pick, parts, place_position, Motor_data, location
 
-    if location is None or data_queue_QR.empty():
-        print("No location data available or QR queue is empty")
+    if location is None or not isinstance(location, tuple) or len(location) != 3:
+        print(f"Error: Invalid location data. Current location: {location}")
         return
 
     floor, roi, theta = location
+
+    if not all(isinstance(x, (int, float)) for x in (floor, roi, theta)):
+        print(f"Error: Invalid location data types. Floor: {type(floor)}, ROI: {type(roi)}, Theta: {type(theta)}")
+        return
+    
     classifi = parts[0]
     print(f"Classification: {classifi}")
 
@@ -576,16 +506,18 @@ def motor_move(user_option, data_queue_QR):
     safe_angle = motor_set_4.safe_position[safe_position_key]
 
     try:
+        time.sleep(1.5)
+        solenoid.airpump_on()
+        time.sleep(1)
         for position in pick_positions:
-            time.sleep(1.5)
-            solenoid.airpump_on()
-            time.sleep(1)
             print(f"Moving to {pick_positions}")
             motor_set_4.move(position + [theta])
+            
             time.sleep(1)
+        
+        print(f"Moving to {place_position}")
         motor_set_4.place(place_angle)
         motor_set_4.safe_place(safe_angle)
-        print(f"Moving to {place_position}")
 
         globals()[f'current_step_{classifi_letter}'] += 1
 
@@ -598,6 +530,8 @@ def motor_move(user_option, data_queue_QR):
         print("Permission denied when trying to move motor. Please check hardware permissions.")
     except Exception as e:
         print(f"Error in motor movement: {e}")
+        logging.error(f"Error in motor movement: {e}")
+        logging.error(traceback.format_exc())
 
     Motor_data = f"{place_position}/{'Motor'}/{'END'}/{datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-5]}"
     data_queue_Motor.put(Motor_data)

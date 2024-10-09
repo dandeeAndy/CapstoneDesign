@@ -1,8 +1,8 @@
 import os
 import solenoid
-import math
 
 from dynamixel_sdk import *  # Uses Dynamixel SDK library
+from IKinematics import IK
 
 # DYNAMIXEL Model & Protocol Version
 MY_DXL = 'X_SERIES'
@@ -124,123 +124,91 @@ def place(angles_list):
 # ---------------------------------------------------------------
 def safe_place(angles_list):
     solenoid.airpump_off()
-    #time.sleep(1)
+    time.sleep(1)
     for angles in angles_list:
         move(angles)
         time.sleep(1)
 # ---------------------------------------------------------------
-class DeltaRobot:
-    class Move:
-        def __init__(self):
-            self.a = 100.0
-            self.b = 260.0
-            self.c = 600.0
-            self.d = 42.5
-            self.posX, self.posY, self.posZ = 230, -144, 542
-            
-        def set_position(self, x, y, z):
-            self.posX, self.posY, self.posZ = x, y, z
-            
-        def deltakinematic(self, servo):
-            pi180 = 180.0 * (math.pi / 180.0)
-            pi300 = 300.0 * (math.pi / 180.0)
-            pi420 = 420.0 * (math.pi / 180.0)
-
-            x = y = z = 0.0
-            
-            if servo == 'A':
-                x = math.cos(pi180) * self.posX + math.sin(pi180) * self.posY
-                y = -math.sin(pi180) * self.posX + math.cos(pi180) * self.posY
-                z = self.posZ
-            elif servo == 'B':
-                x = math.cos(pi300) * self.posX + math.sin(pi300) * self.posY
-                y = -math.sin(pi300) * self.posX + math.cos(pi300) * self.posY
-                z = self.posZ
-            elif servo == 'C':
-                x = math.cos(pi420) * self.posX + math.sin(pi420) * self.posY
-                y = -math.sin(pi420) * self.posX + math.cos(pi420) * self.posY
-                z = self.posZ
-
-            length1 = (self.a - self.d - y)
-            alpha = (360.0 / (2.0 * math.pi)) * math.atan2(z, length1)
-            length2 = math.sqrt(math.pow(self.c, 2) - math.pow(x, 2))
-            length3 = math.sqrt(math.pow(length1, 2) + math.pow(z, 2))
-
-            cosine_angle = (math.pow(length3, 2) - math.pow(length2, 2) + math.pow(self.b, 2)) / (2.0 * length2 * self.b)
-            beta = (360.0 / (2.0 * math.pi)) * math.acos(cosine_angle)
-            gamma = 180.0 - alpha - beta
-
-            return gamma
-
-    @staticmethod
-    def calculate_angles(x, y, z):
-        robot_move = DeltaRobot.Move()
-        robot_move.set_position(x, y, z)
-        minus = 10.046
-        degree_motor1 = robot_move.deltakinematic('A') - minus
-        degree_motor2 = robot_move.deltakinematic('B') - minus
-        degree_motor3 = robot_move.deltakinematic('C') - minus
-        return [degree_motor1, degree_motor2, degree_motor3]
+Home = [-16,-16,-16,0]
 # ---------------------------------------------------------------------------------------------------------------
 # Pick_Angle
 pick_position = {
-    '1_1': [DeltaRobot.calculate_angles(-107, 170, 450), DeltaRobot.calculate_angles(-107, 170, 602), DeltaRobot.calculate_angles(-107, 170, 450)],
-    '1_2': [DeltaRobot.calculate_angles(-110, 175, 450), DeltaRobot.calculate_angles(-110, 175, 558), DeltaRobot.calculate_angles(-110, 175, 450)],
-    '1_3': [DeltaRobot.calculate_angles(-122, 182, 450), DeltaRobot.calculate_angles(-122, 182, 502), DeltaRobot.calculate_angles(-122, 182, 450)],
-    '2_1': [DeltaRobot.calculate_angles(65, 170, 450),   DeltaRobot.calculate_angles(65, 170, 602),   DeltaRobot.calculate_angles(65, 170, 450)],
-    '2_2': [DeltaRobot.calculate_angles(65, 170, 450),   DeltaRobot.calculate_angles(65, 170, 558),   DeltaRobot.calculate_angles(65, 170, 450)],
-    '2_3': [DeltaRobot.calculate_angles(70, 177, 450),   DeltaRobot.calculate_angles(70, 177, 500),   DeltaRobot.calculate_angles(70, 177, 450)],
-    '3_1': [DeltaRobot.calculate_angles(60, 310, 450),   DeltaRobot.calculate_angles(60, 310, 585),   DeltaRobot.calculate_angles(60, 310, 450)],
-    '3_2': [DeltaRobot.calculate_angles(59, 315, 450),   DeltaRobot.calculate_angles(59, 315, 545),   DeltaRobot.calculate_angles(59, 315, 450)],
-    '3_3': [DeltaRobot.calculate_angles(70, 320, 450),   DeltaRobot.calculate_angles(70, 320, 495),   DeltaRobot.calculate_angles(70, 320, 450)],
-    '4_1': [DeltaRobot.calculate_angles(-97, 310, 450),  DeltaRobot.calculate_angles(-97, 310, 584),  DeltaRobot.calculate_angles(-97, 310, 450)],
-    '4_2': [DeltaRobot.calculate_angles(-103, 315, 450), DeltaRobot.calculate_angles(-103, 315, 544), DeltaRobot.calculate_angles(-103, 315, 450)],
-    '4_3': [DeltaRobot.calculate_angles(-114, 320, 450), DeltaRobot.calculate_angles(-114, 320, 494), DeltaRobot.calculate_angles(-114, 320, 450)]
+    '1_1': [IK.c_deg(-107, 170, 450), IK.c_deg(-107, 170, 602), IK.c_deg(-107, 170, 450)],
+    '2_1': [IK.c_deg(-110, 175, 450), IK.c_deg(-110, 175, 558), IK.c_deg(-110, 175, 450)],
+    '3_1': [IK.c_deg(-114, 182, 450), IK.c_deg(-114, 182, 503), IK.c_deg(-114, 182, 450)],
+    '1_2': [IK.c_deg(67, 172, 450),   IK.c_deg(67, 172, 602),   IK.c_deg(67, 172, 450)],
+    '2_2': [IK.c_deg(70, 175, 450),   IK.c_deg(70, 175, 562),   IK.c_deg(70, 175, 450)],
+    '3_2': [IK.c_deg(70, 180, 450),   IK.c_deg(70, 180, 503),   IK.c_deg(70, 180, 450)],
+    '1_3': [IK.c_deg(60, 310, 450),   IK.c_deg(60, 310, 585),   IK.c_deg(60, 310, 450)],
+    '2_3': [IK.c_deg(64, 314, 450),   IK.c_deg(64, 314, 545),   IK.c_deg(64, 314, 450)],
+    '3_3': [IK.c_deg(66, 318, 450),   IK.c_deg(66, 318, 497),   IK.c_deg(66, 318, 450)],
+    '1_4': [IK.c_deg(-98, 310, 450),  IK.c_deg(-98, 310, 582),  IK.c_deg(-98, 310, 450)],
+    '2_4': [IK.c_deg(-105, 314, 450), IK.c_deg(-105, 314, 542), IK.c_deg(-105, 314, 450)],
+    '3_4': [IK.c_deg(-112, 320, 450), IK.c_deg(-112, 320, 494), IK.c_deg(-112, 320, 450)]
 }
 # ---------------------------------------------------------------------------------------------------------------
 # Place_Angle
 place_position = {
-    'A1': [DeltaRobot.calculate_angles(230, -240, 450), DeltaRobot.calculate_angles(230, -240, 578)],
-    'A2': [DeltaRobot.calculate_angles(100, -240, 450), DeltaRobot.calculate_angles(100, -240, 590)],
-    'A3': [DeltaRobot.calculate_angles(230, -144, 450), DeltaRobot.calculate_angles(230, -144, 590)],
-    'A4': [DeltaRobot.calculate_angles(100, -144, 450), DeltaRobot.calculate_angles(100, -144, 590)],
-    'A5': [DeltaRobot.calculate_angles(230, -240, 450), DeltaRobot.calculate_angles(230, -240, 578)],
-    'A6': [DeltaRobot.calculate_angles(100, -240, 450), DeltaRobot.calculate_angles(100, -240, 590)],
-    'A7': [DeltaRobot.calculate_angles(230, -144, 450), DeltaRobot.calculate_angles(230, -144, 590)],
-    'A8': [DeltaRobot.calculate_angles(100, -144, 450), DeltaRobot.calculate_angles(100, -144, 590)],
-    # 새로운 B1-B8 위치 추가
-    'B1': [DeltaRobot.calculate_angles(-165, -240, 450), DeltaRobot.calculate_angles(-165, -240, 590)],
-    'B2': [DeltaRobot.calculate_angles(-252, -238, 450), DeltaRobot.calculate_angles(-252, -238, 575)],
-    'B3': [DeltaRobot.calculate_angles(-105, -142, 450), DeltaRobot.calculate_angles(-105, -142, 600)],
-    'B4': [DeltaRobot.calculate_angles(-248, -146, 450), DeltaRobot.calculate_angles(-248, -146, 582)],
-    'B5': [DeltaRobot.calculate_angles(-116, -250, 450), DeltaRobot.calculate_angles(-116, -250, 542)],
-    'B6': [DeltaRobot.calculate_angles(-252, -247, 450), DeltaRobot.calculate_angles(-252, -247, 534)],
-    'B7': [DeltaRobot.calculate_angles(-105, -142, 450), DeltaRobot.calculate_angles(-105, -142, 548)],
-    'B8': [DeltaRobot.calculate_angles(-248, -146, 450), DeltaRobot.calculate_angles(-248, -146, 555)]
+    'A1': [IK.c_deg(230, -240, 450), IK.c_deg(230, -240, 578)],
+    'A2': [IK.c_deg(100, -240, 450), IK.c_deg(100, -240, 590)],
+    'A3': [IK.c_deg(230, -144, 450), IK.c_deg(230, -144, 590)],
+    'A4': [IK.c_deg(100, -144, 450), IK.c_deg(100, -144, 590)],
+    'A5': [IK.c_deg(230, -240, 450), IK.c_deg(230, -240, 578)],
+    'A6': [IK.c_deg(100, -240, 450), IK.c_deg(100, -240, 590)],
+    'A7': [IK.c_deg(230, -144, 450), IK.c_deg(230, -144, 590)],
+    'A8': [IK.c_deg(100, -144, 450), IK.c_deg(100, -144, 590)],
+    
+    'B1': [IK.c_deg(-165, -240, 450), IK.c_deg(-165, -240, 590)],
+    'B2': [IK.c_deg(-252, -238, 450), IK.c_deg(-252, -238, 575)],
+    'B3': [IK.c_deg(-105, -142, 450), IK.c_deg(-105, -142, 600)],
+    'B4': [IK.c_deg(-248, -146, 450), IK.c_deg(-248, -146, 582)],
+    'B5': [IK.c_deg(-116, -250, 450), IK.c_deg(-116, -250, 542)],
+    'B6': [IK.c_deg(-252, -247, 450), IK.c_deg(-252, -247, 534)],
+    'B7': [IK.c_deg(-105, -142, 450), IK.c_deg(-105, -142, 548)],
+    'B8': [IK.c_deg(-248, -146, 450), IK.c_deg(-248, -146, 555)]
 }
-Home=[-16,-16,-16,0]
+place_position = {
+    'A1': [(IK.c_deg(230, -240, 450) + [0]), (IK.c_deg(230, -240, 578) + [0])],
+    'A2': [(IK.c_deg(100, -240, 450) + [0]), (IK.c_deg(100, -240, 590) + [0])],
+    'A3': [(IK.c_deg(230, -144, 450) + [0]), (IK.c_deg(230, -144, 590) + [0])],
+    'A4': [(IK.c_deg(100, -144, 450) + [0]), (IK.c_deg(100, -144, 590) + [0])],
+    'A5': [(IK.c_deg(230, -240, 450) + [0]), (IK.c_deg(230, -240, 578) + [0])],
+    'A6': [(IK.c_deg(100, -240, 450) + [0]), (IK.c_deg(100, -240, 590) + [0])],
+    'A7': [(IK.c_deg(230, -144, 450) + [0]), (IK.c_deg(230, -144, 590) + [0])],
+    'A8': [(IK.c_deg(100, -144, 450) + [0]), (IK.c_deg(100, -144, 590) + [0])],
+    
+    'B1': [(IK.c_deg(-165, -240, 450) + [0]), (IK.c_deg(-165, -240, 590) + [0])],
+    'B2': [(IK.c_deg(-252, -238, 450) + [0]), (IK.c_deg(-252, -238, 575) + [0])],
+    'B3': [(IK.c_deg(-105, -142, 450) + [0]), (IK.c_deg(-105, -142, 600) + [0])],
+    'B4': [(IK.c_deg(-248, -146, 450) + [0]), (IK.c_deg(-248, -146, 582) + [0])],
+    'B5': [(IK.c_deg(-116, -250, 450) + [0]), (IK.c_deg(-116, -250, 542) + [0])],
+    'B6': [(IK.c_deg(-252, -247, 450) + [0]), (IK.c_deg(-252, -247, 534) + [0])],
+    'B7': [(IK.c_deg(-105, -142, 450) + [0]), (IK.c_deg(-105, -142, 548) + [0])],
+    'B8': [(IK.c_deg(-248, -146, 450) + [0]), (IK.c_deg(-248, -146, 555) + [0])]
+}
+
 # ---------------------------------------------------------------------------------------------------------------
 # Place_Angle
 safe_position = {
     # PALLET A   
-    'AS1' : [DeltaRobot.calculate_angles(230, -240, 450),Home],
-    'AS2' : [DeltaRobot.calculate_angles(100, -240, 450),Home],
-    'AS3' : [DeltaRobot.calculate_angles(230, -144, 450),Home],
-    'AS4' : [DeltaRobot.calculate_angles(100, -144, 450),Home],
-    'AS5' : [DeltaRobot.calculate_angles(230, -240, 450),Home],
-    'AS6' : [DeltaRobot.calculate_angles(100, -240, 450),Home],
-    'AS7' : [DeltaRobot.calculate_angles(230, -144, 450),Home],
-    'AS8' : [DeltaRobot.calculate_angles(100, -144, 450),Home],
-    
+    'AS1' : [(IK.c_deg(230, -240, 450) + [0]), Home],
+    'AS2' : [(IK.c_deg(100, -240, 450) + [0]), Home],
+    'AS3' : [(IK.c_deg(230, -144, 450) + [0]), Home],
+    'AS4' : [(IK.c_deg(100, -144, 450) + [0]), Home],
+    'AS5' : [(IK.c_deg(230, -240, 450) + [0]), Home],
+    'AS6' : [(IK.c_deg(100, -240, 450) + [0]), Home],
+    'AS7' : [(IK.c_deg(230, -144, 450) + [0]), Home],
+    'AS8' : [(IK.c_deg(100, -144, 450) + [0]), Home],
+
     # PALLET B  
-    'BS1' : [[-35,48,-4,0],[-16,-16,-16,0]],
-    'BS2' : [[-46,24,4,0],[-16,-16,-16,0]],
-    'BS3' : [[-36,35,-23,0],[-16,-16,-16,0]],
-    'BS4' : [[-43,12,-9,0],[-16,-16,-16,0]],
-    'BS5' : [[-35,48,-4,0],[-16,-16,-16,0]],
-    'BS6' : [[-46,24,4,0],[-16,-16,-16,0]],
-    'BS7' : [[-36,35,-23,0],[-16,-16,-16,0]],
-    'BS8' : [[-43,12,-9,0],[-16,-16,-16,0]],
+    'BS1' : [(IK.c_deg(-165, -240, 450) + [0]), Home],
+    'BS2' : [(IK.c_deg(-252, -238, 450) + [0]), Home],
+    'BS3' : [(IK.c_deg(-105, -142, 450) + [0]), Home],
+    'BS4' : [(IK.c_deg(-248, -146, 450) + [0]), Home],
+    'BS5' : [(IK.c_deg(-116, -250, 450) + [0]), Home],
+    'BS6' : [(IK.c_deg(-252, -247, 450) + [0]), Home],
+    'BS7' : [(IK.c_deg(-105, -142, 450) + [0]), Home],
+    'BS8' : [(IK.c_deg(-248, -146, 450) + [0]), Home]
 }          
 
 # ---------------------------------------------------------------------------------------------------------------
