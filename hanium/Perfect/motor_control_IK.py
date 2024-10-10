@@ -202,7 +202,7 @@ place_position = {
 }
 
 Home = [-16,-16,-16, 0]
-x,y,z = -249,-150,547
+x,y,z = -112,320,498
 
 # move(Home)
 # time.sleep(1)
