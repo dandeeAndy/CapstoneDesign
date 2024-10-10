@@ -10,10 +10,8 @@ import time
 
 print(socket.gethostbyname(socket.gethostname()))
 
-Vision_Motor_host ='192.168.172.251'
-# Vision_Motor_host ='192.168.112.251'
-UI_host = '192.168.172.1'
-# UI_host = '192.168.112.1'
+Vision_Motor_host ='192.168.8.251'
+UI_host = '192.168.8.1'
 port = 3333
 
 lock = threading.Lock()
@@ -203,9 +201,9 @@ if __name__ == '__main__':
                 mainWin.destination_widget_2, 
                 mainWin.phone_number_widget_2]
     
-    history_widgets = [mainWin.ALARM_widget, 
-                       mainWin.STATE_widget, 
-                       mainWin.DATETIME_widget]
+    history_widgets =  [mainWin.ALARM_widget, 
+                        mainWin.STATE_widget, 
+                        mainWin.DATETIME_widget]
     
     mainWin.showMaximized()
     mainWin.show()
