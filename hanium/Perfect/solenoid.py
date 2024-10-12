@@ -2,7 +2,7 @@ import serial
 import time
 
 # Serial 통신을 설정하고 예외 처리를 추가합니다.
-ser = serial.Serial('COM6', 9600)
+ser = serial.Serial('COM6', 9600, timeout=1)
 
 def control_relay(state):
     if state:
