@@ -515,14 +515,6 @@ def motor_move(user_option, data_queue_QR):
     safe_angle = motor_set_4.safe_position[safe_position_key]
 
     try:
-        # time.sleep(2.5)
-        # solenoid.airpump_on()
-        # time.sleep(2)
-        # for position in pick_positions:
-        #     # print(f"Moving to {pick_positions}")
-        #     motor_set_4.move(position + [theta])
-        #     time.sleep(1)
-        
         motor_set_4.pick(pick_positions, theta)
         print(f"Moving to {place_position}")
         motor_set_4.place(place_angle)

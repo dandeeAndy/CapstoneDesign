@@ -100,21 +100,11 @@ def move(goal_angles):
             print(f"Failed to set goal position for Dynamixel#{dxl_id}")
             exit()
 # ---------------------------------------------------------------
-def move_with_pump(angles_list):
-    time.sleep(2)
-    solenoid.airpump_on()
-    time.sleep(1)
-    for angles in angles_list:
-        move(angles)
-        time.sleep(1)
-    solenoid.airpump_off()
-# ---------------------------------------------------------------
 def pick(angles_list,theta):
-    time.sleep(2.5)
     solenoid.airpump_on()
     time.sleep(2)
     for angles in angles_list:
-        move(angles+[theta])
+        move(angles + [theta])
         time.sleep(1)
 # ---------------------------------------------------------------
 def place(angles_list):
@@ -196,18 +186,3 @@ safe_position = {
 
 motor_positions_A = ['A1','A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8']
 motor_positions_B = ['B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8']
-
-# motor_positions_Y = ['A1','A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8']  
-# motor_positions_N = ['B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8'] 
-
-# motor_positions_A = ['A1','A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8']  
-# motor_positions_B = ['B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8']
-
-# while True:
-    
-#     move(Home)
-#     time.sleep(1)
-#     move((IK.c_deg(232, -232, 450) + [0]))
-#     time.sleep(1)
-#     move((IK.c_deg(232, -232, 582) + [0]))
-#     time.sleep(1)

@@ -1,17 +1,16 @@
-import sys, os
+import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 import UI_set
-from queue import Queue
 import socket
 import threading
 import time
 
 print(socket.gethostbyname(socket.gethostname()))
 
-Vision_Motor_host ='192.168.205.251'
-UI_host = '192.168.205.1'
+Vision_Motor_host ='192.168.8.251'
+UI_host = '192.168.8.1'
 port = 3333
 
 lock = threading.Lock()
@@ -40,7 +39,6 @@ def client_func():
             time.sleep(5)
             continue
 
-    buffer = ""
     while True:
         try:
             data = client_socket.recv(1024)

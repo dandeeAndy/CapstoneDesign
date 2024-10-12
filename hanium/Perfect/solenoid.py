@@ -10,8 +10,8 @@ def control_relay(state):
     else:
         ser.write(b'0')  # Turn relay OFF
 
-def airpump_on():
+def airpump_off():
     control_relay(True)
 
-def airpump_off():
+def airpump_on():
     control_relay(False)
