@@ -137,14 +137,14 @@ class MainWindow(QMainWindow):
         file_menu.addAction(exit_action)
         self.setMenuBar(self.menu_bar)
         
-        self.logo_label = QLabel(self)
-        self.logo_pixmap = QPixmap('JALK3_logo_image.png')
-        self.logo_label.setPixmap(self.logo_pixmap)
-        self.logo_label.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
-        self.logo_label.mousePressEvent = self.refresh_system
-        logo_scaled_pixmap = self.logo_pixmap.scaled(400, 200, Qt.KeepAspectRatio, Qt.SmoothTransformation)
-        self.logo_label.setPixmap(logo_scaled_pixmap)
-        self.grid_layout.addWidget(self.logo_label, 0, 0, 1, 5)
+        # self.logo_label = QLabel(self)
+        # self.logo_pixmap = QPixmap('JALK3_logo_image.png')
+        # self.logo_label.setPixmap(self.logo_pixmap)
+        # self.logo_label.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
+        # self.logo_label.mousePressEvent = self.refresh_system
+        # logo_scaled_pixmap = self.logo_pixmap.scaled(400, 200, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        # self.logo_label.setPixmap(logo_scaled_pixmap)
+        # self.grid_layout.addWidget(self.logo_label, 0, 0, 1, 5)
         
         self.assembly_label = QLabel(self)
         self.assembly_pixmap = QPixmap('delta_total.png')
