@@ -7,7 +7,7 @@ PROTOCOL_VERSION = 2.0
 # Default setting
 DXL_IDs = [1, 2, 3, 4]  # Dynamixel IDs
 BAUDRATE = 57600
-DEVICENAME = 'COM3'  # Port Name
+DEVICENAME = 'COM17'  # Port Name
 TORQUE_ENABLE = 1
 TORQUE_DISABLE = 0
 
