@@ -1,4 +1,3 @@
-import os
 import solenoid
 
 from dynamixel_sdk import *  # Uses Dynamixel SDK library

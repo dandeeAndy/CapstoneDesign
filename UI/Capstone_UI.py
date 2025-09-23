@@ -9,8 +9,8 @@ import time
 
 print(socket.gethostbyname(socket.gethostname()))
 
-Vision_Motor_host ='192.168.8.251'
-UI_host = '192.168.8.1'
+Vision_Motor_host ='192.168.149.251'
+UI_host = '192.168.149.1'
 port = 3333
 
 lock = threading.Lock()
